@@ -53,8 +53,8 @@ main_router.route('/teamwit')
 						if (err) console.log(err); // handle error here
 	        			team.intepretation = response;
 	        			finalResponse.push(team);
-	        			finalResponse++;
-	        			if(finalResponse==results.length){
+	        			witCounter++;
+	        			if(witCounter==results.length){
 	        				res.json(finalResponse);
 	        			}
 					});

@@ -32,7 +32,8 @@
     "connect-flash":"0.1.1",
     "connect-pg-simple":"2.1.1",
     "future":"2.3.1",
-    "url":"0.10.1"
+    "url":"0.10.1",
+    "futures":"2.3.3"
   },
   "devDependencies": {
     "after": "^0.8.1",

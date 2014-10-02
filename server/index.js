@@ -42,14 +42,23 @@ main_router.route('/teamwit')
 	.all(function(req,res){
 		_getTeamSponsorsInfo(function(isSuccess,results){
 			if (isSuccess){
-				var teamSponsors = results,
-				sampleTeam = results[0];
-				var sponsorIntepretation = wit.requestWit(sampleTeam.sponsor);
+				var witCounter = 0,
+				finalResponse = [];
 
-				sponsorIntepretation.when(function(err,response){
-					if (err) console.log(err); // handle error here
-        			res.json(response);
-				});
+				for (var k = 0; k<results.length; k++){
+					var team = results[k];
+					var sponsorIntepretation = wit.requestWit(sampleTeam.sponsor);
+
+					sponsorIntepretation.when(function(err,response){
+						if (err) console.log(err); // handle error here
+	        			team.intepretation = response;
+	        			finalResponse.push(team);
+	        			finalResponse++;
+	        			if(finalResponse==results.length){
+	        				res.json(finalResponse);
+	        			}
+					});
+				}
 			}else{
 				res.json('Cannot call from DB team data');
 			}

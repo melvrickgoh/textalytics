@@ -4,6 +4,7 @@
 
 var express = require('express'),
 TeamDAO = require('./dao/TeamDAO'),
+Wit = require('./services/wit'),
 main_router = express.Router();
 //svc acct pw: notasecret
 var readline = require('readline');
@@ -13,7 +14,8 @@ var rl = readline.createInterface({
   output: process.stdout
 });
 
-var tDAO = new TeamDAO();
+var tDAO = new TeamDAO(),
+wit = new Wit();
 
 /*
 * APP Classes
@@ -35,5 +37,41 @@ main_router.route('/teamextracts')
 			
 		});
 	});
+
+main_router.route('/teamwit')
+	.all(function(req,res){
+		_getTeamSponsorsInfo(function(isSuccess,results){
+			if (isSuccess){
+				var teamSponsors = results,
+				sampleTeam = results[0];
+				var sponsorIntepretation = wit.requestWit(sampleTeam.sponsor);
+
+				sponsorIntepretation.when(function(err,response){
+					if (err) console.log(err); // handle error here
+        			res.json(response);
+				});
+			}else{
+				res.json('Cannot call from DB team data');
+			}
+		});
+	});
+
+function _getTeamSponsorsInfo(callback){
+	tDAO.getAllTeams(function(isSuccess,results){
+		if (isSuccess){
+			var resultsArr = [];
+			for (var i = 0; i<results.length; i++){
+				resultsArr.push({
+					id: results[i].id,
+					sponsor: results[i].sponsor,
+					team:results[i].teamname
+				});
+			}
+			callback(true,resultsArr);
+		}else{
+			callback(isSuccess,results);
+		}
+	});
+}
 
 exports.index = main_router;

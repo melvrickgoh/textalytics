@@ -47,7 +47,7 @@ main_router.route('/teamwit')
 
 				for (var k = 0; k<results.length; k++){
 					var team = results[k];
-					var sponsorIntepretation = wit.requestWit(sampleTeam.sponsor);
+					var sponsorIntepretation = wit.requestWit(team.sponsor);
 
 					sponsorIntepretation.when(function(err,response){
 						if (err) console.log(err); // handle error here

@@ -119,21 +119,23 @@ function _getPersons(outcome){
 	lastNames = outcome.entities.last_name,
 	personsResult = [];
 
-	if (persons.length == 0){
-		if (firstNames.length == 0 && lastNames.length == 0){
+	if (persons && persons.length > 0){
+		for (var i = 0; i<persons.length; i++){
+			personsResult.push(persons[i].value.trim());
+		}
+	}else{
+		if (!firstNames && !lastNames){
 			return [];//completely no one
-		}else if (firstNames.length == lastNames.length){//if same match: can link coz in order
+		}else if (firstNames && lastNames && firstNames.length == lastNames.length){//if same match: can link coz in order
 			for (var i = 0; i<firstNames.length; i++) {
 				personsResult.push(firstNames[i].value.trim() + ' ' + lastNames[i].value.trim());
 			}
 		}else{
-			for (var i = 0; i<firstNames.length; i++) {
-				personsResult.push(firstNames[i].value.trim());
+			if (firstNames && firstNames.length>0){
+				for (var i = 0; i<firstNames.length; i++) {
+					personsResult.push(firstNames[i].value.trim());
+				}
 			}
-		}
-	}else{
-		for (var i = 0; i<persons.length; i++){
-			personsResult.push(persons[i].value.trim());
 		}
 	}
 	return personsResult;

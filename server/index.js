@@ -72,7 +72,7 @@ main_router.route('/teamwit')
         			console.log(team);
         			wit.processWitResults(response);
 
-        			res.json(finalResponse);
+        			res.json(response);
 				});
 			}else{
 				res.json('Cannot call from DB team data');

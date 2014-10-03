@@ -37,5 +37,13 @@ Wit.prototype.requestWit = function(user_text) {
     return future;
 }
 
+Wit.prototype.processWitResults = function(result){
+	console.log(result);
+
+}
+
+function _filterNames(results){
+
+}
 
 module.exports = Wit;

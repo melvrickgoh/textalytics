@@ -45,7 +45,7 @@ main_router.route('/teamwit')
 				var witCounter = 0,
 				finalResponse = [];
 
-				for (var k = 0; k<results.length; k++){
+				/*for (var k = 0; k<results.length; k++){
 					var team = results[k];
 					var sponsorIntepretation = wit.requestWit(team.sponsor);
 
@@ -53,12 +53,27 @@ main_router.route('/teamwit')
 						if (err) console.log(err); // handle error here
 	        			team.intepretation = response;
 	        			finalResponse.push(team);
+
+	        			wit.processWitResults(response);
+
 	        			witCounter++;
 	        			if(witCounter==results.length){
 	        				res.json(finalResponse);
 	        			}
 					});
-				}
+				}*/
+
+				var team = results[80];
+				var sponsorIntepretation = wit.requestWit(team.sponsor);
+
+				sponsorIntepretation.when(function(err,response){
+					if (err) console.log(err); // handle error here
+        			team.intepretation = response;
+        			console.log(team);
+        			wit.processWitResults(response);
+
+        			res.json(finalResponse);
+				});
 			}else{
 				res.json('Cannot call from DB team data');
 			}

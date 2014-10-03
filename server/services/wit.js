@@ -79,7 +79,7 @@ Wit.prototype.processWitResults = function(postTeam){
 	ultimateResult.locations = _getLocations(bestOutcome);
 
 	//capture fringe results: emails
-	var fringeResults = _getFringeResults(bestOutcome),
+	var fringeResults = _getFringeResults(bestOutcome);
 	ultimateResult.emails = fringeResults.emails;
 
 	ultimateResult.startup = _checkForStartup(outcome);

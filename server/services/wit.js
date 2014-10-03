@@ -75,7 +75,53 @@ Wit.prototype.processWitResults = function(postTeam){
 	ultimateResult.persons = _getPersons(bestOutcome);
 
 	//capture locations
+	ultimateResult.locations = _getLocations(bestOutcome);
 
+	//capture fringe results: emails
+	var fringeResults = _getFringeResults(bestOutcome),
+	ultimateResult.emails = fringeResults.emails;
+
+	ultimateResult.startup = _checkForStartup(outcome);
+
+	return ultimateResult;
+}
+
+function _checkForStartup(outcome){
+	var startup = outcome.entities.startup;
+	if (startup){
+		return true;
+	}
+	return false;
+}
+
+function _getAlternateResults(outcome){
+	var emails = outcome.entities.email,
+	emailResults = [];
+
+	if (emails && emails.length > 0){
+		for (var i = 0; i < emails.length; i++) {
+			if (emailResults.indexOf(emails[i].value.trim()) < 0){
+				emailResults.push(emails[i].value.trim());
+			}
+		}
+	}
+
+	return {emails:emailResults}
+}
+
+function _getLocations(outcome){
+	var locations = outcome.entities.location,
+	locationResults = [];
+
+	if (locations) {
+		for (var i = 0; i < locations.length; i++) {
+			if (locationResults.indexOf(locations[i].value.trim()) < 0) {
+				locationResults.push(locations[i].value.trim());
+			}
+		}
+	}
+
+	return locationResults;
 }
 
 function _getOrganizations(outcome){

@@ -69,9 +69,9 @@ main_router.route('/teamwit')
 				sponsorIntepretation.when(function(err,response){
 					if (err) console.log(err); // handle error here
         			team.intepretation = response;
-        			wit.processWitResults(team);
-
-        			res.json(team);
+        			var processedResults = wit.processWitResults(team);
+        			
+        			res.json(processedResults);
 				});
 			}else{
 				res.json('Cannot call from DB team data');

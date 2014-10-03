@@ -69,7 +69,6 @@ main_router.route('/teamwit')
 				sponsorIntepretation.when(function(err,response){
 					if (err) console.log(err); // handle error here
         			team.intepretation = response;
-        			console.log(team);
         			wit.processWitResults(team);
 
         			res.json(team);

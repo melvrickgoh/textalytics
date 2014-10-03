@@ -64,7 +64,7 @@ main_router.route('/teamwit')
 				}*/
 
 				var team = results[89];
-				var sponsorIntepretation = wit.requestWit(team.sponsor);
+				var sponsorIntepretation = wit.requestWit('Mr. Mishra Nigamananda, Standard Chartered. Mr Chris Ismael, Developer Evangelist, Microsoft Singapore');
 
 				sponsorIntepretation.when(function(err,response){
 					if (err) console.log(err); // handle error here

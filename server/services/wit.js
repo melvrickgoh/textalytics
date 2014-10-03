@@ -37,13 +37,121 @@ Wit.prototype.requestWit = function(user_text) {
     return future;
 }
 
-Wit.prototype.processWitResults = function(result){
-	console.log(result);
+Wit.prototype.processWitResults = function(postTeam){
+	var teamID = postTeam.id,
+	sponsorRaw = postTeam.team,
+	witIntepretation = postTeam.intepretation,
+	witOutcomes = postTeam.intepretation.outcomes,
+	bestOutcome,
+	ultimateResult = {};
+
+	witOutcomes = _filterInvalidOutcomes(witOutcomes);
+
+	//weed out invalid responses
+	if (witOutcomes.length == 0){
+		return {error: true, message: 'invalid input'}
+	}
+
+	//get the most confident outcome
+	if (witOutcomes.length == 1){
+		bestOutcome = witOutcomes[0];
+	}else{
+		bestOutcome = _getBestOutcome(witOutcomes);
+	}
+
+	ultimateResult.outcome = bestOutcome;
+	ultimateResult.confidence = bestOutcome.confidence;
+
+	//capture organizations
+	var organizationResults = _getOrganizations(bestOutcome);
+	ultimateResult.organizations = organizationResults.organizations,
+	ultimateResult.acronyms = organizationResults.acronyms,
+	ultimateResult.departments = organizationResults.departments;
+
+	//capture persons from outcomes
+	ultimateResult.persons = _getPersons(bestOutcome);
+
+	//capture locations
 
 }
 
-function _filterNames(results){
+function _getOrganizations(outcome){
+	var organizations = outcome.entities.organization,
+	acronyms = outcome.entities.organization_acronym,
+	departments = outcome.entities.department,
+	organizationResults = [],
+	organizationAcronyms = [],
+	departmentResults = [];
+	
+	if (organizations && organizations.length > 0){
+		for (var i = 0; i < organizations.length; i++){
+			if (organizationResults.indexOf(organizations[i].value.trim()) < 0){
+				organizationResults.push(organizations[i].value.trim());
+			}
+		}
+	}
 
+	if (acronyms && acronyms.length > 0){
+		for (var i = 0; i < acronyms.length; i++){
+			if (organizationAcronyms.indexOf(acronyms[i].value.trim()) < 0){
+				organizationAcronyms.push(acronyms[i].value.trim());
+			}
+		}
+	}
+
+	if (departments && departments.length > 0){
+		for (var i = 0; i < departments.length; i++){
+			if (departmentResults.indexOf(departments[i].value.trim()) < 0){
+				departmentResults.push(departments[i].value.trim());
+			}
+		}
+	}
+
+	return {organizations: organizationResults, acronyms: organizationAcronyms, departments: departmentResults};
+}
+
+function _getPersons(outcome){
+	var persons = outcome.entities.person,
+	firstNames = outcome.entities.first_name,
+	lastNames = outcome.entities.last_name,
+	personsResult = [];
+
+	if (persons.length == 0){
+		if (firstNames.length == 0 && lastNames.length == 0){
+			return [];//completely no one
+		}else if (firstNames.length == lastNames.length){//if same match: can link coz in order
+			for (var i = 0; i<firstNames.length; i++) {
+				personsResult.push(firstNames[i].value.trim() + ' ' + lastNames[i].value.trim());
+			}
+		}else{
+			for (var i = 0; i<firstNames.length; i++) {
+				personsResult.push(firstNames[i].value.trim());
+			}
+		}
+	}else{
+		for (var i = 0; i<persons.length; i++){
+			personsResult.push(persons[i].value.trim());
+		}
+	}
+	return personsResult;
+}
+
+function _getBestOutcome(outcomes){
+	var bestOutcome, topConfidence = 0;
+	for (var i = 0; i<outcomes.length; i++){
+		var currOutcome = outcomes[i];
+		if (currOutcome.confidence > topConfidence){
+			bestOutcome = currOutcome;
+			topConfidence = currOutcome.confidence;
+		}
+	}
+	return bestOutcome;
+}
+
+function _filterInvalidOutcomes(outcomes){
+	return outcomes.filter(function(outcome){
+		return outcome.intent !== 'invalid';
+	});
 }
 
 module.exports = Wit;

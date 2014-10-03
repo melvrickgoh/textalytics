@@ -46,7 +46,8 @@ Wit.prototype.processWitResults = function(postTeam){
 	bestOutcome,
 	ultimateResult = {};
 
-	console.log(witIntepretation);
+	ultimateResult.teamID = teamID;
+	ultimateResult.raw = sponsorRaw;
 
 	witOutcomes = _filterInvalidOutcomes(witOutcomes);
 

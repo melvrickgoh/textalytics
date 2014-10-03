@@ -38,12 +38,16 @@ Wit.prototype.requestWit = function(user_text) {
 }
 
 Wit.prototype.processWitResults = function(postTeam){
+	console.log(postTeam);
+
 	var teamID = postTeam.id,
 	sponsorRaw = postTeam.team,
 	witIntepretation = postTeam.intepretation,
 	witOutcomes = postTeam.intepretation.outcomes,
 	bestOutcome,
 	ultimateResult = {};
+
+
 
 	witOutcomes = _filterInvalidOutcomes(witOutcomes);
 

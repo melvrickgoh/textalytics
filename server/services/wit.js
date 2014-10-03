@@ -83,7 +83,7 @@ Wit.prototype.processWitResults = function(postTeam){
 	ultimateResult.emails = fringeResults.emails;
 	
 	//check if its a startup project
-	ultimateResult.startup = _checkForStartup(outcome);
+	ultimateResult.startup = _checkForStartup(bestOutcome);
 
 	return ultimateResult;
 }

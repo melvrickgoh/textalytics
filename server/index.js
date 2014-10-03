@@ -70,7 +70,7 @@ main_router.route('/teamwit')
 					if (err) console.log(err); // handle error here
         			team.intepretation = response;
         			console.log(team);
-        			wit.processWitResults(response);
+        			wit.processWitResults(team);
 
         			res.json(team);
 				});

@@ -153,9 +153,10 @@ function _getBestOutcome(outcomes){
 }
 
 function _filterInvalidOutcomes(outcomes){
-	return outcomes.filter(function(outcome){
+	var outcomes =  outcomes.filter(function(outcome){
 		return outcome.intent !== 'invalid';
 	});
+	return outcomes;
 }
 
 module.exports = Wit;

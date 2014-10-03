@@ -63,7 +63,7 @@ main_router.route('/teamwit')
 					});
 				}*/
 
-				var team = results[80];
+				var team = results[89];
 				var sponsorIntepretation = wit.requestWit(team.sponsor);
 
 				sponsorIntepretation.when(function(err,response){
@@ -72,7 +72,7 @@ main_router.route('/teamwit')
         			console.log(team);
         			wit.processWitResults(response);
 
-        			res.json(response);
+        			res.json(team);
 				});
 			}else{
 				res.json('Cannot call from DB team data');

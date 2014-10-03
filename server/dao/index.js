@@ -184,7 +184,6 @@ pgDAO.prototype.generateDeleteQuery = function(details){
 
 pgDAO.prototype.select = function(details,callback){
 	var query = this.generateSelectQuery(details);
-	console.log(query);
 	this.getConnection(query,function(err,result){
 		if (err){
 			callback(false,err);

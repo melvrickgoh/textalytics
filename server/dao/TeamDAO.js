@@ -35,7 +35,6 @@ TeamDAO.prototype.getAllTeams = function(callback){
 			DESCRIPTIONLINKS,MEMBERS,SPONSOR,SPONSORLINK,SEMESTER,YEAR,ID,DES_KEYWORDS,DES_ENTITIES]
 	};
 	dao.select(selectTeamDetails,function(isSuccess,result){
-		console.log(result);
 		if (result.length >= 1){
 			callback(true,result);//selected length >= 1
 		}else{

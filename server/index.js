@@ -5,6 +5,7 @@
 var express = require('express'),
 TeamDAO = require('./dao/TeamDAO'),
 Wit = require('./services/wit'),
+LinkedIn = require('./services/linkedin'),
 main_router = express.Router();
 //svc acct pw: notasecret
 var readline = require('readline');
@@ -15,7 +16,8 @@ var rl = readline.createInterface({
 });
 
 var tDAO = new TeamDAO(),
-wit = new Wit();
+wit = new Wit(),
+linkedIn = new LinkedIn();
 
 /*
 * APP Classes
@@ -24,6 +26,38 @@ wit = new Wit();
 main_router.route('/')
 	.all(function(req,res){
 		res.send('welcome to head');
+	});
+
+main_router.route('/oauth/linkedin')
+	.all(function(req,res){
+		var liMaster = linkedIn.getLinkedInMaster();
+		liMaster.auth.authorize(res, ['r_basicprofile', 'r_fullprofile', 'r_emailaddress', 'r_network', 'r_contactinfo', 'rw_nus', 'rw_groups', 'w_messages']);
+	});
+
+main_router.route('/oauth/linkedin/callback')
+	.all(function(req,res){
+		_restrictedLinkedIn(req,res,function(result){
+			var liMaster = linkedIn.getLinkedInMaster();
+			liMaster.auth.getAccessToken(res, req.query.code, function(err, results) {
+		        if ( err )
+		            return console.error(err);
+
+		        /**
+		         * Results have something like:
+		         * {"expires_in":5184000,"access_token":". . . ."}
+		         */
+
+		        console.log(results);
+		        return res.send(results);
+		    });
+		});
+	});
+
+main_router.route('/linkedin/helloworld')
+	.all(function(req,res){
+		_restrictedLinkedIn(req,res,function(result){
+			res.send('linked in authenticated');
+		});
 	});
 
 main_router.route('/teamextracts')
@@ -79,6 +113,14 @@ main_router.route('/teamwit')
 		});
 	});
 
+function _restrictedLinkedIn(req,res,next){
+	if(req.session.linkedIn){
+		next(req.session.linkedIn);
+	}else{
+		res.redirect('/oauth/linkedin'); 
+	}
+}
+
 function _getTeamSponsorsInfo(callback){
 	tDAO.getAllTeams(function(isSuccess,results){
 		if (isSuccess){
@@ -96,5 +138,7 @@ function _getTeamSponsorsInfo(callback){
 		}
 	});
 }
+
+
 
 exports.index = main_router;

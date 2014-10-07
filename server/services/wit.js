@@ -40,14 +40,14 @@ Wit.prototype.requestWit = function(user_text) {
 Wit.prototype.processWitResults = function(postTeam){
 
 	var teamID = postTeam.id,
-	sponsorRaw = postTeam.team,
+	teamName = postTeam.team,
 	witIntepretation = postTeam.intepretation,
 	witOutcomes = postTeam.intepretation.outcomes,
 	bestOutcome,
 	ultimateResult = {};
 
 	ultimateResult.teamID = teamID;
-	ultimateResult.raw = sponsorRaw;
+	ultimateResult.teamName = teamName;
 
 	witOutcomes = _filterInvalidOutcomes(witOutcomes);
 
@@ -84,6 +84,9 @@ Wit.prototype.processWitResults = function(postTeam){
 	
 	//check if its a startup project
 	ultimateResult.startup = _checkForStartup(bestOutcome);
+
+	//state raw text
+	ultimateResult.raw = bestOutcome._text;
 
 	return ultimateResult;
 }

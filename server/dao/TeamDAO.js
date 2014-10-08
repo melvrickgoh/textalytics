@@ -58,7 +58,6 @@ TeamDAO.prototype.getAllTeams = function(callback){
 			WIT_ACRONYMS,WIT_LOCATIONS,WIT_STARTUP]
 	};
 	dao.select(selectTeamDetails,function(isSuccess,result){
-		console.log(result);
 		if (result.length >= 1){
 			callback(true,result);//selected length >= 1
 		}else{

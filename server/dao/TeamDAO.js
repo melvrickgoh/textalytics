@@ -128,7 +128,7 @@ TeamDAO.prototype.updateTeamWitData = function(teamID,witData,callback){
 			type:'boolean',
 			value:witData.startup
 		}],
-		conditions:['id = \'' + teamID + '\'']
+		conditions:['id = ' + teamID ]
 	}
 	console.log(updateWitDetails);
 	dao.update(updateWitDetails,function(isSuccess,result){
@@ -188,7 +188,7 @@ TeamDAO.prototype.updateTeamLinkedInData = function(teamID,linkedInDetails,callb
 			type:'string',
 			value:processedCompaniesLIData.rawNames
 		}],
-		conditions:['id = \'' + teamID + '\'']
+		conditions:['id = ' + teamID ]
 	}
 	dao.update(updateTeamLinkedInDataDetails,function(isSuccess,result){
 		if (result.rowCount >= 1){

@@ -130,7 +130,7 @@ TeamDAO.prototype.updateTeamWitData = function(teamID,witData,callback){
 		conditions:['id = \'' + teamID + '\'']
 	}
 	dao.update(updateWitDetails,function(isSuccess,result){
-		console.log(result);
+		//console.log(result);
 		if (result.rowCount >= 1){
 			callback(true);//selected length >= 1
 		}else{
@@ -329,7 +329,7 @@ function _arrayToString(array){
 			result = result.substring(0,result.length-2);
 		}
 	}
-
+	console.log('array to string > ' + result);
 	return result;
 }
 

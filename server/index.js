@@ -117,13 +117,50 @@ main_router.route('/teamwit')
 					});
 				}*/
 
-				var team = results[89];
-				var sponsorIntepretation = wit.requestWit('Mr. Mishra Nigamananda, Standard Chartered. Mr Chris Ismael, Developer Evangelist, Microsoft Singapore');
+				var team = results[0];
+				var sponsorIntepretation = wit.requestWit(team.sponsor);
 
 				sponsorIntepretation.when(function(err,response){
 					if (err) console.log(err); // handle error here
         			team.intepretation = response;
         			var processedResults = wit.processWitResults(team);
+
+        			if (processedResults.intent == 'sponsor'){
+        				tDAO.updateTeamWitData(team.id,processedResults,function(isSuccess){
+        					if (processedResults.organizations.length > 0){
+        						var organizations = processedResults.organizations;
+        						var organizationsLinkedInData = [],
+        						scoring = {},
+        						organizationSearchCounter = 0;//let dao know which one failed linkedin's search
+        						for (var i = 0; i<organizations.length; i++){
+        							var companyName = organizations[i];
+        							_matchAndSearchCompany(companyName,function(isSuccess,companyDetails){
+        								if(isSuccess){
+        									//do something about it
+        									companyDetails.rawName = companyName;
+        									organizationsLinkedInData.push(companyDetails);
+        									scoring[companyName] = companyDetails.name;
+        								}else{
+        									scoring[companyName] = false;
+        								}
+
+        								organizationSearchCounter++;
+
+        								if (organizationSearchCounter == organizations.length){
+        									//time to update database
+        									tDAO.updateTeamLinkedInData(team.id,{scores:scoring,dataArray:organizationsLinkedInData},function(isSuccess){
+        										res.json('single full stream processing done');
+        									});
+        								}
+        							});
+        						}
+        					}
+        				});
+        			}else{
+        				tDAO.updateInvalidIntent(team.id,processedResults,function(isSuccess){
+        					res.json('single  full stream processing done but invalid intent');
+        				});
+        			}
         			
         			res.json(processedResults);
 				});
@@ -141,15 +178,12 @@ function _matchAndSearchCompany(companyName,callback){
 			var matchResults = results;
 			if (matchResults.errorCode == 0){
 				//initiate search
-				console.log(matchResults.errorCode);
 				linkedIn.companySearch(companyName,function(e,results1){
 					if(e){
 						console.log(e);
 						console.log('error occured');
 					}else{
 						var searchResults = results1;
-						console.log(searchResults);
-						console.log('companies found > ' + searchResults.companies._total);
 						if (searchResults.companies._total > 0){
 							callback(true,linkedIn.extractFirstSearchCompany(searchResults));
 						}else{

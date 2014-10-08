@@ -29,6 +29,7 @@ var TABLENAME = 'teams',
 	LI_UNIVERSALNAME = 'liuniversalname',
 	LI_WEBSITE = 'liwebsite',
 	LI_SPECIALITIES = 'lispecialities',
+	LI_RAWNAME = "lirawname",
 	WIT_INTENT = "witintent",
 	WIT_CONFIDENCE = "witconfidence",
 	WIT_PERSONS = "witpersons",
@@ -52,7 +53,7 @@ TeamDAO.prototype.getAllTeams = function(callback){
 		attributes:[NAME,PAGE,PITCH,ACCEPTANCE,POSTER,MIDTERMS,FINALS,REFERENCE,DESCRIPTION,
 			DESCRIPTIONLINKS,MEMBERS,SPONSOR,SPONSORLINK,SEMESTER,YEAR,ID,DES_KEYWORDS,DES_ENTITIES,
 			LI_NAME,LI_ID,LI_DESCRIPTION,LI_FOUNDINGYEAR,LI_EMPLOYEES,LI_INDUSTRIES,LI_UNIVERSALNAME,
-			LI_WEBSITE,LI_SPECIALITIES,
+			LI_WEBSITE,LI_SPECIALITIES,LI_RAWNAME,
 			WIT_INTENT,WIT_CONFIDENCE,WIT_PERSONS,WIT_ORGANIZATIONS,WIT_DEPARTMENTS,WIT_EMAILS,
 			WIT_ACRONYMS,WIT_LOCATIONS,WIT_STARTUP]
 	};
@@ -62,6 +63,25 @@ TeamDAO.prototype.getAllTeams = function(callback){
 			callback(true,result);//selected length >= 1
 		}else{
 			callback(false,result);//selected length is 0 or less
+		}
+	});
+}
+
+TeamDAO.prototype.updateInvalidIntent = function(teamID,witData,callback){
+	var updateWitDetails = {
+		name:this.TABLENAME,
+		values:[{
+			name:WIT_INTENT,
+			type:'string',
+			value:witData.outcome.intent
+		}],
+		conditions:['id = \'' + teamID + '\'']
+	}
+	dao.update(updateWitDetails,function(isSuccess,result){
+		if (result.rowCount >= 1){
+			callback(true);//selected length >= 1
+		}else{
+			callback(false);//selected length is 0 or less
 		}
 	});
 }
@@ -118,44 +138,51 @@ TeamDAO.prototype.updateTeamWitData = function(teamID,witData,callback){
 }
 
 TeamDAO.prototype.updateTeamLinkedInData = function(teamID,linkedInDetails,callback){
+
+	var processedCompaniesLIData = _linkedInMultiArray(linkedInDetails);
+
 	var updateTeamLinkedInDataDetails = {
 		name:this.TABLENAME,
 		values:[{
 			name:LI_NAME,
 			type:'string',
-			value:linkedInDetails.name
+			value:processedCompaniesLIData.companyNames
 		},{
 			name:LI_ID,
 			type:'string',
-			value:linkedInDetails.id
+			value:processedCompaniesLIData.companyIDs
 		},{
 			name:LI_DESCRIPTION,
 			type:'string',
-			value:linkedInDetails.description
+			value:processedCompaniesLIData.companyDescriptions
 		},{
 			name:LI_FOUNDINGYEAR,
 			type:'string',
-			value:linkedInDetails.foundedYear
+			value:processedCompaniesLIData.foundingYears
 		},{
 			name:LI_EMPLOYEES,
 			type:'string',
-			value:linkedInDetails.employees
+			value:processedCompaniesLIData.employees
 		},{
 			name:LI_INDUSTRIES,
 			type:'string',
-			value:_arrayToString(linkedInDetails.industries)
+			value:processedCompaniesLIData.industries
 		},{
 			name:LI_UNIVERSALNAME,
 			type:'string',
-			value:linkedInDetails.universalName
+			value:processedCompaniesLIData.universalNames
 		},{
 			name:LI_WEBSITE,
 			type:'string',
-			value:linkedInDetails.website
+			value:processedCompaniesLIData.websites
 		},{
 			name:LI_SPECIALITIES,
 			type:'string',
-			value:_arrayToString(linkedInDetails.specialities)
+			value:processedCompaniesLIData.specialities
+		},{
+			name:LI_RAWNAME,
+			type:'string',
+			value:processedCompaniesLIData.rawNames
 		}],
 		conditions:['id = \'' + teamID + '\'']
 	}
@@ -169,20 +196,31 @@ TeamDAO.prototype.updateTeamLinkedInData = function(teamID,linkedInDetails,callb
 }
 
 TeamDAO.prototype.interpretArrays = function(dbString){
-	return dbString.split(';');
+	return dbString.split('~~');
 }
 
-TeamDAO.prototype.interpretIndustryArray = function(industryDBString){
-	var groups = industryDBString.split(';');
-	var resultArray = [];
-	for (var i = 0; i<groups.length; i++){
-		var resultValueArr = groups[i].split('=');
-		resultArray.push({
-			code: resultValueArr[0],
-			name: resultValueArr[1]
-		});
+TeamDAO.prototype.interpretLinkedInData = function(dbString){
+	return dbString.split('XXX');
+}
+
+TeamDAO.prototype.interpretLinkedInIndustryArray = function(industryDBString){
+	var companies = industryDBString.split('XXX');
+	var companiesArr = [];
+	for (var k = 0; k<companies.length; k++){
+		var companyDBString = companies[k];
+		var groups = companyDBString.split('~~');
+		var resultArray = [];
+		for (var i = 0; i<groups.length; i++){
+			var resultValueArr = groups[i].split('III');
+			resultArray.push({
+				code: resultValueArr[0],
+				name: resultValueArr[1]
+			});
+		}
+		companiesArr.push(resultArray);
 	}
-	return resultArray;
+	
+	return companiesArr;
 }
 
 function _liIndustryArrayToString(industries){
@@ -192,15 +230,90 @@ function _liIndustryArrayToString(industries){
 		for (var i = 0; i<industries.length; i++){
 			var industryCode = industries[i].code,
 			industryName = industries[i].name;
-			result += industryCode + '=' + industryName + ';';
+			result += industryCode + 'III' + industryName + '~~';
 		}
 
 		if (result.length>0){
-			result = result.substring(0,result.length-1);
+			result = result.substring(0,result.length-2);
 		}
 	}
 
 	return result;
+}
+
+function _linkedInMultiArray(linkedInDetails){
+	var scores = linkedInDetails.scores,
+	companies = linkedInDetails.dataArray;
+
+	//ordering is important
+	var companyNames = '',
+	companyIDs = '',
+	companyDescriptions = '',
+	foundingYears = '',
+	employees = '',
+	industries = '',
+	universalNames = '',
+	websites = '',
+	specialities = '',
+	rawNames = '';
+
+	for (var i = 0; i<companies.length; i++){
+		var company = companies[i];
+		companyNames += company.name + 'XXX';
+		companyIDs += company.id + 'XXX';
+		companyDescriptions += company.description + 'XXX';
+		foundingYears += company.foundedYear + 'XXX';
+		employees += company.employees + 'XXX';
+		industries += _liIndustryArrayToString(companies.industries) + 'XXX';
+		universalNames += company.universalName + 'XXX';
+		websites += company.website + 'XXX';
+		specialities += _arrayToString(company.specialities) + 'XXX';
+		rawNames += company.rawName + 'XXX';
+	}
+
+	if (companyNames.length > 3){
+		companyNames = companyNames.substring(0,companyNames.length - 3);
+	}
+	if (companyIDs.length > 3){
+		companyIDs = companyIDs.substring(0,companyIDs.length - 3);
+	}
+	if (companyDescriptions.length > 3){
+		companyDescriptions = companyDescriptions.substring(0,companyDescriptions.length - 3);
+	}
+	if (foundingYears.length > 3){
+		foundingYears = foundingYears.substring(0,foundingYears.length - 3);
+	}
+	if (employees.length > 3){
+		employees = employees.substring(0,employees.length - 3);
+	}
+	if (industries.length > 3){
+		industries = industries.substring(0,industries.length - 3);
+	}
+	if (universalNames.length > 3){
+		universalNames = universalNames.substring(0,universalNames.length - 3);
+	}
+	if (websites.length > 3){
+		websites = websites.substring(0,websites.length - 3);
+	}
+	if (specialities.length > 3){
+		specialities = specialities.substring(0,specialities.length - 3);
+	}
+	if (rawNames.length > 3){
+		rawNames = rawNames.substring(0,rawNames.length - 3);
+	}
+
+	return {
+		names : companyNames,
+		ids : companyIDs,
+		descriptions : companyDescriptions,
+		years : foundingYears,
+		employees : employees,
+		industries : industries,
+		universalNames : universalNames,
+		websites : websites,
+		specialities : specialities,
+		rawNames : rawNames
+	}
 }
 
 function _arrayToString(array){
@@ -208,10 +321,10 @@ function _arrayToString(array){
 
 	if (array){
 		for (var i = 0; i<array.length; i++) {
-			result += array[i] + ';';
+			result += array[i] + '~~';
 		}
 		if (result.length>0){
-			result = result.substring(0,result.length-1);
+			result = result.substring(0,result.length-2);
 		}
 	}
 

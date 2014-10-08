@@ -42,7 +42,7 @@ var TABLENAME = 'teams',
 
 function TeamDAO(options){
 	if (options){
-		dao = new pgDAO({pgURL:options.pgURL})
+		dao = new pgDAO({pgURL:options.pgURL});
 	}
 }
 
@@ -75,7 +75,7 @@ TeamDAO.prototype.updateInvalidIntent = function(teamID,witData,callback){
 			type:'string',
 			value:witData.outcome.intent
 		}],
-		conditions:['id = \'' + teamID + '\'']
+		conditions:['id = ' + teamID ]
 	}
 	dao.update(updateWitDetails,function(isSuccess,result){
 		if (result.rowCount >= 1){

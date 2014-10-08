@@ -152,7 +152,7 @@ main_router.route('/teamwit')
         										res.json(organizationsLinkedInData);
         									});
         								}
-        							});
+        							});//
         						}
         					}
         				});

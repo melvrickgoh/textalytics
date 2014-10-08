@@ -87,6 +87,7 @@ TeamDAO.prototype.updateInvalidIntent = function(teamID,witData,callback){
 }
 
 TeamDAO.prototype.updateTeamWitData = function(teamID,witData,callback){
+	console.log(witData);
 	var updateWitDetails = {
 		name:this.TABLENAME,
 		values:[{

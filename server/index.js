@@ -71,10 +71,8 @@ main_router.route('/linkedin/company-search')
 		_matchAndSearchCompany('linkedin',function(isSuccess,results){
 			console.log(isSuccess);
 			if(isSuccess){
-				console.log(results);
 				res.json(results);
 			}else{
-				console.log(results);
 				console.log('cannot find company');
 			}
 		});

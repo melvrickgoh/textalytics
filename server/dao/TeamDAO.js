@@ -80,6 +80,7 @@ TeamDAO.prototype.updateInvalidIntent = function(teamID,witData,callback){
 		if (result.rowCount >= 1){
 			callback(true);//selected length >= 1
 		}else{
+			console.log(result);
 			callback(false);//selected length is 0 or less
 		}
 	});

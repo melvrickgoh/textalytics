@@ -69,7 +69,7 @@ TeamDAO.prototype.getAllTeams = function(callback){
 TeamDAO.prototype.updateInvalidIntent = function(teamID,witData,callback){
 	console.log('WIT INTENT ' + witData.outcome.intent);
 	var updateWitDetails = {
-		name:this.TABLENAME,
+		name:TABLENAME,
 		values:[{
 			name:WIT_INTENT,
 			type:'string',
@@ -90,7 +90,7 @@ TeamDAO.prototype.updateInvalidIntent = function(teamID,witData,callback){
 TeamDAO.prototype.updateTeamWitData = function(teamID,witData,callback){
 	console.log(witData);
 	var updateWitDetails = {
-		name:this.TABLENAME,
+		name:TABLENAME,
 		values:[{
 			name:WIT_INTENT,
 			type:'string',
@@ -146,7 +146,7 @@ TeamDAO.prototype.updateTeamLinkedInData = function(teamID,linkedInDetails,callb
 	var processedCompaniesLIData = _linkedInMultiArray(linkedInDetails);
 
 	var updateTeamLinkedInDataDetails = {
-		name:this.TABLENAME,
+		name:TABLENAME,
 		values:[{
 			name:LI_NAME,
 			type:'string',

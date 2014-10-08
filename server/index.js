@@ -149,7 +149,7 @@ main_router.route('/teamwit')
         								if (organizationSearchCounter == organizations.length){
         									//time to update database
         									tDAO.updateTeamLinkedInData(team.id,{scores:scoring,dataArray:organizationsLinkedInData},function(isSuccess){
-        										res.json('single full stream processing done');
+        										res.json(organizationsLinkedInData);
         									});
         								}
         							});

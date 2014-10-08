@@ -159,8 +159,6 @@ main_router.route('/teamwit')
         					res.json('single  full stream processing done but invalid intent');
         				});
         			}
-        			
-        			res.json(processedResults);
 				});
 			}else{
 				res.json('Cannot call from DB team data');

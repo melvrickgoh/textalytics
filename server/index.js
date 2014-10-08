@@ -181,6 +181,7 @@ function _getTeamSponsorsInfo(callback){
 		if (isSuccess){
 			var resultsArr = [];
 			for (var i = 0; i<results.length; i++){
+				console.log(results[i]);
 				resultsArr.push({
 					id: results[i].id,
 					sponsor: results[i].sponsor,

@@ -3,6 +3,7 @@
  */
 
 var express = require('express'),
+
 TeamDAO = require('./dao/TeamDAO'),
 Wit = require('./services/wit'),
 LinkedIn = require('./services/linkedin'),
@@ -36,27 +37,46 @@ main_router.route('/oauth/linkedin')
 
 main_router.route('/oauth/linkedin/callback')
 	.all(function(req,res){
-		_restrictedLinkedIn(req,res,function(result){
-			var liMaster = linkedIn.getLinkedInMaster();
-			liMaster.auth.getAccessToken(res, req.query.code, function(err, results) {
-		        if ( err )
-		            return console.error(err);
+		var liMaster = linkedIn.getLinkedInMaster();
+		liMaster.auth.getAccessToken(res, req.query.code, function(err, results) {
+	        if ( err )
+	            return console.error(err);
 
-		        /**
-		         * Results have something like:
-		         * {"expires_in":5184000,"access_token":". . . ."}
-		         */
+	        /**
+	         * Results have something like:
+	         * {"expires_in":5184000,"access_token":". . . ."}
+	         */
+	         var results = JSON.parse(results);
+	         var accessToken = results.access_token;
+	         linkedIn.initializeUserAuthorization(accessToken);
 
-		        console.log(results);
-		        return res.send(results);
-		    });
-		});
+	        var targetLocale = req.flash('destination')[0];
+
+	        req.flash('linkedIn',accessToken);
+	        req.session.linkedIn = accessToken;
+
+	        res.redirect(targetLocale);
+	    });
 	});
 
 main_router.route('/linkedin/helloworld')
 	.all(function(req,res){
 		_restrictedLinkedIn(req,res,function(result){
-			res.send('linked in authenticated');
+			res.json('linked in authenticated');
+		},'/linkedin/helloworld');
+	});
+
+main_router.route('/linkedin/company-search')
+	.all(function(req,res){
+		_matchAndSearchCompany('linkedin',function(isSuccess,results){
+			console.log(isSuccess);
+			if(isSuccess){
+				console.log(results);
+				res.json(results);
+			}else{
+				console.log(results);
+				console.log('cannot find company');
+			}
 		});
 	});
 
@@ -113,10 +133,45 @@ main_router.route('/teamwit')
 		});
 	});
 
-function _restrictedLinkedIn(req,res,next){
+function _matchAndSearchCompany(companyName,callback){
+	linkedIn.companyMatch(companyName,function(e,results){
+		if(e){
+			console.log('error' + e);
+		}else{
+			var matchResults = results;
+			if (matchResults.errorCode == 0){
+				//initiate search
+				console.log(matchResults.errorCode);
+				linkedIn.companySearch(companyName,function(e,results1){
+					if(e){
+						console.log(e);
+						console.log('error occured');
+					}else{
+						var searchResults = results1;
+						console.log(searchResults);
+						console.log('companies found > ' + searchResults.companies._total);
+						if (searchResults.companies._total > 0){
+							callback(true,linkedIn.extractFirstSearchCompany(searchResults));
+						}else{
+							callback(false,searchResults);
+						}
+					}
+				});
+			}else{
+				//got back the results
+				callback(true,linkedIn.getCompanyDetails(results));
+			}
+		}
+	});
+}
+
+function _restrictedLinkedIn(req,res,next,targetLocale){
+	console.log(req.session);
 	if(req.session.linkedIn){
-		next(req.session.linkedIn);
+		console.log(req.flash('linkedIn'));
+		next(req.flash('linkedIn'));
 	}else{
+		req.flash('destination',targetLocale);
 		res.redirect('/oauth/linkedin'); 
 	}
 }

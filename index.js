@@ -20,6 +20,12 @@ var app = express();
 
 app.set('port', (process.env.PORT || 5432))
 app.use(express.static(__dirname + '/public'))
+app.use(cookieParser());
+app.use(session({
+	secret:'75otna9w35iudo'
+}));
+//flash middleware for helping to route data between requests through the flash object
+app.use(flash());
 
 //general ROUTER
 app.use('/', router.index);

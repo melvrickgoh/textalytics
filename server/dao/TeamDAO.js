@@ -28,7 +28,16 @@ var TABLENAME = 'teams',
 	LI_INDUSTRIES = 'liIndustries',
 	LI_UNIVERSALNAME = 'liUniversalName',
 	LI_WEBSITE = 'liWebsite',
-	LI_SPECIALITIES = 'liSpecialities';
+	LI_SPECIALITIES = 'liSpecialities',
+	WIT_INTENT = "witIntent",
+	WIT_CONFIDENCE = "witConfidence",
+	WIT_PERSONS = "witPersons",
+	WIT_ORGANIZATIONS = "witOrganizations",
+	WIT_DEPARTMENTS = "witDepartments",
+	WIT_EMAILS = "witEmails",
+	WIT_ACRONYMS = "witAcronyms",
+	WIT_LOCATIONS = "witLocations",
+	WIT_STARTUP = "witStartup";
 
 function TeamDAO(options){
 	if (options){
@@ -43,13 +52,66 @@ TeamDAO.prototype.getAllTeams = function(callback){
 		attributes:[NAME,PAGE,PITCH,ACCEPTANCE,POSTER,MIDTERMS,FINALS,REFERENCE,DESCRIPTION,
 			DESCRIPTIONLINKS,MEMBERS,SPONSOR,SPONSORLINK,SEMESTER,YEAR,ID,DES_KEYWORDS,DES_ENTITIES,
 			LI_NAME,LI_ID,LI_DESCRIPTION,LI_FOUNDINGYEAR,LI_EMPLOYEES,LI_INDUSTRIES,LI_UNIVERSALNAME,
-			LI_WEBSITE,LI_SPECIALITIES]
+			LI_WEBSITE,LI_SPECIALITIES,
+			WIT_INTENT,WIT_CONFIDENCE,WIT_PERSONS,WIT_ORGANIZATIONS,WIT_DEPARTMENTS,WIT_EMAILS,
+			WIT_ACRONYMS,WIT_LOCATIONS,WIT_STARTUP]
 	};
 	dao.select(selectTeamDetails,function(isSuccess,result){
 		if (result.length >= 1){
 			callback(true,result);//selected length >= 1
 		}else{
 			callback(false,result);//selected length is 0 or less
+		}
+	});
+}
+
+TeamDAO.prototype.updateTeamWitData = function(teamID,witData,callback){
+	var updateWitDetails = {
+		name:this.TABLENAME,
+		values:[{
+			name:WIT_INTENT,
+			type:'string',
+			value:witData.outcome.intent
+		},{
+			name:WIT_CONFIDENCE,
+			type:'double',
+			value:witData.confidence
+		},{
+			name:WIT_PERSONS,
+			type:'string',
+			value:_arrayToString(witData.persons)
+		},{
+			name:WIT_ORGANIZATIONS,
+			type:'string',
+			value:_arrayToString(witData.organizations)
+		},{
+			name:WIT_DEPARTMENTS,
+			type:'string',
+			value:_arrayToString(witData.departments)
+		},{
+			name:WIT_EMAILS,
+			type:'string',
+			value:_arrayToString(witData.emails)
+		},{
+			name:WIT_ACRONYMS,
+			type:'string',
+			value:_arrayToString(witData.acronyms)
+		},{
+			name:WIT_LOCATIONS,
+			type:'string',
+			value:_arrayToString(witData.locations)
+		},{
+			name:WIT_STARTUP,
+			type:'boolean',
+			value:witData.startup
+		}],
+		conditions:['id = \'' + teamID + '\'']
+	}
+	dao.update(updateWitDetails,function(isSuccess,result){
+		if (result.rowCount >= 1){
+			callback(true);//selected length >= 1
+		}else{
+			callback(false);//selected length is 0 or less
 		}
 	});
 }
@@ -80,7 +142,7 @@ TeamDAO.prototype.updateTeamLinkedInData = function(teamID,linkedInDetails,callb
 		},{
 			name:LI_INDUSTRIES,
 			type:'string',
-			value:JSON.stringify(linkedInDetails.industries)
+			value:_arrayToString(linkedInDetails.industries)
 		},{
 			name:LI_UNIVERSALNAME,
 			type:'string',
@@ -92,7 +154,7 @@ TeamDAO.prototype.updateTeamLinkedInData = function(teamID,linkedInDetails,callb
 		},{
 			name:LI_SPECIALITIES,
 			type:'string',
-			value:JSON.stringify(linkedInDetails.specialities)
+			value:_arrayToString(linkedInDetails.specialities)
 		}],
 		conditions:['id = \'' + teamID + '\'']
 	}
@@ -103,6 +165,56 @@ TeamDAO.prototype.updateTeamLinkedInData = function(teamID,linkedInDetails,callb
 			callback(false);//selected length is 0 or less
 		}
 	});
+}
+
+TeamDAO.prototype.interpretArrays = function(dbString){
+	return dbString.split(';');
+}
+
+TeamDAO.prototype.interpretIndustryArray = function(industryDBString){
+	var groups = industryDBString.split(';');
+	var resultArray = [];
+	for (var i = 0; i<groups.length; i++){
+		var resultValueArr = groups[i].split('=');
+		resultArray.push({
+			code: resultValueArr[0],
+			name: resultValueArr[1]
+		});
+	}
+	return resultArray;
+}
+
+function _liIndustryArrayToString(industries){
+	var result = '';
+
+	if (industries){
+		for (var i = 0; i<industries.length; i++){
+			var industryCode = industries[i].code,
+			industryName = industries[i].name;
+			result += industryCode + '=' + industryName + ';';
+		}
+
+		if (result.length>0){
+			result = result.substring(0,result.length-1);
+		}
+	}
+
+	return result;
+}
+
+function _arrayToString(array){
+	var result = '';
+
+	if (array){
+		for (var i = 0; i<array.length; i++) {
+			result += array[i] + ';';
+		}
+		if (result.length>0){
+			result = result.substring(0,result.length-1);
+		}
+	}
+
+	return result;
 }
 
 module.exports = TeamDAO;

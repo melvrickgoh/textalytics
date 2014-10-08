@@ -67,7 +67,6 @@ TeamDAO.prototype.getAllTeams = function(callback){
 }
 
 TeamDAO.prototype.updateInvalidIntent = function(teamID,witData,callback){
-	console.log('WIT INTENT ' + witData.outcome.intent);
 	var updateWitDetails = {
 		name:TABLENAME,
 		values:[{
@@ -81,14 +80,12 @@ TeamDAO.prototype.updateInvalidIntent = function(teamID,witData,callback){
 		if (result.rowCount >= 1){
 			callback(true);//selected length >= 1
 		}else{
-			console.log(result);
 			callback(false);//selected length is 0 or less
 		}
 	});
 }
 
 TeamDAO.prototype.updateTeamWitData = function(teamID,witData,callback){
-	console.log(witData);
 	var updateWitDetails = {
 		name:TABLENAME,
 		values:[{
@@ -130,9 +127,7 @@ TeamDAO.prototype.updateTeamWitData = function(teamID,witData,callback){
 		}],
 		conditions:['id = ' + teamID ]
 	}
-	console.log(updateWitDetails);
 	dao.update(updateWitDetails,function(isSuccess,result){
-		console.log(result);
 		if (result.rowCount >= 1){
 			callback(true);//selected length >= 1
 		}else{

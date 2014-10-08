@@ -123,7 +123,7 @@ main_router.route('/teamwit')
         			team.intepretation = response;
         			var processedResults = wit.processWitResults(team);
 
-        			if (processedResults.intent == 'sponsor'){
+        			if (processedResults.outcome.intent == 'sponsor'){
         				tDAO.updateTeamWitData(team.id,processedResults,function(isSuccess){
         					if (processedResults.organizations.length > 0){
         						var organizations = processedResults.organizations;

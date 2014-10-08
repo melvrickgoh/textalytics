@@ -130,6 +130,7 @@ TeamDAO.prototype.updateTeamWitData = function(teamID,witData,callback){
 		}],
 		conditions:['id = \'' + teamID + '\'']
 	}
+	console.log(updateWitDetails);
 	dao.update(updateWitDetails,function(isSuccess,result){
 		console.log(result);
 		if (result.rowCount >= 1){

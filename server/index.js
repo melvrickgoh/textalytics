@@ -200,9 +200,7 @@ function _matchAndSearchCompany(companyName,callback){
 }
 
 function _restrictedLinkedIn(req,res,next,targetLocale){
-	console.log(req.session);
 	if(req.session.linkedIn){
-		console.log(req.flash('linkedIn'));
 		next(req.flash('linkedIn'));
 	}else{
 		req.flash('destination',targetLocale);
@@ -215,7 +213,6 @@ function _getTeamSponsorsInfo(callback){
 		if (isSuccess){
 			var resultsArr = [];
 			for (var i = 0; i<results.length; i++){
-				console.log(results[i]);
 				resultsArr.push({
 					id: results[i].id,
 					sponsor: results[i].sponsor,

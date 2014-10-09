@@ -214,7 +214,7 @@ function _restrictedLinkedIn(req,res,next,targetLocale){
 }
 
 function _getTeamSponsorsInfo(callback){
-	tDAO.getAllTeams(function(isSuccess,results){
+	tDAO.getDimTeams(function(isSuccess,results){
 		if (isSuccess){
 			var resultsArr = [];
 			for (var i = 0; i<results.length; i++){
@@ -225,6 +225,7 @@ function _getTeamSponsorsInfo(callback){
 				});
 			}
 			callback(true,resultsArr);
+			console.log(resultsArr.length);
 		}else{
 			callback(isSuccess,results);
 		}

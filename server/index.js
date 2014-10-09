@@ -109,7 +109,7 @@ main_router.route('/teamwit')
 	        			console.log(processedResults.outcome);
 	        			if (processedResults.outcome && processedResults.outcome.intent == 'sponsor'){
 	        				tDAO.updateTeamWitData(team.id,processedResults,function(isSuccess){
-	        					if (processedResults.organizations.length > 0){
+	        					/*if (processedResults.organizations.length > 0){
 	        						var organizations = processedResults.organizations;
 	        						var organizationsLinkedInData = [],
 	        						scoring = {},
@@ -138,9 +138,9 @@ main_router.route('/teamwit')
 	        										//res.json(organizationsLinkedInData);
 	        									});
 	        								}
-	        							});*/
+	        							});
 	        						}
-	        					}
+	        					}*/
 	        				});
 	        			}else{
 	        				tDAO.updateInvalidIntent(team.id,processedResults,function(isSuccess){

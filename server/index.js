@@ -106,8 +106,8 @@ main_router.route('/teamwit')
 						if (err) console.log(err); // handle error here
 	        			team.intepretation = response;
 	        			var processedResults = wit.processWitResults(team);
-
-	        			if (processedResults.outcome.intent == 'sponsor'){
+	        			console.log(processedResults.outcome);
+	        			if (processedResults.outcome && processedResults.outcome.intent == 'sponsor'){
 	        				tDAO.updateTeamWitData(team.id,processedResults,function(isSuccess){
 	        					if (processedResults.organizations.length > 0){
 	        						var organizations = processedResults.organizations;

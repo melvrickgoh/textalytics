@@ -111,7 +111,7 @@ main_router.route('/teamwit')
 
 						sponsorIntepretation.when(function(err,response){
 							if (err) console.log(err); // handle error here
-		        			team.intepretation = response;
+		        			//team.intepretation = response;
 		        			var processedResults = wit.processWitResults(response);
 		        			if (processedResults.outcome && processedResults.outcome.intent == 'sponsor'){
 		        				tDAO.updateTeamWitData(response.id,processedResults,function(isSuccess){
@@ -154,7 +154,7 @@ main_router.route('/teamwit')
 		        					}
 		        				});
 		        			}else{
-		        				tDAO.updateInvalidIntent(team.id,processedResults,function(isSuccess){
+		        				tDAO.updateInvalidIntent(response.id,processedResults,function(isSuccess){
 		        					//res.json('single  full stream processing done but invalid intent');
 		        					console.log('counter > ' + witCounter + 'results length > ' + results.length);
 

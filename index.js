@@ -10,7 +10,6 @@ pg = require('pg.js'),
 session = require('express-session'),
 pgSession = require('connect-pg-simple')(session),
 flash = require('connect-flash'),//allowing the flashing 
-timeout = require('connect-timeout'),
 errorHandler = require('errorhandler'),
 pgDAO = require('./server/dao/index');
 
@@ -27,7 +26,6 @@ app.use(session({
 //flash middleware for helping to route data between requests through the flash object
 app.use(flash());
 
-app.use(timeout(12000000));//2mins
 
 //general ROUTER
 app.use('/', router.index);

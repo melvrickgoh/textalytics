@@ -139,7 +139,7 @@ TeamDAO.prototype.updateTeamWitData = function(teamID,witData,callback){
 TeamDAO.prototype.updateTeamLinkedInData = function(teamID,linkedInDetails,callback){
 
 	var processedCompaniesLIData = _linkedInMultiArray(linkedInDetails);
-
+	console.log(processedCompaniesLIData);
 	var updateTeamLinkedInDataDetails = {
 		name:TABLENAME,
 		values:[{
@@ -186,6 +186,7 @@ TeamDAO.prototype.updateTeamLinkedInData = function(teamID,linkedInDetails,callb
 		conditions:['id = ' + teamID ]
 	}
 	dao.update(updateTeamLinkedInDataDetails,function(isSuccess,result){
+		console.log(result);
 		if (result.rowCount >= 1){
 			callback(true);//selected length >= 1
 		}else{
@@ -258,6 +259,7 @@ function _linkedInMultiArray(linkedInDetails){
 
 	for (var i = 0; i<companies.length; i++){
 		var company = companies[i];
+		console.log(company);
 		companyNames += company.name + 'XXX';
 		companyIDs += company.id + 'XXX';
 		companyDescriptions += company.description + 'XXX';

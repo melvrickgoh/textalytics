@@ -145,14 +145,14 @@ main_router.route('/teamwit')
 	        							});
 	        						}
 	        					}*/
-	        					if (witCounter == results.length){
+	        					if (witCounter == results.length-1){
 	        						res.json('done processing');
 	        					}
 	        				});
 	        			}else{
 	        				tDAO.updateInvalidIntent(team.id,processedResults,function(isSuccess){
 	        					//res.json('single  full stream processing done but invalid intent');
-	        					if (witCounter == results.length) {
+	        					if (witCounter == results.length-1) {
 	        						res.json('done processing');
 	        					}
 	        				});

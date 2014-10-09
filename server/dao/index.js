@@ -89,17 +89,22 @@ pgDAO.prototype.getConnection = function(queryObject,callback,errCallback){
 pgDAO.prototype.update = function(details,callback){
 	var query = this.generateUpdateQuery(details);
 	console.log(query);
-	
+
 	this.getConnection(query,function(err,result){
-		if (err){
+		try{
+			if (err){
+				callback(false,err);
+				return;
+			}
+			//returns the number of rows deleted
+			callback(true,{
+				rowCount:result.rowCount,
+				rows:result.rows
+			});
+		}catch (err){
+			console.log(err);
 			callback(false,err);
-			return;
 		}
-		//returns the number of rows deleted
-		callback(true,{
-			rowCount:result.rowCount,
-			rows:result.rows
-		});
 	});
 }
 

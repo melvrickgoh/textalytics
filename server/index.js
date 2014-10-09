@@ -141,6 +141,10 @@ main_router.route('/teamwit')
 	        							});
 	        						}
 	        					}*/
+	        					witCounter++;
+	        					if (witCounter == results.length){
+	        						res.json('done processing');
+	        					}
 	        				});
 	        			}else{
 	        				tDAO.updateInvalidIntent(team.id,processedResults,function(isSuccess){

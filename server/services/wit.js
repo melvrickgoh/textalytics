@@ -10,7 +10,8 @@ function Wit(options){
 Wit.prototype.constructor = Wit;
 
 
-Wit.prototype.requestWit = function(user_text) {
+Wit.prototype.requestWit = function(team) {
+    var user_text = team.sponsor;
     var future = Future.create();
     var options = {
         host: 'api.wit.ai',
@@ -21,14 +22,19 @@ Wit.prototype.requestWit = function(user_text) {
     };
 
     https.request(options, function(res) {
-        var response = '';
+        var response = '',
+        objectResponse;
 
         res.on('data', function (chunk) {
             response += chunk;
+            objectResponse = JSON.parse(response);
+            objectResponse.id = team.id;
+            objectResponse.sponsor = team.sponsor;
+            objectResponse.team = team.team;
         });
 
         res.on('end', function () {
-            future.fulfill(undefined, JSON.parse(response));
+            future.fulfill(undefined, objectResponse);
         });
     }).on('error', function(e) {
         future.fulfill(e, undefined);
@@ -37,12 +43,11 @@ Wit.prototype.requestWit = function(user_text) {
     return future;
 }
 
-Wit.prototype.processWitResults = function(postTeam){
+Wit.prototype.processWitResults = function(witInterpretation){
 
-	var teamID = postTeam.id,
-	teamName = postTeam.team,
-	witIntepretation = postTeam.intepretation,
-	witOutcomes = postTeam.intepretation.outcomes,
+	var teamID = witInterpretation.id,
+	teamName = witInterpretation.team,
+	witOutcomes = witInterpretation.outcomes,
 	bestOutcome,
 	ultimateResult = {};
 

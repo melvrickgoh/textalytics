@@ -107,14 +107,14 @@ main_router.route('/teamwit')
 					var team = results[k];
 					if (team != undefined){
 						console.log(JSON.stringify(team));
-						var sponsorIntepretation = wit.requestWit(team.sponsor);
+						var sponsorIntepretation = wit.requestWit(team);
 
 						sponsorIntepretation.when(function(err,response){
 							if (err) console.log(err); // handle error here
 		        			team.intepretation = response;
-		        			var processedResults = wit.processWitResults(team);
+		        			var processedResults = wit.processWitResults(response);
 		        			if (processedResults.outcome && processedResults.outcome.intent == 'sponsor'){
-		        				tDAO.updateTeamWitData(team.id,processedResults,function(isSuccess){
+		        				tDAO.updateTeamWitData(response.id,processedResults,function(isSuccess){
 		        					/*if (processedResults.organizations.length > 0){
 		        						var organizations = processedResults.organizations;
 		        						var organizationsLinkedInData = [],

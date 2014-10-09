@@ -89,6 +89,19 @@ main_router.route('/teamextracts')
 		});
 	});
 
+main_router.route('/linkedin/processSearch')
+	.all(function(req,res){
+		tDAO.getTeamsWithCompanies(function(isSuccess,results){
+			if(isSuccess){
+				
+				res.json(results);
+			}else{
+				res.json(results);
+			}
+			
+		});
+	});
+
 main_router.route('/teamwit')
 	.all(function(req,res){
 		req.setTimeout(200000000,function () {

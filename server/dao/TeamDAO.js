@@ -87,6 +87,24 @@ TeamDAO.prototype.getDimTeams = function(callback){
 	});
 }
 
+TeamDAO.prototype.getTeamsWithCompanies = function(callback){
+	var selectTeamDetails = {
+		name:TABLENAME,
+		distinct:false,
+		attributes:[NAME,ID,
+			WIT_INTENT,WIT_CONFIDENCE,WIT_ORGANIZATIONS,WIT_DEPARTMENTS,
+			WIT_ACRONYMS,WIT_LOCATIONS,WIT_STARTUP],
+		conditions:['length(witorganizations)>0' ]
+	};
+	dao.select(selectTeamDetails,function(isSuccess,result){
+		if (result.length >= 1){
+			callback(true,result);//selected length >= 1
+		}else{
+			callback(false,result);//selected length is 0 or less
+		}
+	});
+}
+
 TeamDAO.prototype.updateInvalidIntent = function(teamID,witData,callback){
 	var updateWitDetails = {
 		name:TABLENAME,

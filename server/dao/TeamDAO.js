@@ -72,7 +72,7 @@ TeamDAO.prototype.updateInvalidIntent = function(teamID,witData,callback){
 		values:[{
 			name:WIT_INTENT,
 			type:'string',
-			value:witData.outcome.intent
+			value:'invalid'
 		}],
 		conditions:['id = ' + teamID ]
 	}

@@ -139,7 +139,6 @@ TeamDAO.prototype.updateTeamWitData = function(teamID,witData,callback){
 TeamDAO.prototype.updateTeamLinkedInData = function(teamID,linkedInDetails,callback){
 
 	var processedCompaniesLIData = _linkedInMultiArray(linkedInDetails);
-	console.log(processedCompaniesLIData);
 	var updateTeamLinkedInDataDetails = {
 		name:TABLENAME,
 		values:[{

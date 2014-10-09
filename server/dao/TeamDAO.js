@@ -259,13 +259,12 @@ function _linkedInMultiArray(linkedInDetails){
 
 	for (var i = 0; i<companies.length; i++){
 		var company = companies[i];
-		console.log(company);
 		companyNames += company.name + 'XXX';
 		companyIDs += company.id + 'XXX';
 		companyDescriptions += company.description + 'XXX';
 		foundingYears += company.foundedYear + 'XXX';
 		employees += company.employees + 'XXX';
-		industries += _liIndustryArrayToString(companies.industries) + 'XXX';
+		industries += _liIndustryArrayToString(company.industries) + 'XXX';
 		universalNames += company.universalName + 'XXX';
 		websites += company.website + 'XXX';
 		specialities += _arrayToString(company.specialities) + 'XXX';

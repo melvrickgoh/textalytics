@@ -88,7 +88,8 @@ pgDAO.prototype.getConnection = function(queryObject,callback,errCallback){
 
 pgDAO.prototype.update = function(details,callback){
 	var query = this.generateUpdateQuery(details);
-
+	console.log(query);
+	
 	this.getConnection(query,function(err,result){
 		if (err){
 			callback(false,err);

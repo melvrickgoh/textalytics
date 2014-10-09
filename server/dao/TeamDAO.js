@@ -76,7 +76,7 @@ TeamDAO.prototype.getDimTeams = function(callback){
 			LI_WEBSITE,LI_SPECIALITIES,LI_RAWNAME,
 			WIT_INTENT,WIT_CONFIDENCE,WIT_PERSONS,WIT_ORGANIZATIONS,WIT_DEPARTMENTS,WIT_EMAILS,
 			WIT_ACRONYMS,WIT_LOCATIONS,WIT_STARTUP],
-		conditions:['witconfidence > 0' ]
+		conditions:['witconfidence = 0' ]
 	};
 	dao.select(selectTeamDetails,function(isSuccess,result){
 		if (result.length >= 1){

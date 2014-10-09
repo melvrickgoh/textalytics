@@ -102,7 +102,7 @@ main_router.route('/teamwit')
 				var witCounter = 0,
 				finalResponse = [];
 
-				for (var k = 0; k<results.length; k++){
+				for (var k = 0; k<100; k++){
 					
 					var team = results[k];
 					var sponsorIntepretation = wit.requestWit(team.sponsor);
@@ -145,20 +145,24 @@ main_router.route('/teamwit')
 	        							});
 	        						}
 	        					}*/
-	        					if (witCounter == results.length-1){
+	        					console.log('counter > ' + witCounter + 'results length > ' + results.length);
+
+	        					if (witCounter == 100-1){
 	        						res.json('done processing');
 	        					}
 	        				});
 	        			}else{
 	        				tDAO.updateInvalidIntent(team.id,processedResults,function(isSuccess){
 	        					//res.json('single  full stream processing done but invalid intent');
-	        					if (witCounter == results.length-1) {
+	        					console.log('counter > ' + witCounter + 'results length > ' + results.length);
+
+
+	        					if (witCounter == 100-1) {
 	        						res.json('done processing');
 	        					}
 	        				});
         				}
         				witCounter++;
-        				console.log('counter > ' + witCounter + 'results length > ' + results.length);
 
 					});
 

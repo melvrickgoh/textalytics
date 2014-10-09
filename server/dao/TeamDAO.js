@@ -145,19 +145,19 @@ TeamDAO.prototype.updateTeamLinkedInData = function(teamID,linkedInDetails,callb
 		values:[{
 			name:LI_NAME,
 			type:'string',
-			value:processedCompaniesLIData.companyNames
+			value:processedCompaniesLIData.names
 		},{
 			name:LI_ID,
 			type:'string',
-			value:processedCompaniesLIData.companyIDs
+			value:processedCompaniesLIData.ids
 		},{
 			name:LI_DESCRIPTION,
 			type:'string',
-			value:processedCompaniesLIData.companyDescriptions
+			value:processedCompaniesLIData.descriptions
 		},{
 			name:LI_FOUNDINGYEAR,
 			type:'string',
-			value:processedCompaniesLIData.foundingYears
+			value:processedCompaniesLIData.years
 		},{
 			name:LI_EMPLOYEES,
 			type:'string',

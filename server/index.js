@@ -133,7 +133,7 @@ main_router.route('/teamwit')
 	        									tDAO.updateTeamLinkedInData(team.id,{scores:scoring,dataArray:organizationsLinkedInData},function(isSuccess){
 	        										
 	        										if (witCounter == results.length){
-	        											res.json('done processing');
+	        											//res.json('done processing');
 	        										}
 	        										//res.json(organizationsLinkedInData);
 	        									});
@@ -146,7 +146,7 @@ main_router.route('/teamwit')
 	        				tDAO.updateInvalidIntent(team.id,processedResults,function(isSuccess){
 	        					//res.json('single  full stream processing done but invalid intent');
 	        					if (witCounter == results.length) {
-	        						res.json('done processing');
+	        						//res.json('done processing');
 	        					}
 	        				});
         				}

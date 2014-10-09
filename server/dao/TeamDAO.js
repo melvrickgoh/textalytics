@@ -153,7 +153,7 @@ TeamDAO.prototype.updateTeamLinkedInData = function(teamID,linkedInDetails,callb
 		},{
 			name:LI_DESCRIPTION,
 			type:'string',
-			value:processedCompaniesLIData.descriptions
+			value:''//processedCompaniesLIData.descriptions
 		},{
 			name:LI_FOUNDINGYEAR,
 			type:'string',

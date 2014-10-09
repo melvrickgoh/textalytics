@@ -27,7 +27,7 @@ app.use(session({
 //flash middleware for helping to route data between requests through the flash object
 app.use(flash());
 
-app.use(timeout(120000));//2mins
+app.use(timeout(12000000));//2mins
 
 //general ROUTER
 app.use('/', router.index);

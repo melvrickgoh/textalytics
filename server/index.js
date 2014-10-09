@@ -105,69 +105,71 @@ main_router.route('/teamwit')
 				for (var k = 0; k<100; k++){
 					
 					var team = results[k];
-					console.log(JSON.stringify(team));
-					var sponsorIntepretation = wit.requestWit(team.sponsor);
+					if (team){
+						console.log(JSON.stringify(team));
+						var sponsorIntepretation = wit.requestWit(team.sponsor);
 
-					sponsorIntepretation.when(function(err,response){
-						if (err) console.log(err); // handle error here
-	        			team.intepretation = response;
-	        			var processedResults = wit.processWitResults(team);
-	        			if (processedResults.outcome && processedResults.outcome.intent == 'sponsor'){
-	        				tDAO.updateTeamWitData(team.id,processedResults,function(isSuccess){
-	        					/*if (processedResults.organizations.length > 0){
-	        						var organizations = processedResults.organizations;
-	        						var organizationsLinkedInData = [],
-	        						scoring = {},
-	        						organizationSearchCounter = 0;//let dao know which one failed linkedin's search
-	        						for (var i = 0; i<organizations.length; i++){
-	        							var companyName = organizations[i];
-	        							/*_matchAndSearchCompany(companyName,function(isSuccess,companyDetails){
-	        								if(isSuccess){
-	        									//do something about it
-	        									companyDetails.rawName = companyName;
-	        									organizationsLinkedInData.push(companyDetails);
-	        									scoring[companyName] = companyDetails.name;
-	        								}else{
-	        									scoring[companyName] = false;
-	        								}
+						sponsorIntepretation.when(function(err,response){
+							if (err) console.log(err); // handle error here
+		        			team.intepretation = response;
+		        			var processedResults = wit.processWitResults(team);
+		        			if (processedResults.outcome && processedResults.outcome.intent == 'sponsor'){
+		        				tDAO.updateTeamWitData(team.id,processedResults,function(isSuccess){
+		        					/*if (processedResults.organizations.length > 0){
+		        						var organizations = processedResults.organizations;
+		        						var organizationsLinkedInData = [],
+		        						scoring = {},
+		        						organizationSearchCounter = 0;//let dao know which one failed linkedin's search
+		        						for (var i = 0; i<organizations.length; i++){
+		        							var companyName = organizations[i];
+		        							/*_matchAndSearchCompany(companyName,function(isSuccess,companyDetails){
+		        								if(isSuccess){
+		        									//do something about it
+		        									companyDetails.rawName = companyName;
+		        									organizationsLinkedInData.push(companyDetails);
+		        									scoring[companyName] = companyDetails.name;
+		        								}else{
+		        									scoring[companyName] = false;
+		        								}
 
-	        								organizationSearchCounter++;
-	        								console.log('counter  == '+ organizationSearchCounter);
-	        								if (organizationSearchCounter == organizations.length){
-	        									//time to update database
-	        									tDAO.updateTeamLinkedInData(team.id,{scores:scoring,dataArray:organizationsLinkedInData},function(isSuccess){
-	        										
-	        										if (witCounter == results.length){
-	        											//res.json('done processing');
-	        										}
-	        										//res.json(organizationsLinkedInData);
-	        									});
-	        								}
-	        							});
-	        						}
-	        					}*/
-	        					console.log('counter > ' + witCounter + 'results length > ' + results.length);
+		        								organizationSearchCounter++;
+		        								console.log('counter  == '+ organizationSearchCounter);
+		        								if (organizationSearchCounter == organizations.length){
+		        									//time to update database
+		        									tDAO.updateTeamLinkedInData(team.id,{scores:scoring,dataArray:organizationsLinkedInData},function(isSuccess){
+		        										
+		        										if (witCounter == results.length){
+		        											//res.json('done processing');
+		        										}
+		        										//res.json(organizationsLinkedInData);
+		        									});
+		        								}
+		        							});
+		        						}
+		        					}*/
+		        					console.log('counter > ' + witCounter + 'results length > ' + results.length);
 
-	        					if (witCounter == 100-1){
-	        						res.json('done processing');
-	        					}
-	        				});
-	        			}else{
-	        				tDAO.updateInvalidIntent(team.id,processedResults,function(isSuccess){
-	        					//res.json('single  full stream processing done but invalid intent');
-	        					console.log('counter > ' + witCounter + 'results length > ' + results.length);
+		        					if (witCounter == 100-1){
+		        						res.json('done processing');
+		        					}
+		        				});
+		        			}else{
+		        				tDAO.updateInvalidIntent(team.id,processedResults,function(isSuccess){
+		        					//res.json('single  full stream processing done but invalid intent');
+		        					console.log('counter > ' + witCounter + 'results length > ' + results.length);
 
 
-	        					if (witCounter == 100-1) {
-	        						res.json('done processing');
-	        					}
-	        				});
-        				}
-        				witCounter++;
+		        					if (witCounter == 100-1) {
+		        						res.json('done processing');
+		        					}
+		        				});
+	        				}
+	        				witCounter++;
 
-					});
-
-					
+						});
+					}else{
+						witCounter++;
+					}
 				}
 			}else{
 				res.json('Cannot call from DB team data');

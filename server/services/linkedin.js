@@ -100,9 +100,9 @@ LinkedIn.prototype.getCompanyDetails = function(company){
 		name: company.name,
 		id: company.id,
 		description: company.description,
-		employees: company.employeeCountRange.name,
+		employees: company.employeeCountRange ? company.employeeCountRange.name : '',
 		foundedYear: company.foundedYear,
-		industries: company.industries.values,
+		industries: company.industries ? company.industries.values : '',
 		universalName : company.universalName,
 		website : company.websiteUrl,
 		specialities: specialities

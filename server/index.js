@@ -69,7 +69,6 @@ main_router.route('/linkedin/helloworld')
 main_router.route('/linkedin/company-search')
 	.all(function(req,res){
 		_matchAndSearchCompany('linkedin',function(isSuccess,results){
-			console.log(isSuccess);
 			if(isSuccess){
 				res.json(results);
 			}else{
@@ -106,7 +105,6 @@ main_router.route('/teamwit')
 						if (err) console.log(err); // handle error here
 	        			team.intepretation = response;
 	        			var processedResults = wit.processWitResults(team);
-	        			console.log(processedResults.outcome);
 	        			if (processedResults.outcome && processedResults.outcome.intent == 'sponsor'){
 	        				tDAO.updateTeamWitData(team.id,processedResults,function(isSuccess){
 	        					/*if (processedResults.organizations.length > 0){

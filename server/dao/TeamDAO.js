@@ -195,6 +195,11 @@ TeamDAO.prototype.updateTeamLinkedInData = function(teamID,linkedInDetails,callb
 	});
 }
 
+function _processDescription(input){
+	var desired = input.replace(/[^\w\s]/gi, '');
+	return desired;
+}
+
 TeamDAO.prototype.interpretArrays = function(dbString){
 	return dbString.split('~~');
 }
@@ -261,7 +266,7 @@ function _linkedInMultiArray(linkedInDetails){
 		var company = companies[i];
 		companyNames += company.name + 'XXX';
 		companyIDs += company.id + 'XXX';
-		companyDescriptions += company.description + 'XXX';
+		companyDescriptions += _processDescription(company.description) + 'XXX';
 		foundingYears += company.foundedYear + 'XXX';
 		employees += company.employees + 'XXX';
 		industries += _liIndustryArrayToString(company.industries) + 'XXX';

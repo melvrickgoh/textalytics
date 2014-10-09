@@ -102,7 +102,7 @@ main_router.route('/teamwit')
 				var witCounter = 0,
 				finalResponse = [];
 
-				for (var k = 0; k<100; k++){
+				for (var k = 0; k<results.length; k++){
 					
 					var team = results[k];
 					if (team != undefined){
@@ -150,7 +150,7 @@ main_router.route('/teamwit')
 		        					witCounter++;
 		        					console.log('counter > ' + witCounter + 'results length > ' + results.length);
 
-		        					if (witCounter == 100-1){
+		        					if (witCounter == results.length-1){
 		        						res.json('done processing');
 		        					}
 		        				});
@@ -161,7 +161,7 @@ main_router.route('/teamwit')
 		        					console.log('counter > ' + witCounter + 'results length > ' + results.length);
 
 
-		        					if (witCounter == 100-1) {
+		        					if (witCounter == results.length-1) {
 		        						res.json('done processing');
 		        					}
 		        				});

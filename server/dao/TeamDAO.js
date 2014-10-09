@@ -189,7 +189,11 @@ TeamDAO.prototype.updateTeamLinkedInData = function(teamID,linkedInDetails,callb
 		if (result.rowCount >= 1){
 			callback(true);//selected length >= 1
 		}else{
-			callback(false);//selected length is 0 or less
+			try{
+				callback(false);//selected length is 0 or less
+			}catch(err){
+				console.log(err);
+			}
 		}
 	});
 }

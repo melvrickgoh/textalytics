@@ -91,6 +91,12 @@ main_router.route('/teamextracts')
 
 main_router.route('/teamwit')
 	.all(function(req,res){
+		req.setTimeout(200,function () {
+		  req.abort();
+		  console.log("timeout");
+		  self.emit('pass',message);
+		});
+
 		_getTeamSponsorsInfo(function(isSuccess,results){
 			if (isSuccess){
 				var witCounter = 0,

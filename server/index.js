@@ -130,13 +130,13 @@ main_router.route('/teamwit')
 	        								console.log('counter  == '+ organizationSearchCounter);
 	        								if (organizationSearchCounter == organizations.length){
 	        									//time to update database
-	        									tDAO.updateTeamLinkedInData(team.id,{scores:scoring,dataArray:organizationsLinkedInData},function(isSuccess){
+	        									/*tDAO.updateTeamLinkedInData(team.id,{scores:scoring,dataArray:organizationsLinkedInData},function(isSuccess){
 	        										
 	        										if (witCounter == results.length){
 	        											//res.json('done processing');
 	        										}
 	        										//res.json(organizationsLinkedInData);
-	        									});
+	        									});*/
 	        								}
 	        							});//
 	        						}

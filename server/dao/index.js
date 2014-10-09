@@ -154,7 +154,7 @@ pgDAO.prototype.generateUpdateQuery = function(details){
 
 pgDAO.prototype.delete = function(details,callback){
 	var query = this.generateDeleteQuery(details);
-
+	console.log(query);
 	this.getConnection(query,function(err,result){
 		if (err){
 			callback(false,err);

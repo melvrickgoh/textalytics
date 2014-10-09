@@ -147,6 +147,7 @@ main_router.route('/teamwit')
 		        							});
 		        						}
 		        					}*/
+		        					witCounter++;
 		        					console.log('counter > ' + witCounter + 'results length > ' + results.length);
 
 		        					if (witCounter == 100-1){
@@ -156,6 +157,7 @@ main_router.route('/teamwit')
 		        			}else{
 		        				tDAO.updateInvalidIntent(response.id,processedResults,function(isSuccess){
 		        					//res.json('single  full stream processing done but invalid intent');
+		        					witCounter++;
 		        					console.log('counter > ' + witCounter + 'results length > ' + results.length);
 
 
@@ -164,7 +166,7 @@ main_router.route('/teamwit')
 		        					}
 		        				});
 	        				}
-	        				witCounter++;
+	        				
 
 						});
 					}else{

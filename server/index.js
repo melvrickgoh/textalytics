@@ -139,7 +139,6 @@ main_router.route('/teamwit')
 	        							});
 	        						}
 	        					}*/
-	        					witCounter++;
 	        					if (witCounter == results.length){
 	        						res.json('done processing');
 	        					}
@@ -147,17 +146,17 @@ main_router.route('/teamwit')
 	        			}else{
 	        				tDAO.updateInvalidIntent(team.id,processedResults,function(isSuccess){
 	        					//res.json('single  full stream processing done but invalid intent');
-	        					witCounter++;
 	        					if (witCounter == results.length) {
 	        						res.json('done processing');
 	        					}
 	        				});
         				}
+        				witCounter++;
         				console.log('counter > ' + witCounter + 'results length > ' + results.length);
 
 					});
 
-					witCounter++;
+					
 				}
 			}else{
 				res.json('Cannot call from DB team data');

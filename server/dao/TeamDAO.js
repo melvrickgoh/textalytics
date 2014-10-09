@@ -197,6 +197,7 @@ TeamDAO.prototype.updateTeamLinkedInData = function(teamID,linkedInDetails,callb
 
 function _processDescription(input){
 	var desired = input.replace(/[^\w\s]/gi, '');
+	desired = desired.replace('\'','');
 	return desired;
 }
 

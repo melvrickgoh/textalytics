@@ -105,7 +105,7 @@ main_router.route('/teamwit')
 				for (var k = 0; k<100; k++){
 					
 					var team = results[k];
-					if (team){
+					if (team != undefined){
 						console.log(JSON.stringify(team));
 						var sponsorIntepretation = wit.requestWit(team.sponsor);
 

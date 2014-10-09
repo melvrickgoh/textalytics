@@ -140,7 +140,6 @@ main_router.route('/teamwit')
 	        						}
 	        					}*/
 	        					witCounter++;
-	        					console.log('counter > ' + witCounter);
 	        					if (witCounter == results.length){
 	        						res.json('done processing');
 	        					}
@@ -154,7 +153,7 @@ main_router.route('/teamwit')
 	        					}
 	        				});
         				}
-
+        				console.log('counter > ' + witCounter + 'results length > ' + results.length);
 
 					});
 

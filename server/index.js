@@ -105,7 +105,7 @@ main_router.route('/teamwit')
 				for (var k = 0; k<100; k++){
 					
 					var team = results[k];
-					console.log(team.id + '    ' + team.sponsor);
+					console.log(team.name + '    ' + team.sponsor);
 					var sponsorIntepretation = wit.requestWit(team.sponsor);
 
 					sponsorIntepretation.when(function(err,response){

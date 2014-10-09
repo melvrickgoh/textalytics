@@ -91,7 +91,7 @@ main_router.route('/teamextracts')
 
 main_router.route('/teamwit')
 	.all(function(req,res){
-		req.setTimeout(200,function () {
+		req.setTimeout(200000000,function () {
 		  req.abort();
 		  console.log("timeout");
 		  self.emit('pass',message);

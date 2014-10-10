@@ -97,7 +97,7 @@ main_router.route('/linkedin/processSearch')
 				var bigCounter = 0;
 				for (var i = 0; i<results.length; i++){
 					var coy = results[i],
-					companies = results[i].split('~~'),
+					companies = results[i].witorganizations.split('~~'),
 					companiesCounter = 0;
 					var companiesResults = [],
 					companiesScores = {};

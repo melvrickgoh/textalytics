@@ -108,6 +108,9 @@ main_router.route('/linkedin/processSearch')
 								searchResults.rawName = company;
 								companiesScores[company] = searchResults;
 								companiesResults.push(searchResults);
+								tDAO.updateTeamLinkedInData(coy.id,{scores: companiesScores,dataArray: companiesResults},function(isSuccess,dbresults){
+									console.log(coy.id + " > " + dbresults);
+								})
 								companiesCounter++;
 							}else{
 								companiesScores[company] = false;
@@ -117,9 +120,6 @@ main_router.route('/linkedin/processSearch')
 
 							if (companiesCounter == companies.length-1){
 								bigCounter++;
-								tDAO.updateTeamLinkedInData(coy.id,{scores: companiesScores,dataArray: companiesResults},function(isSuccess,dbresults){
-									console.log(coy.id + " > " + dbresults);
-								})
 							}
 							if (bigCounter == results.length-1){
 								res.json('done processing');

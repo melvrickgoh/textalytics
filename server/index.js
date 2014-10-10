@@ -26,7 +26,8 @@ linkedIn = new LinkedIn();
 
 main_router.route('/')
 	.all(function(req,res){
-		res.send('welcome to head');
+		res.render('ebola.ejs');
+		//res.send('welcome to head');
 	});
 
 main_router.route('/oauth/linkedin')

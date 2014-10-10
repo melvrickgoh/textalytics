@@ -23,6 +23,10 @@ app.use(cookieParser());
 app.use(session({
 	secret:'75otna9w35iudo'
 }));
+
+app.set('views', __dirname + '/public/views');
+app.set('view engine', 'ejs');
+app.engine('.html', require('ejs').renderFile);
 //flash middleware for helping to route data between requests through the flash object
 app.use(flash());
 

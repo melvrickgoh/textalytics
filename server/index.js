@@ -240,6 +240,7 @@ function _matchAndSearchCompanySingapore(companyName,callback){
 						console.log('error occured');
 					}else{
 						var searchResults = results1;
+						console.log(searchResults);
 						if (searchResults.companies._total > 0){
 							callback(true,linkedIn.extractFirstSearchCompany(searchResults));
 						}else{

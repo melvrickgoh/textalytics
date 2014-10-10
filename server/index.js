@@ -69,7 +69,7 @@ main_router.route('/linkedin/helloworld')
 main_router.route('/linkedin/company-search')
 	.all(function(req,res){
 		var company = req.query.company;
-		_matchAndSearchCompany(company,function(isSuccess,results){
+		_matchAndSearchCompanySingapore(company,function(isSuccess,results){
 			if(isSuccess){
 				res.json(results);
 			}else{

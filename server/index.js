@@ -68,7 +68,8 @@ main_router.route('/linkedin/helloworld')
 
 main_router.route('/linkedin/company-search')
 	.all(function(req,res){
-		_matchAndSearchCompany('SMU',function(isSuccess,results){
+		var company = req.query.company;
+		_matchAndSearchCompany(company,function(isSuccess,results){
 			if(isSuccess){
 				res.json(results);
 			}else{

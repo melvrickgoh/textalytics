@@ -113,7 +113,6 @@ main_router.route('/linkedin/processSearch')
 								companiesScores[company] = false;
 								console.log('cannot find company > ' + company);
 								companiesCounter++;
-								continue;
 							}
 
 							if (companiesCounter == companies.length-1){
@@ -125,6 +124,7 @@ main_router.route('/linkedin/processSearch')
 							if (bigCounter == results.length-1){
 								res.json('done processing');
 							}
+							return;
 						});
 					}
 					

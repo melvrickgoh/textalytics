@@ -70,7 +70,7 @@ LinkedIn.prototype.companySingaporeSearch = function(companyName,callback){
 	var fetchCompanyInfo = function(companyName, callback){
 
 
-	    var url = apiHost + '/company-search:(companies:(id,name,universal-name,website-url,industries,status,logo-url,blog-rss-url,twitter-id,employee-count-range,specialties,locations,description,stock-exchange,founded-year,end-year,num-followers))?keywords='+companyName+'&facet=location,sg:0&format=json'
+	    var url = apiHost + '/company-search:(companies:(id,name,universal-name,website-url,industries,status,logo-url,blog-rss-url,twitter-id,employee-count-range,specialties,locations,description,stock-exchange,founded-year,end-year,num-followers))?keywords='+companyName+'&facet=location,sg:0,us:0&format=json'
 	 
 	    request.get({url:url, oauth:oauth, json:true}, function (e, r, body) {
 	        if (e) return callback(e);

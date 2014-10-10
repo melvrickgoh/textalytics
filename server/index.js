@@ -68,7 +68,7 @@ main_router.route('/linkedin/helloworld')
 
 main_router.route('/linkedin/company-search')
 	.all(function(req,res){
-		_matchAndSearchCompany('linkedin',function(isSuccess,results){
+		_matchAndSearchCompany('SMU',function(isSuccess,results){
 			if(isSuccess){
 				res.json(results);
 			}else{
@@ -203,7 +203,7 @@ function _matchAndSearchCompany(companyName,callback){
 			var matchResults = results;
 			if (matchResults.errorCode == 0){
 				//initiate search
-				linkedIn.companySearch(companyName,function(e,results1){
+				linkedIn.companySingaporeSearch(companyName,function(e,results1){
 					if(e){
 						console.log(e);
 						console.log('error occured');

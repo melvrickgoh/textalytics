@@ -53,6 +53,34 @@ LinkedIn.prototype.companySearch = function(companyName,callback){
 	fetchCompanyInfo(companyName,callback); 
 }
 
+LinkedIn.prototype.companySingaporeSearch = function(companyName,callback){
+	var request = require('request')
+    , qs = require('querystring')
+ 
+    // LinkedIn Specifics
+    , apiHost = 'https://api.linkedin.com/v1'
+ 
+    , oauth = {
+        consumer_key: '75otna9w35iudo'
+        , consumer_secret: 'Zr6IYQxnELcwywLB'
+        , token: '620859b4-d7d5-4f60-9c3c-66a06f4b686f'
+        , token_secret: '777bbe55-39b6-4494-a9dd-eff9ab2b6ae7'
+    };
+ 
+	var fetchCompanyInfo = function(companyName, callback){
+
+
+	    var url = apiHost + '/company-search:(companies:(id,name,universal-name,website-url,industries,status,logo-url,blog-rss-url,twitter-id,employee-count-range,specialties,locations,description,stock-exchange,founded-year,end-year,num-followers))?keywords='+companyName+'&facet=location,sg:0,us:0&format=json'
+	 
+	    request.get({url:url, oauth:oauth, json:true}, function (e, r, body) {
+	        if (e) return callback(e);
+
+	        return callback(null, body);
+	    });
+	}
+	fetchCompanyInfo(companyName,callback); 
+}
+
 LinkedIn.prototype.companyMatch = function(companyName,callback){
 	https://api.linkedin.com/v1/companies/universal-name=linkedin
 	var request = require('request')

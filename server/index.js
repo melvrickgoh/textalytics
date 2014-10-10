@@ -196,7 +196,7 @@ main_router.route('/teamwit')
 		});
 	});
 
-function _matchAndSearchCompany(companyName,callback){
+function _matchAndSearchCompanySingapore(companyName,callback){
 	linkedIn.companyMatch(companyName,function(e,results){
 		if(e){
 			console.log('error' + e);
@@ -205,6 +205,35 @@ function _matchAndSearchCompany(companyName,callback){
 			if (matchResults.errorCode == 0){
 				//initiate search
 				linkedIn.companySingaporeSearch(companyName,function(e,results1){
+					if(e){
+						console.log(e);
+						console.log('error occured');
+					}else{
+						var searchResults = results1;
+						if (searchResults.companies._total > 0){
+							callback(true,linkedIn.extractFirstSearchCompany(searchResults));
+						}else{
+							callback(false,searchResults);
+						}
+					}
+				});
+			}else{
+				//got back the results
+				callback(true,linkedIn.getCompanyDetails(results));
+			}
+		}
+	});
+}
+
+function _matchAndSearchCompany(companyName,callback){
+	linkedIn.companyMatch(companyName,function(e,results){
+		if(e){
+			console.log('error' + e);
+		}else{
+			var matchResults = results;
+			if (matchResults.errorCode == 0){
+				//initiate search
+				linkedIn.companySearch(companyName,function(e,results1){
 					if(e){
 						console.log(e);
 						console.log('error occured');

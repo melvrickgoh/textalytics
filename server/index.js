@@ -108,12 +108,14 @@ main_router.route('/linkedin/processSearch')
 								searchResults.rawName = company;
 								companiesScores[company] = searchResults;
 								companiesResults.push(searchResults);
+								companiesCounter++;
 							}else{
 								companiesScores[company] = false;
 								console.log('cannot find company > ' + company);
+								companiesCounter++;
+								continue;
 							}
 
-							companiesCounter++;
 							if (companiesCounter == companies.length-1){
 								bigCounter++;
 								tDAO.updateTeamLinkedInData(coy.id,{scores: companiesScores,dataArray: companiesResults},function(isSuccess,dbresults){

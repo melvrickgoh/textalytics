@@ -94,13 +94,32 @@ main_router.route('/linkedin/processSearch')
 	.all(function(req,res){
 		tDAO.getTeamsWithCompanies(function(isSuccess,results){
 			if(isSuccess){
+				var bigCounter = 0;
 				for (var i = 0; i<results.length; i++){
-					var company = results[i];
+					var companies = results[i].split('~~'),
+					companiesCounter = 0;
+					companiesResults = [];
+					for (var j = 0; j<companies.length; j++){
+						_matchAndSearchCompanySingapore(company,function(isSuccess,searchResults){
+							if(isSuccess){
+								companiesResults.push(searchResults);
+							}else{
+								console.log('cannot find company');
+							}
+
+							companiesCounter++;
+							if (companiesCounter == companies.length-1){
+								bigCounter++;
+							}
+							if (bigCounter == results.length-1){
+								res.json('done processing');
+							}
+						});
+					}
 					
 				}
-				res.json(results);
 			}else{
-				res.json(results);
+				res.json('DAO failed to retrieve companies');
 			}
 			
 		});

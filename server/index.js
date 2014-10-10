@@ -110,7 +110,7 @@ main_router.route('/linkedin/processSearch')
 								companiesResults.push(searchResults);
 							}else{
 								companiesScores[company] = false;
-								console.log('cannot find company');
+								console.log('cannot find company > ' + company);
 							}
 
 							companiesCounter++;

@@ -96,20 +96,29 @@ main_router.route('/linkedin/processSearch')
 			if(isSuccess){
 				var bigCounter = 0;
 				for (var i = 0; i<results.length; i++){
-					var companies = results[i].split('~~'),
+					var coy = results[i],
+					companies = results[i].split('~~'),
 					companiesCounter = 0;
-					companiesResults = [];
+					var companiesResults = [],
+					companiesScores = {};
 					for (var j = 0; j<companies.length; j++){
+						var company = companies[j];
 						_matchAndSearchCompanySingapore(company,function(isSuccess,searchResults){
 							if(isSuccess){
+								searchResults.rawName = company;
+								companiesScores[company] = searchResults;
 								companiesResults.push(searchResults);
 							}else{
+								companiesScores[company] = false;
 								console.log('cannot find company');
 							}
 
 							companiesCounter++;
 							if (companiesCounter == companies.length-1){
 								bigCounter++;
+								tDAO.updateTeamLinkedInData(coy.id,{scores: companiesScores,dataArray: companiesResults},function(isSuccess,dbresults){
+									console.log(coy.id + " > " + dbresults);
+								})
 							}
 							if (bigCounter == results.length-1){
 								res.json('done processing');

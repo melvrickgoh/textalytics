@@ -307,16 +307,16 @@ function _linkedInMultiArray(linkedInDetails){
 
 	for (var i = 0; i<companies.length; i++){
 		var company = companies[i];
-		companyNames += company.name + 'XXX';
-		companyIDs += company.id + 'XXX';
-		companyDescriptions += _processDescription(company.description) + 'XXX';
-		foundingYears += company.foundedYear + 'XXX';
-		employees += company.employees + 'XXX';
-		industries += _liIndustryArrayToString(company.industries) + 'XXX';
-		universalNames += company.universalName + 'XXX';
-		websites += company.website + 'XXX';
-		specialities += _arrayToString(company.specialities) + 'XXX';
-		rawNames += company.rawName + 'XXX';
+		companyNames += company.name? company.name + 'XXX': '';
+		companyIDs += company.id? company.id + 'XXX': '';
+		companyDescriptions += company.description? _processDescription(company.description) + 'XXX' : '';
+		foundingYears += company.foundedYear? company.foundedYear + 'XXX' : '';
+		employees += company.employees? company.employees + 'XXX' : '';
+		industries += company.industries? _liIndustryArrayToString(company.industries) + 'XXX' : '';
+		universalNames += company.universalName? company.universalName + 'XXX' : '';
+		websites += company.website? company.website + 'XXX' : '';
+		specialities += company.specialities? _arrayToString(company.specialities) + 'XXX' : '';
+		rawNames += company.rawName? company.rawName + 'XXX' : '';
 	}
 
 	if (companyNames.length > 3){

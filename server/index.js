@@ -30,6 +30,12 @@ main_router.route('/')
 		//res.send('welcome to head');
 	});
 
+main_router.route('/ebola')
+	.all(function(req,res){
+		res.render('ebolamap.ejs');
+		//res.send('welcome to head');
+	});
+
 main_router.route('/oauth/linkedin')
 	.all(function(req,res){
 		var liMaster = linkedIn.getLinkedInMaster();

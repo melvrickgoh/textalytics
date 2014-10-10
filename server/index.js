@@ -74,6 +74,7 @@ main_router.route('/linkedin/company-search')
 				res.json(results);
 			}else{
 				console.log('cannot find company');
+				res.json(results);
 			}
 		});
 	});

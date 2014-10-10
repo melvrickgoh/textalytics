@@ -103,7 +103,7 @@ main_router.route('/linkedin/processSearch')
 					companiesScores = {};
 					for (var j = 0; j<companies.length; j++){
 						var company = companies[j];
-						if (company == 'IIE'){
+						if (company.trim().toLowerCase() == 'iie'){
 							companiesCounter++;
 							continue;
 						}

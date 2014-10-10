@@ -93,7 +93,10 @@ main_router.route('/linkedin/processSearch')
 	.all(function(req,res){
 		tDAO.getTeamsWithCompanies(function(isSuccess,results){
 			if(isSuccess){
-				
+				for (var i = 0; i<results.length; i++){
+					var company = results[i];
+					
+				}
 				res.json(results);
 			}else{
 				res.json(results);

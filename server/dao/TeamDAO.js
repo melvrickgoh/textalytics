@@ -224,7 +224,6 @@ TeamDAO.prototype.updateTeamLinkedInData = function(teamID,linkedInDetails,callb
 		conditions:['id = ' + teamID ]
 	}
 	dao.update(updateTeamLinkedInDataDetails,function(isSuccess,result){
-		console.log(result);
 		if (result.rowCount >= 1){
 			callback(true);//selected length >= 1
 		}else{

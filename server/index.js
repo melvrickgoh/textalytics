@@ -102,35 +102,37 @@ main_router.route('/linkedin/processSearch')
 	.all(function(req,res){
 		tDAO.getTeamsWithCompanies(function(isSuccess,results){
 			if(isSuccess){
-				var bigCounter = 0;
+				var bigCounter = 0,
+				companiesLISearchStore = {};
 				for (var i = 0; i<results.length; i++){
 					var coy = results[i],
-					companies = results[i].witorganizations.split('~~'),
-					companiesCounter = 0;
-					var companiesResults = [],
-					companiesScores = {};
+					companies = results[i].witorganizations.split('~~');
+					companiesLISearchStore[coy.id] = {};
+					companiesLISearchStore[coy.id].companiesResults = [],
+					companiesLISearchStore[coy.id].companiesScores = {},
+					companiesLISearchStore[coy.id].companiesCounter = 0;
 					for (var j = 0; j<companies.length; j++){
 						var company = companies[j];
-						console.log(company);
+						console.log('PRE CALL > '+company);
 						/*if (company.trim().toLowerCase() == 'iie'){
 							companiesCounter++;
 							continue;
 						}*/
-						_matchAndSearchCompanySingapore(company,function(isSuccess,searchResults){
+						_matchAndSearchCompanySingapore(company,function(isSuccess,searchResults,companyID){
 							if(isSuccess){
 								searchResults.rawName = company;
-								companiesScores[company] = searchResults;
-								companiesResults.push(searchResults);
+								companiesLISearchStore[companyID].companiesScores[company] = searchResults;
+								companiesLISearchStore[companyID].companiesResults.push(searchResults);
 							}else{
-								companiesScores[company] = false;
+								companiesLISearchStore[companyID].companiesScores[company] = false;
 								console.log('cannot find company > ' + company);
 							}
 								
-							companiesCounter++;
+							companiesLISearchStore[companyID].companiesCounter++;
 
-							if (companiesCounter == companies.length-1){
-								tDAO.updateTeamLinkedInData(coy.id,{scores: companiesScores,dataArray: companiesResults},function(isSuccess,dbresults){
-									console.log(coy.id + " > " + dbresults);
+							if (companiesLISearchStore[companyID].companiesCounter == companies.length-1){
+								tDAO.updateTeamLinkedInData(companyID,{scores: companiesLISearchStore[companyID].companiesScores,dataArray: companiesLISearchStore[companyID].companiesResults},function(isSuccess,dbresults){
+									console.log(companyID + " > " + dbresults);
 								});
 								bigCounter++;
 							}
@@ -138,7 +140,7 @@ main_router.route('/linkedin/processSearch')
 								res.json('done processing');
 							}
 							return;
-						});
+						},coy.id);
 					}
 					
 				}
@@ -239,7 +241,7 @@ main_router.route('/teamwit')
 		});
 	});
 
-function _matchAndSearchCompanySingapore(companyName,callback){
+function _matchAndSearchCompanySingapore(companyName,callback,companyID){
 	linkedIn.companyMatch(companyName,function(e,results){
 		if(e){
 			console.log('error' + e);
@@ -255,15 +257,15 @@ function _matchAndSearchCompanySingapore(companyName,callback){
 						var searchResults = results1;
 						console.log(searchResults);
 						if (searchResults.companies && searchResults.companies._total > 0){
-							callback(true,linkedIn.extractFirstSearchCompany(searchResults));
+							callback(true,linkedIn.extractFirstSearchCompany(searchResults),companyID);
 						}else{
-							callback(false,searchResults);
+							callback(false,searchResults,companyID);
 						}
 					}
 				});
 			}else{
 				//got back the results
-				callback(true,linkedIn.getCompanyDetails(results));
+				callback(true,linkedIn.getCompanyDetails(results),companyID);
 			}
 		}
 	});

@@ -10,6 +10,18 @@ var OAUTH_GROUPS = {
 	    , consumer_secret: 'PpgGs9QQliIMkv46'
 	    , token: 'a62b1fdf-88ac-4062-a9b8-602d5f48de66'
 	    , token_secret: '31dcfab4-a3e5-42ea-903b-2b69e8c595f7'
+	},
+	t3:{
+		consumer_key: '75ykn07z5f4pp4'
+	    , consumer_secret: 'IsvID0ukMlVa0fez'
+	    , token: '7e3ef627-79fc-4b4e-9c97-ab20a5ef8928'
+	    , token_secret: '262839b5-b051-4f5a-a6e8-c231b717bd9b'
+	},
+	t4:{
+		consumer_key: '75q21r3tmzi0iv'
+	    , consumer_secret: 'KtDRXqIRQSK43hPr'
+	    , token: 'a3c3cee6-1dc3-4b33-b015-342f795c1fa4'
+	    , token_secret: 'c816aa48-f6a9-4ef0-9e71-a2012a89af13'
 	}
 },
 OAUTH_GROUP = OAUTH_GROUPS.t2,

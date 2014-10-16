@@ -98,6 +98,11 @@ main_router.route('/teamextracts')
 		});
 	});
 
+main_router.route('/testSplitString')
+	.all(function(req,res){
+		res.json('overturelabs'.split('~~'));
+	});
+
 main_router.route('/linkedin/processSearch')
 	.all(function(req,res){
 		tDAO.getTeamsWithCompanies(function(isSuccess,results){

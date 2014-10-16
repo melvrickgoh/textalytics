@@ -137,12 +137,53 @@
     });
       var stackedBarData = function(rawData){
         console.log(rawData);
+        var dictionary = {};
+        for(var i = 0; i<rawData.length; i++){
+          var unit = rawData[i],
+          industryResults = _extractIndustry(unit.liindustries),
+          year = unit.year;
+          if (!dictionary[industryResults.industry]){
+            dictionary[industryResults.industry] = {};
+          }
+
+          if (!dictionary[industryResults.industry][year]){
+            dictionary[industryResults.industry][year] = [];
+          }
+
+          dictionary[industryResults.industry][year].push(unit);
+        }
+        return dictionary;
+      }
+
+      var filterStackedBarDictionary = function(dictionary){
+        var valuesData = [],
+        industryKeys = Object.keys(dictionary);
+        for(var i = 0; i<industryKeys.length; i++){
+          var industryName = industryKeys[i],
+          industrySet = dictionary[industryName],
+          industryYearsKeys = Object.keys(industrySet),
+          industryGroup = {key:industryName,values:[]};
+          for (var j = 0; j<industryYearsKeys.length; j++){
+            var industryYear = industryYearsKeys[j],
+            industryYearSet = industrySet[industryYear];
+            industryGroup.values.push({x:industryYear,y:industryYearSet.length});
+          }
+          valuesData.push(industryGroup);
+        }
+        return valuesData;
+      }
+
+      var _extractIndustry = function(rawText){
+        var arr = rawText.split('III');
+        return {code:arr[0],industry:arr[1]}
       }
 
       var getAllTeamsData = function(){
         xhr('/allteamsdata',function(results){
           var data = JSON.parse(results);
-          stackedBarData(data);
+          var filteredData = filterStackedBarDictionary(stackedBarData(data));
+          console.log('ALL TEAMS FILTER');
+          console.log(filteredData);
         });
       }
 

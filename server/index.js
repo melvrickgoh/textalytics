@@ -45,13 +45,11 @@ main_router.route('/ebola')
 main_router.route('/visualize')
 	.all(function(req,res){
 		res.render('visualize.ejs');
-		//res.send('welcome to head');
 	});
 
 main_router.route('/allteamsdata')
 	.all(function(req,res){
 		tDAO.getAllTeams(function(isSuccess,results){
-			console.log(results);
 			if(isSuccess){
 				res.json(results);
 			}else{

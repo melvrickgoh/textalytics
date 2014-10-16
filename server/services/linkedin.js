@@ -24,7 +24,7 @@ var OAUTH_GROUPS = {
 	    , token_secret: 'c816aa48-f6a9-4ef0-9e71-a2012a89af13'
 	}
 },
-OAUTH_GROUP = OAUTH_GROUPS.t2,
+OAUTH_GROUP = OAUTH_GROUPS.t3,
 //OAuth_Token = '620859b4-d7d5-4f60-9c3c-66a06f4b686f',
 LOCAL_CALLBACK = 'http://localhost:5432/oauth/linkedin/callback',
 DEPLOYED_CALLBACK = 'http://textalytics-wit.herokuapp.com/oauth/linkedin/callback',

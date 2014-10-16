@@ -137,7 +137,7 @@ main_router.route('/linkedin/processSearch')
 
 							if (companiesLISearchStore[companyID].companiesCounter == companies.length){
 								tDAO.updateTeamLinkedInData(companyID,{scores: companiesLISearchStore[companyID].companiesScores,dataArray: companiesLISearchStore[companyID].companiesResults},function(isSuccess,dbresults){
-									console.log(companyID + " > " + dbresults);
+									console.log(companyID + " update results > " + dbresults);
 								});
 								bigCounter++;
 							}

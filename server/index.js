@@ -111,6 +111,7 @@ main_router.route('/linkedin/processSearch')
 					companiesScores = {};
 					for (var j = 0; j<companies.length; j++){
 						var company = companies[j];
+						console.log(company);
 						/*if (company.trim().toLowerCase() == 'iie'){
 							companiesCounter++;
 							continue;
@@ -120,17 +121,17 @@ main_router.route('/linkedin/processSearch')
 								searchResults.rawName = company;
 								companiesScores[company] = searchResults;
 								companiesResults.push(searchResults);
-								tDAO.updateTeamLinkedInData(coy.id,{scores: companiesScores,dataArray: companiesResults},function(isSuccess,dbresults){
-									console.log(coy.id + " > " + dbresults);
-								})
-								companiesCounter++;
 							}else{
 								companiesScores[company] = false;
 								console.log('cannot find company > ' + company);
-								companiesCounter++;
 							}
+								
+							companiesCounter++;
 
 							if (companiesCounter == companies.length-1){
+								tDAO.updateTeamLinkedInData(coy.id,{scores: companiesScores,dataArray: companiesResults},function(isSuccess,dbresults){
+									console.log(coy.id + " > " + dbresults);
+								});
 								bigCounter++;
 							}
 							if (bigCounter == results.length-1){

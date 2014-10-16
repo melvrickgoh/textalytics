@@ -142,15 +142,17 @@
           var unit = rawData[i],
           industryResults = _extractIndustry(unit.liindustries),
           year = unit.year;
-          if (!dictionary[industryResults.industry]){
-            dictionary[industryResults.industry] = {};
-          }
+          if (industryResults){
+            if (!dictionary[industryResults.industry]){
+              dictionary[industryResults.industry] = {};
+            }
 
-          if (!dictionary[industryResults.industry][year]){
-            dictionary[industryResults.industry][year] = [];
-          }
+            if (!dictionary[industryResults.industry][year]){
+              dictionary[industryResults.industry][year] = [];
+            }
 
-          dictionary[industryResults.industry][year].push(unit);
+            dictionary[industryResults.industry][year].push(unit);
+          }
         }
         return dictionary;
       }
@@ -174,8 +176,12 @@
       }
 
       var _extractIndustry = function(rawText){
-        var arr = rawText.split('III');
-        return {code:arr[0],industry:arr[1]}
+        if (rawText.length > 0){
+          var arr = rawText.split('III');
+          return {code:arr[0],industry:arr[1]}
+        }else{
+          return false;
+        }
       }
 
       var getAllTeamsData = function(){

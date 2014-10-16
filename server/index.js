@@ -26,13 +26,19 @@ linkedIn = new LinkedIn();
 
 main_router.route('/')
 	.all(function(req,res){
-		res.render('ebola.ejs');
+		res.render('index.ejs');
+		//res.send('welcome to head');
+	});
+
+main_router.route('/ebolamap')
+	.all(function(req,res){
+		res.render('ebolamap.ejs');
 		//res.send('welcome to head');
 	});
 
 main_router.route('/ebola')
 	.all(function(req,res){
-		res.render('ebolamap.ejs');
+		res.render('ebola.ejs');
 		//res.send('welcome to head');
 	});
 

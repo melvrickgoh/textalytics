@@ -1,8 +1,22 @@
-var API_KEY = '75otna9w35iudo',
-OAuth_Token = '620859b4-d7d5-4f60-9c3c-66a06f4b686f',
+var OAUTH_GROUPS = {
+	t1:{
+	    consumer_key: '75otna9w35iudo'
+	    , consumer_secret: 'Zr6IYQxnELcwywLB'
+	    , token: '620859b4-d7d5-4f60-9c3c-66a06f4b686f'
+	    , token_secret: '777bbe55-39b6-4494-a9dd-eff9ab2b6ae7'
+	},
+	t2:{
+		consumer_key: '75zk9y8biiqhwl'
+	    , consumer_secret: 'PpgGs9QQliIMkv46'
+	    , token: 'a62b1fdf-88ac-4062-a9b8-602d5f48de66'
+	    , token_secret: '31dcfab4-a3e5-42ea-903b-2b69e8c595f7'
+	}
+},
+OAUTH_GROUP = OAUTH_GROUPS.t1,
+//OAuth_Token = '620859b4-d7d5-4f60-9c3c-66a06f4b686f',
 LOCAL_CALLBACK = 'http://localhost:5432/oauth/linkedin/callback',
 DEPLOYED_CALLBACK = 'http://textalytics-wit.herokuapp.com/oauth/linkedin/callback',
-LinkedIN = require('node-linkedin')(API_KEY, 'Zr6IYQxnELcwywLB', LOCAL_CALLBACK),
+LinkedIN = require('node-linkedin')(OAUTH_GROUP.consumer_key, OAUTH_GROUP.consumer_secret, LOCAL_CALLBACK),
 linkedin, svcLinkedIn;
 
 function LinkedIn(options){
@@ -32,12 +46,7 @@ LinkedIn.prototype.companySearch = function(companyName,callback){
     // LinkedIn Specifics
     , apiHost = 'https://api.linkedin.com/v1'
  
-    , oauth = {
-        consumer_key: '75otna9w35iudo'
-        , consumer_secret: 'Zr6IYQxnELcwywLB'
-        , token: '620859b4-d7d5-4f60-9c3c-66a06f4b686f'
-        , token_secret: '777bbe55-39b6-4494-a9dd-eff9ab2b6ae7'
-    };
+    , oauth = OAUTH_GROUP;
  
 	var fetchCompanyInfo = function(companyName, callback){
 
@@ -60,12 +69,7 @@ LinkedIn.prototype.companySingaporeSearch = function(companyName,callback){
     // LinkedIn Specifics
     , apiHost = 'https://api.linkedin.com/v1'
  
-    , oauth = {
-        consumer_key: '75otna9w35iudo'
-        , consumer_secret: 'Zr6IYQxnELcwywLB'
-        , token: '620859b4-d7d5-4f60-9c3c-66a06f4b686f'
-        , token_secret: '777bbe55-39b6-4494-a9dd-eff9ab2b6ae7'
-    };
+    , oauth = OAUTH_GROUP;
  
 	var fetchCompanyInfo = function(companyName, callback){
 
@@ -89,12 +93,7 @@ LinkedIn.prototype.companyMatch = function(companyName,callback){
     // LinkedIn Specifics
     , apiHost = 'https://api.linkedin.com/v1'
  
-    , oauth = {
-        consumer_key: '75otna9w35iudo'
-        , consumer_secret: 'Zr6IYQxnELcwywLB'
-        , token: '620859b4-d7d5-4f60-9c3c-66a06f4b686f'
-        , token_secret: '777bbe55-39b6-4494-a9dd-eff9ab2b6ae7'
-    };
+    , oauth = OAUTH_GROUP;
  
 	var fetchCompanyInfo = function(companyName, callback){
 

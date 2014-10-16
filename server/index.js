@@ -100,7 +100,7 @@ main_router.route('/teamextracts')
 
 main_router.route('/testSplitString')
 	.all(function(req,res){
-		res.json('overturelabs'.split('~~'));
+		res.json('overture labs'.split('~~'));
 	});
 
 main_router.route('/linkedin/processSearch')
@@ -135,13 +135,13 @@ main_router.route('/linkedin/processSearch')
 								
 							companiesLISearchStore[companyID].companiesCounter++;
 
-							if (companiesLISearchStore[companyID].companiesCounter == companies.length-1){
+							if (companiesLISearchStore[companyID].companiesCounter == companies.length){
 								tDAO.updateTeamLinkedInData(companyID,{scores: companiesLISearchStore[companyID].companiesScores,dataArray: companiesLISearchStore[companyID].companiesResults},function(isSuccess,dbresults){
 									console.log(companyID + " > " + dbresults);
 								});
 								bigCounter++;
 							}
-							if (bigCounter == results.length-1){
+							if (bigCounter == results.length){
 								res.json('done processing');
 							}
 							return;

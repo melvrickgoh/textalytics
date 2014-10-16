@@ -314,7 +314,7 @@ function _linkedInMultiArray(linkedInDetails){
 		industries += company.industries? _liIndustryArrayToString(company.industries) + 'XXX' : '';
 		universalNames += company.universalName? company.universalName + 'XXX' : '';
 		websites += company.website? company.website + 'XXX' : '';
-		specialities += company.specialities? _arrayToString(company.specialities) + 'XXX' : '';
+		specialities += company.specialities? ( _arrayToString(company.specialities).length>0 ? _arrayToString(company.specialities) + 'XXX' : '' ) : '';
 		rawNames += company.rawName? company.rawName + 'XXX' : '';
 	}
 

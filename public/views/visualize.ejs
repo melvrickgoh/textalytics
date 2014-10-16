@@ -176,6 +176,7 @@
       }
 
       var _extractIndustry = function(rawText){
+        console.log(rawText);
         if (rawText.length > 0){
           var arr = rawText.split('III');
           return {code:arr[0],industry:arr[1]}

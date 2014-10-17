@@ -106,12 +106,15 @@
 
       var initializeGraph = function(dataset){
         nv.addGraph(function() {
-          var chart = nv.models.multiBarChart();
+          var chart = nv.models.multiBarChart()
+          .useInteractiveGuideline(true);
 
           chart.xAxis
+              .axisLabel('Number of Projects')
               .tickFormat(d3.format(',f'));
 
           chart.yAxis
+              .axisLabel('Year')
               .tickFormat(d3.format(',.1f'));
           d3.select('#chart svg')
               .datum(dataset)

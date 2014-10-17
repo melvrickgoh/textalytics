@@ -61,19 +61,6 @@
     <script src="/nv.d3.min.js"></script>
 
     <script>
-
-      var hardcodedJSON = [
-          //{name:'State',group1:'Under 5 Years',group2:'5 to 13 Years'},
-          {name:'AL',group1:'310504',group2:'552339'},
-          {name:'AK',group1:'52083',group2:'85640'},
-          {name:'AZ',group1:'515910',group2:'828669'},
-          {name:'AR',group1:'202070',group2:'343207'},
-          {name:'CA',group1:'2704659',group2:'4499890'},
-          {name:'CO',group1:'358280',group2:'587154'},
-          {name:'CT',group1:'211637',group2:'403658'}
-      ]
-
-
       function data() {
         return stream_layers(3,10+Math.random()*100,.1).map(function(data, i) {
           return {
@@ -126,7 +113,6 @@
 
           chart.yAxis
               .tickFormat(d3.format(',.1f'));
-              console.log(JSON.stringify(data()));
           d3.select('#chart svg')
               .datum(dataset)
               .transition().duration(500)
@@ -156,7 +142,26 @@
 
             dictionary[industryResults.industry][year].push(unit);
           }else{
-            console.log(unit);
+            if (unit.witstartup){
+              if(!dictionary['Startup']){
+                dictionary['Startup'] = {};
+              }
+
+              if(!dictionary['Startup'][unit.year]){
+                dictionary['Startup'][unit.year] = [];
+              }
+
+              dictionary['Startup'][unit.year].push(unit);
+            }else{
+              if(!dictionary['Unclassified']){
+                dictionary['Unclassified'] = {};
+              }
+
+              if(!dictionary['Unclassified'][unit.year]){
+                dictionary['Unclassified'][unit.year] = [];
+              }
+              dictionary['Unclassified'][unit.year].push(unit);
+            }
           }
         }
         return dictionary;

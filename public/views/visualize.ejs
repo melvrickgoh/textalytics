@@ -115,8 +115,8 @@
               //.tickFormat(d3.format(',f'));
 
           chart.yAxis
-              .axisLabel('Year')
-              .tickFormat(d3.format(',.1f'));
+              .axisLabel('Year');
+              //.tickFormat(d3.format(',.1f'));
           d3.select('#chart svg')
               .datum(dataset)
               .transition().duration(500)

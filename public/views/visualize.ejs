@@ -117,24 +117,27 @@
         return {x: i, y: Math.max(0, d)};
       }
 
-      nv.addGraph(function() {
-        var chart = nv.models.multiBarChart();
+      var initializeGraph = function(dataset){
+        nv.addGraph(function() {
+          var chart = nv.models.multiBarChart();
 
-        chart.xAxis
-            .tickFormat(d3.format(',f'));
+          chart.xAxis
+              .tickFormat(d3.format(',f'));
 
-        chart.yAxis
-            .tickFormat(d3.format(',.1f'));
-            console.log(JSON.stringify(data()));
-        d3.select('#chart svg')
-            .datum(data())
-            .transition().duration(500)
-            .call(chart);
+          chart.yAxis
+              .tickFormat(d3.format(',.1f'));
+              console.log(JSON.stringify(data()));
+          d3.select('#chart svg')
+              .datum(dataset)
+              .transition().duration(500)
+              .call(chart);
 
-        nv.utils.windowResize(chart.update);
+          nv.utils.windowResize(chart.update);
 
-        return chart;
-    });
+          return chart;
+      });
+      }
+      
       var stackedBarData = function(rawData){
         console.log(rawData);
         var dictionary = {};
@@ -152,6 +155,8 @@
             }
 
             dictionary[industryResults.industry][year].push(unit);
+          }else{
+            if (unit.)
           }
         }
         return dictionary;
@@ -176,7 +181,6 @@
       }
 
       var _extractIndustry = function(rawText){
-        console.log(rawText);
         if (rawText && rawText.length > 0){
           var arr = rawText.split('III');
           return {code:arr[0],industry:arr[1]}
@@ -191,6 +195,7 @@
           var filteredData = filterStackedBarDictionary(stackedBarData(data));
           console.log('ALL TEAMS FILTER');
           console.log(filteredData);
+          initializeGraph(filteredData);
         });
       }
 

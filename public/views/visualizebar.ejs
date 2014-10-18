@@ -1,0 +1,254 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="http://getbootstrap.com/favicon.ico">
+
+    <title>Textalytics</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="http://getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="http://getbootstrap.com/examples/jumbotron/jumbotron.css" rel="stylesheet">
+    <link href="/nv.d3.css" rel="stylesheet">
+    
+
+    <!--INLINE STYLE SHEET-->
+    <style>
+      body {
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        margin: auto;
+        position: relative;
+        width: 960px;
+      }
+
+      text {
+        font: 10px sans-serif;
+      }
+
+      .axis path,
+      .axis line {
+        fill: none;
+        stroke: #000;
+        shape-rendering: crispEdges;
+      }
+
+      form {
+        position: absolute;
+        right: 10px;
+        top: 10px;
+      }
+    </style>
+  </head>
+
+  <body>
+
+    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">Textalytics </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main jumbotron for a primary marketing message or call to action -->
+    <div class="jumbotron">
+      <div class="container">
+        <div id="chart">
+          <svg></svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="http://code.jquery.com/jquery-2.1.0.min.js"></script>
+    <script src="http://d3js.org/d3.v2.min.js"></script>
+    <script src="/nv.d3.min.js"></script>
+
+    <script>
+      function data() {
+        return stream_layers(3,10+Math.random()*100,.1).map(function(data, i) {
+          return {
+            key: 'Stream' + i,
+            values: data
+          };
+        });
+      }
+
+      /* Inspired by Lee Byron's test data generator. */
+      function stream_layers(n, m, o) {
+        if (arguments.length < 3) o = 0;
+        function bump(a) {
+          var x = 1 / (.1 + Math.random()),
+              y = 2 * Math.random() - .5,
+              z = 10 / (.1 + Math.random());
+          for (var i = 0; i < m; i++) {
+            var w = (i / m - y) * z;
+            a[i] += x * Math.exp(-w * w);
+          }
+        }
+        return d3.range(n).map(function() {
+            var a = [], i;
+            for (i = 0; i < m; i++) a[i] = o + o * Math.random();
+            for (i = 0; i < 5; i++) bump(a);
+            return a.map(stream_index);
+          });
+      }
+
+      /* Another layer generator using gamma distributions. */
+      function stream_waves(n, m) {
+        return d3.range(n).map(function(i) {
+          return d3.range(m).map(function(j) {
+              var x = 20 * j / m - i / 3;
+              return 2 * x * Math.exp(-.5 * x);
+            }).map(stream_index);
+          });
+      }
+
+      function stream_index(d, i) {
+        return {x: i, y: Math.max(0, d)};
+      }
+
+      var initializeGraph = function(dataset){
+        nv.addGraph(function() {
+          var chart = nv.models.multiBarChart()
+                        .showControls(true);
+          console.log(chart);
+
+          chart.xAxis
+              .axisLabel('Number of Projects');
+              //.tickFormat(d3.format(',f'));
+
+          chart.yAxis
+              .axisLabel('Year');
+              //.tickFormat(d3.format(',.1f'));
+          d3.select('#chart svg')
+              .datum(dataset)
+              .transition().duration(500)
+              .call(chart);
+
+          nv.utils.windowResize(chart.update);
+
+          return chart;
+      });
+      }
+      
+      var stackedBarData = function(rawData){
+        console.log(rawData);
+        var dictionary = {};
+        for(var i = 0; i<rawData.length; i++){
+          var unit = rawData[i],
+          industryResults = _extractIndustry(unit.liindustries),
+          year = unit.year;
+          if (industryResults){
+            if (!dictionary[industryResults.industry]){
+              dictionary[industryResults.industry] = {};
+            }
+
+            if (!dictionary[industryResults.industry][year]){
+              dictionary[industryResults.industry][year] = [];
+            }
+
+            dictionary[industryResults.industry][year].push(unit);
+          }else{
+            if (unit.witstartup){
+              if(!dictionary['Startup']){
+                dictionary['Startup'] = {};
+              }
+
+              if(!dictionary['Startup'][unit.year]){
+                dictionary['Startup'][unit.year] = [];
+              }
+
+              dictionary['Startup'][unit.year].push(unit);
+            }else{
+              if(!dictionary['Unclassified']){
+                dictionary['Unclassified'] = {};
+              }
+
+              if(!dictionary['Unclassified'][unit.year]){
+                dictionary['Unclassified'][unit.year] = [];
+              }
+              dictionary['Unclassified'][unit.year].push(unit);
+            }
+          }
+        }
+        return dictionary;
+      }
+
+      var filterStackedBarDictionary = function(dictionary){
+        var valuesData = [],
+        industryKeys = Object.keys(dictionary);
+        for(var i = 0; i<industryKeys.length; i++){
+          var industryName = industryKeys[i],
+          industrySet = dictionary[industryName],
+          industryYearsKeys = Object.keys(industrySet),
+          industryGroup = {key:industryName,values:[]};
+          for (var j = 0; j<industryYearsKeys.length; j++){
+            var industryYear = industryYearsKeys[j],
+            industryYearSet = industrySet[industryYear];
+            industryGroup.values.push({x:industryYear,y:industryYearSet.length});
+          }
+          valuesData.push(industryGroup);
+        }
+        return valuesData;
+      }
+
+      var _extractIndustry = function(rawText){
+        if (rawText && rawText.length > 0){
+          var arr = rawText.split('III');
+          return {code:arr[0],industry:arr[1]}
+        }else{
+          return false;
+        }
+      }
+
+      var getAllTeamsData = function(){
+        xhr('/allteamsdata',function(results){
+          var data = JSON.parse(results);
+          var filteredData = filterStackedBarDictionary(stackedBarData(data));
+          console.log('ALL TEAMS FILTER');
+          console.log(filteredData);
+          initializeGraph(filteredData);
+        });
+      }
+
+      var xhr = function(address,callback){
+        var request = new XMLHttpRequest();
+      
+        request.onreadystatechange = function(e) {
+          if (request.readyState == 4) {
+            callback(request.responseText);
+            //window.location.href = '/home';//('/home');
+          }
+        }
+        request.open('GET', address, true);
+        request.send();
+      }
+
+      $(document).ready(function() {
+        //load graph here
+        getAllTeamsData();
+      } );
+    </script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="http://getbootstrap.com/dist/js/bootstrap.min.js"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="http://getbootstrap.com/assets/js/ie10-viewport-bug-workaround.js"></script>
+  </body>
+</html>

@@ -107,8 +107,7 @@
       var initializeGraph = function(dataset){
         nv.addGraph(function() {
           var chart = nv.models.multiBarChart()
-                        .showControls(true)
-                        .stacked(true);
+                        .showControls(false);
           console.log(chart);
 
           chart.xAxis

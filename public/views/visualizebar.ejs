@@ -173,8 +173,8 @@
       filterStackedBarDictionary = function(dictionary){
         var valuesData = [],
         industryKeys = Object.keys(dictionary);
-        INDUSTRIES_NUMBER = industryKeys.length;
-        console.log(INDUSTRIES_NUMBER);
+        //INDUSTRIES_NUMBER = industryKeys.length;
+        //console.log(INDUSTRIES_NUMBER);
         for(var i = 0; i<industryKeys.length; i++){
           var industryName = industryKeys[i],
           industrySet = dictionary[industryName],
@@ -409,6 +409,7 @@
           var filteredData = stackedBarData(data);
           console.log('ALL TEAMS FILTER');
           console.log(filteredData);
+          INDUSTRIES_NUMBER = filteredData.length;
           c3StackedBarFilter(filteredData);
         });
       }

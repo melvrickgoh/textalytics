@@ -233,13 +233,13 @@
           industryYearsKeys = Object.keys(industrySet);
           minMaxes.push(extractMinMaxYears(industryYearsKeys));
         }
-        console.log(minMaxes);
         var superMinMax = extractSuperMinMax(minMaxes);
-        console.log(superMinMax);
         return calculateMinMaxYears(superMinMax.min,superMinMax.max);
       }
 
       var calculateMinMaxYears = function(min,max){
+        min = parseInt(min);
+        max = parseInt(max);
         if (min!=max){
           var arr = [];
           for (var i = min; min<=max; i++){

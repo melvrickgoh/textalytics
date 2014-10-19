@@ -234,6 +234,8 @@
           minMaxes.push(extractMinMaxYears(industryYearsKeys));
         }
         var superMinMax = extractSuperMinMax(minMaxes);
+        console.log(superMinMax);
+        console.log(calculateMinMaxYears(superMinMax.min,superMinMax.max));
         return calculateMinMaxYears(superMinMax.min,superMinMax.max);
       }
 

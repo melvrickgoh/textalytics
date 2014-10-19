@@ -203,7 +203,8 @@
       },
       updatePieCharts = function(yearID){
         if(PIE_CHART){
-          //PIE_CHART.destroy();
+          console.log(PIE_CHART);
+          PIE_CHART.flush();
           PIE_CHART = c3.generate({
             bindto:'#pie-chart',
             size:{

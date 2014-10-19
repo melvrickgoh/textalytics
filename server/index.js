@@ -47,6 +47,11 @@ main_router.route('/visualize')
 		res.render('visualize.ejs');
 	});
 
+main_router.route('/c3')
+	.all(function(req,res){
+		res.render('visualizebar.ejs');
+	});
+
 main_router.route('/allteamsdata')
 	.all(function(req,res){
 		tDAO.getAllTeams(function(isSuccess,results){

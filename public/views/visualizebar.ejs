@@ -16,36 +16,10 @@
 
     <!-- Custom styles for this template -->
     <link href="http://getbootstrap.com/examples/jumbotron/jumbotron.css" rel="stylesheet">
-    <link href="/nv.d3.css" rel="stylesheet">
+    <link href="/c3.css" rel="stylesheet">
     
 
     <!--INLINE STYLE SHEET-->
-    <style>
-      body {
-        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-        margin: auto;
-        position: relative;
-        width: 960px;
-      }
-
-      text {
-        font: 10px sans-serif;
-      }
-
-      .axis path,
-      .axis line {
-        fill: none;
-        stroke: #000;
-        shape-rendering: crispEdges;
-      }
-
-      form {
-        position: absolute;
-        right: 10px;
-        top: 10px;
-      }
-    </style>
-  </head>
 
   <body>
 
@@ -66,8 +40,8 @@
     <!-- Main jumbotron for a primary marketing message or call to action -->
     <div class="jumbotron">
       <div class="container">
-        <div id="chart">
-          <svg></svg>
+        <div class='chart'>
+          <div id='chart'></div>
         </div>
       </div>
     </div>
@@ -76,8 +50,8 @@
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="http://code.jquery.com/jquery-2.1.0.min.js"></script>
-    <script src="http://d3js.org/d3.v2.min.js"></script>
-    <script src="/nv.d3.min.js"></script>
+    <script src="http://d3js.org/d3.v3.min.js"></script>
+    <script src="/c3.js"></script>
 
     <script>
       function data() {
@@ -208,6 +182,101 @@
         return valuesData;
       }
 
+      var c3StackedBarFilter = function(dictionary){
+        var c3package = {
+          data: {
+            columns:[],
+            type:'bar',
+            groups:[]
+          },
+          grid: {
+            y:{
+              lines:[{value:0}]
+            }
+          }
+        };
+        var years = captureYears(dictionary);
+        c3package.data.groups = years;
+
+        var industryKeys = Object.keys(dictionary);
+        c3package.data.groups.push(industryKeys);
+        for (var i = 0; i<industryKeys.length; i++){
+          var industryName = industryKeys[i],
+          industrySet = dictionary[industryName],
+          industryData = [industryName];
+          for(var j = 0; j<years.length; j++){
+            var industryYear = years[j],
+            industryYearSet = industrySet[industryYear];
+            if (industryYearSet){
+              industryData.push(industryYearSet.length);
+            }else{
+              industryData.push(0);
+            }
+          }
+          data.columns.push(industryData);
+        }
+
+        document.selectElementById('chart') = c3.generate(c3package);
+
+      }
+
+      var captureYears = function(dictionary){
+        var industryKeys = Object.keys(dictionary),
+        minMaxes = [];
+        for (var i = 0; i<industryKeys.length; i++){
+          var industryName = industryKeys[i],
+          industrySet = dictionary[industryName],
+          industryYearsKeys = Object.keys(industrySet);
+          minMaxes.push(extractMinMaxYears(industryYearsKeys));
+        }
+
+        var superMinMax = extractSuperMinMax(minMaxes);
+
+        return calculateMinMaxYears(superMinMax.min,superMinMax.max);
+      }
+
+      var calculateMinMaxYears(min,max){
+        if (min!=max){
+          var arr = [];
+          for (var i = min; min<=max; i++){
+            arr.push(i);
+          }
+          return arr;
+        }else{
+          return [min];
+        }
+      }
+
+      var extractMinMaxYears = function(yearKeys){
+        var min =9999,max= 0;
+        for (var i = 0; i<yearKeys.length; i++){
+          var year = yearKeys[i];
+          if (year < min){
+            min = year;
+          }
+
+          if (year > max){
+            max = year;
+          }
+        }
+        return {min:min,max:max};
+      }
+
+      var extractSuperMinMax = function(minMaxArrays){
+        var superMin = 9999, superMax = 0;
+        for (var i = 0; i<minMaxArrays.length; i++){
+          var minMaxGroup = minMaxArrays[i];
+          if (minMaxGroup.min < superMin){
+            superMin = minMaxGroup.min;
+          }
+
+          if (minMaxGroup.max > superMax){
+            superMax = minMaxGroup.max;
+          }
+        }
+        return {min:superMin,max:superMax};
+      }
+
       var _extractIndustry = function(rawText){
         if (rawText && rawText.length > 0){
           var arr = rawText.split('III');
@@ -220,10 +289,10 @@
       var getAllTeamsData = function(){
         xhr('/allteamsdata',function(results){
           var data = JSON.parse(results);
-          var filteredData = filterStackedBarDictionary(stackedBarData(data));
+          var filteredData = c3StackedBarFilter(stackedBarData(data));
           console.log('ALL TEAMS FILTER');
           console.log(filteredData);
-          initializeGraph(filteredData);
+          //initializeGraph(filteredData);
         });
       }
 

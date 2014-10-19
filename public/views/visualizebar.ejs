@@ -242,15 +242,18 @@
       }
 
       var calculateMinMaxYears = function(min,max){
+        console.log(min);
         min = parseInt(min);
-        console.log(min + '  ' + parseInt(min));
+        console.log(parseInt(min));
+        console.log(max);
         max = parseInt(max);
-        console.log(max + '  ' + parseInt(max));
+        console.log(parseInt(max));
         if (min!=max){
           var arr = [];
           for (var i = min; min<=max; i++){
             arr.push(i);
           }
+          console.log(arr);
           return arr;
         }else{
           return [min];

@@ -183,6 +183,7 @@
 
       var c3StackedBarFilter = function(dictionary){
         var c3package = {
+          bindto:'#chart',
           data: {
             columns:[],
             type:'bar',
@@ -215,7 +216,7 @@
           data.columns.push(industryData);
         }
         console.log(c3package);
-        //document.selectElementById('chart') = c3.generate(c3package);
+        c3.generate(c3package);
 
       }
 

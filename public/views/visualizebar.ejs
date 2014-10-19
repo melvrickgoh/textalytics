@@ -235,7 +235,7 @@
         return calculateMinMaxYears(superMinMax.min,superMinMax.max);
       }
 
-      var calculateMinMaxYears(min,max){
+      var calculateMinMaxYears = function(min,max){
         if (min!=max){
           var arr = [];
           for (var i = min; min<=max; i++){

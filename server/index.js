@@ -42,12 +42,12 @@ main_router.route('/ebola')
 		//res.send('welcome to head');
 	});
 
-main_router.route('/visualize')
+main_router.route('/nv')
 	.all(function(req,res){
 		res.render('visualize.ejs');
 	});
 
-main_router.route('/c3')
+main_router.route('/visualize')
 	.all(function(req,res){
 		res.render('visualizebar.ejs');
 	});

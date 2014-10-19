@@ -206,7 +206,6 @@
         }
         //console.log(PIE_COLUMNS);
         MOUSE_COUNTER++;
-        console.log(MOUSE_COUNTER + '   ' + INDUSTRIES_NUMBER);
         if (MOUSE_COUNTER == INDUSTRIES_NUMBER){
           updatePieCharts(individualValues.x);
         }
@@ -218,6 +217,10 @@
           $('#pie-chart').empty();
           PIE_CHART = c3.generate({
             bindto:'#pie-chart',
+            size:{
+              width:250,
+              height:500
+            },
             data:{
               columns:PIE_COLUMNS,
               type:'donut',

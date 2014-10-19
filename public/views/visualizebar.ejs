@@ -206,11 +206,8 @@
           }
         };
         var years = captureYears(dictionary);
-        console.log(years);
         c3package.data.groups = years;
 
-        console.log(c3package);
-        console.log(years);
         
         var industryKeys = Object.keys(dictionary);
         //c3package.data.groups.push(industryKeys);
@@ -227,6 +224,7 @@
               industryData.push(0);
             }
           }
+          console.log(JSON.stringify(industryData));
           c3package.data.columns.push(industryData);
         }
         //years.pop();

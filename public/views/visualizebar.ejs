@@ -28,7 +28,10 @@
 
         <!-- Sidebar -->
         <div id="sidebar-wrapper">
-          <a class="navbar-brand" href="#">Textalytics </a>
+          <h3 id="pie-year">2011</h3>
+          <div class='chart'>
+            <div id='pie-chart'></div>
+          </div>
         </div>
         <!-- /#sidebar-wrapper -->
 
@@ -38,6 +41,7 @@
                 <div class="row">
                     <div class="col-lg-12">
                         <div class="container">
+                          <h2>Projects over the years</h2>
                           <div class='chart'>
                             <div id='chart'></div>
                           </div>
@@ -203,6 +207,7 @@
           PIE_CHART.load(PIE_COLUMNS);
         }else{
           PIE_CHART = c3.generate({
+            bindto:'#pie-chart',
             data:{
               columns:PIE_COLUMNS,
               type:'donut',
@@ -213,9 +218,26 @@
             donut: {
               title: yearID
             }
-          })
+          });
         }
       }
+
+      PIE_CHART = c3.generate({
+        bindto:'#pie-chart',
+        data:{
+          columns:[
+            ['data1', 30],
+            ['data2', 120],
+          ],
+          type:'donut',
+          onclick: function (d, i) { console.log("onclick", d, i); },
+          onmouseover: function (d, i) { console.log("onmouseover", d, i); },
+          onmouseout: function (d, i) { console.log("onmouseout", d, i); }
+        },
+        donut: {
+          title: yearID
+        }
+      });
 
       var c3StackedBarFilter = function(dictionary){
         var c3package = {

@@ -122,7 +122,6 @@
       }
       
       var stackedBarData = function(rawData){
-        console.log(rawData);
         var dictionary = {};
         for(var i = 0; i<rawData.length; i++){
           var unit = rawData[i],
@@ -215,8 +214,8 @@
           }
           data.columns.push(industryData);
         }
-
-        document.selectElementById('chart') = c3.generate(c3package);
+        console.log(c3package);
+        //document.selectElementById('chart') = c3.generate(c3package);
 
       }
 

@@ -198,6 +198,9 @@
         var years = captureYears(dictionary);
         c3package.data.groups = years;
 
+        console.log(c3package);
+        console.log(years);
+        
         var industryKeys = Object.keys(dictionary);
         c3package.data.groups.push(industryKeys);
         for (var i = 0; i<industryKeys.length; i++){

@@ -194,7 +194,7 @@
             x:{
               label: { // ADD
                 text: 'Year',
-                position: 'outer-middle'
+                position: 'outer-center'
               }
             },
             y:{
@@ -204,6 +204,20 @@
                 position: 'outer-middle'
               }
             }
+          },
+          grid: {
+            x: {
+                show: true
+            },
+            y: {
+                show: true
+            }
+          },
+          subchart: {
+              show: true
+          },
+          zoom: {
+              enabled: true
           }
         };
         var years = captureYears(dictionary);

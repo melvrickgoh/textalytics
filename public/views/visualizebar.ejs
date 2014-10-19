@@ -234,14 +234,18 @@
           minMaxes.push(extractMinMaxYears(industryYearsKeys));
         }
         var superMinMax = extractSuperMinMax(minMaxes);
+        console.log('Super Min and Max');
         console.log(superMinMax);
+        console.log('Array calculate');
         console.log(calculateMinMaxYears(superMinMax.min,superMinMax.max));
         return calculateMinMaxYears(superMinMax.min,superMinMax.max);
       }
 
       var calculateMinMaxYears = function(min,max){
         min = parseInt(min);
+        console.log(min + '  ' + parseInt(min));
         max = parseInt(max);
+        console.log(max + '  ' + parseInt(max));
         if (min!=max){
           var arr = [];
           for (var i = min; min<=max; i++){

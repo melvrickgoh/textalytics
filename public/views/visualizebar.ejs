@@ -193,24 +193,27 @@
       var CURRENT_YEAR = 0,
       PIE_CHART,
       PIE_COLUMNS = [],
+      PIE_CHART_PROJECTS_COUNTER = 0,
       MOUSE_COUNTER = 0,
       mouseoverX = function(individualValues){
         if (CURRENT_YEAR != individualValues.x){
           CURRENT_YEAR = individualValues.x;
           PIE_COLUMNS = [];
           MOUSE_COUNTER = 0;
+          PIE_CHART_PROJECTS_COUNTER = 0;
         }
 
         if (individualValues.value > 0) {
           PIE_COLUMNS.push([individualValues.id,individualValues.value]);
         }
         //console.log(PIE_COLUMNS);
+        PIE_CHART_PROJECTS_COUNTER+=individualValues.value;
         MOUSE_COUNTER++;
         if (MOUSE_COUNTER == INDUSTRIES_NUMBER){
-          updatePieCharts(individualValues.x);
+          updatePieCharts(individualValues.x,PIE_CHART_PROJECTS_COUNTER);
         }
       },
-      updatePieCharts = function(yearID){
+      updatePieCharts = function(yearID,noProjects){
         if(PIE_CHART){
           /*console.log(PIE_CHART);
           PIE_CHART.flush();*/
@@ -229,7 +232,7 @@
               //onmouseout: function (d, i) { console.log("onmouseout", d, i); }
             },
             donut: {
-              title: yearID
+              title: yearID + '</br>'+ noProjects + ' projects'
             }
           });
         }else{

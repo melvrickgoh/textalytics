@@ -182,6 +182,7 @@
       }
 
       var c3StackedBarFilter = function(dictionary){
+        console.log('c3called');
         var c3package = {
           bindto:'#chart',
           data: {
@@ -292,10 +293,10 @@
       var getAllTeamsData = function(){
         xhr('/allteamsdata',function(results){
           var data = JSON.parse(results);
-          var filteredData = c3StackedBarFilter(stackedBarData(data));
+          var filteredData = stackedBarData(data);
           console.log('ALL TEAMS FILTER');
           console.log(filteredData);
-          //initializeGraph(filteredData);
+          c3StackedBarFilter(filteredData);
         });
       }
 

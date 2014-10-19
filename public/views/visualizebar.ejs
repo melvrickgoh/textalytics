@@ -169,9 +169,11 @@
         return dictionary;
       }
 
-      var filterStackedBarDictionary = function(dictionary){
+      var INDUSTRIES_NUMBER,
+      filterStackedBarDictionary = function(dictionary){
         var valuesData = [],
         industryKeys = Object.keys(dictionary);
+        INDUSTRIES_NUMBER = industryKeys.length;
         for(var i = 0; i<industryKeys.length; i++){
           var industryName = industryKeys[i],
           industrySet = dictionary[industryName],
@@ -190,18 +192,23 @@
       var CURRENT_YEAR = 0,
       PIE_CHART,
       PIE_COLUMNS = [],
+      MOUSE_COUNTER = 0,
       mouseoverX = function(individualValues){
         if (CURRENT_YEAR != individualValues.x){
           CURRENT_YEAR = individualValues.x;
           PIE_COLUMNS = [];
+          MOUSE_COUNTER = 0;
         }
 
         if (individualValues.value > 0) {
           PIE_COLUMNS.push([individualValues.id,individualValues.value]);
         }
         //console.log(PIE_COLUMNS);
-
-        updatePieCharts(individualValues.x);
+        MOUSE_COUNTER++;
+        console.log(MOUSE_COUNTER + '   ' + INDUSTRIES_NUMBER);
+        if (MOUSE_COUNTER == INDUSTRIES_NUMBER){
+          updatePieCharts(individualValues.x);
+        }
       },
       updatePieCharts = function(yearID){
         if(PIE_CHART){

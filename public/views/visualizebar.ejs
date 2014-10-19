@@ -233,9 +233,9 @@
           industryYearsKeys = Object.keys(industrySet);
           minMaxes.push(extractMinMaxYears(industryYearsKeys));
         }
-
+        console.log(minMaxes);
         var superMinMax = extractSuperMinMax(minMaxes);
-
+        console.log(superMinMax);
         return calculateMinMaxYears(superMinMax.min,superMinMax.max);
       }
 

@@ -197,7 +197,7 @@
               }
             },
             y:{
-              //lines:[{value:0}],
+              lines:[{value:0}],
               label: { // ADD
                 text: 'No. of Projects',
                 position: 'outer-middle'
@@ -206,7 +206,7 @@
           }
         };
         var years = captureYears(dictionary);
-        c3package.data.groups = years;
+        c3package.data.groups = [years];
 
         
         var industryKeys = Object.keys(dictionary);

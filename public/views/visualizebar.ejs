@@ -16,6 +16,7 @@
 
     <!-- Custom styles for this template -->
     <link href="http://getbootstrap.com/examples/jumbotron/jumbotron.css" rel="stylesheet">
+    <link href="/simple-sidebar.css" rel="stylesheet">
     <link href="/c3.css" rel="stylesheet">
     
 
@@ -38,11 +39,9 @@
     </div>
 
     <!-- Main jumbotron for a primary marketing message or call to action -->
-    <div class="jumbotron">
-      <div class="container">
-        <div class='chart'>
-          <div id='chart'></div>
-        </div>
+    <div class="container">
+      <div class='chart'>
+        <div id='chart'></div>
       </div>
     </div>
 
@@ -179,6 +178,38 @@
           valuesData.push(industryGroup);
         }
         return valuesData;
+      }
+
+      var CURRENT_YEAR = 0,
+      PIE_CHART,
+      PIE_COLUMNS = [],
+      mouseoverX = function(individualValues){
+        if (CURRENT_YEAR != individualValues.x){
+          CURRENT_YEAR = individualValues.x;
+          PIE_COLUMNS = [];
+        }
+
+        if (individualValues.value > 0) {
+          PIE_COLUMNS.push([individualValues.id,individualValues.value]);
+        }
+      },
+      updatePieCharts = function(yearID){
+        if(PIE_CHART){
+          PIE_CHART.load(PIE_COLUMNS);
+        }else{
+          PIE_CHART = c3.generate({
+            data:{
+              columns:PIE_COLUMNS,
+              type:'donut',
+              onclick: function (d, i) { console.log("onclick", d, i); },
+              onmouseover: function (d, i) { console.log("onmouseover", d, i); },
+              onmouseout: function (d, i) { console.log("onmouseout", d, i); }
+            },
+            donut: {
+              title: yearID
+            }
+          })
+        }
       }
 
       var c3StackedBarFilter = function(dictionary){

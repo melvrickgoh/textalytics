@@ -205,13 +205,14 @@
           }
         };
         var years = captureYears(dictionary);
+        console.log(years);
         c3package.data.groups = years;
 
         console.log(c3package);
         console.log(years);
         
         var industryKeys = Object.keys(dictionary);
-        c3package.data.groups.push(industryKeys);
+        //c3package.data.groups.push(industryKeys);
         for (var i = 0; i<industryKeys.length; i++){
           var industryName = industryKeys[i],
           industrySet = dictionary[industryName],
@@ -227,9 +228,8 @@
           }
           c3package.data.columns.push(industryData);
         }
-        years.pop();
-        console.log(years);
-        c3package.data.groups = years;
+        //years.pop();
+        //c3package.data.groups = years;
         console.log(c3package);
         c3.generate(c3package);
 

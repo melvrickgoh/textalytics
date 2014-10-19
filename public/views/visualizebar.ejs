@@ -101,7 +101,6 @@
         nv.addGraph(function() {
           var chart = nv.models.multiBarChart()
                         .showControls(true);
-          console.log(chart);
 
           chart.xAxis
               .axisLabel('Number of Projects');
@@ -182,7 +181,6 @@
       }
 
       var c3StackedBarFilter = function(dictionary){
-        console.log('c3called');
         var c3package = {
           bindto:'#chart',
           data: {
@@ -191,8 +189,18 @@
             groups:[]
           },
           grid: {
+            x:{
+              label: { // ADD
+                text: 'Year',
+                position: 'outer-middle'
+              }
+            },
             y:{
-              lines:[{value:0}]
+              lines:[{value:0}],
+              label: { // ADD
+                text: 'No. of Projects',
+                position: 'outer-middle'
+              }
             }
           }
         };
@@ -220,7 +228,7 @@
           c3package.data.columns.push(industryData);
         }
         console.log(c3package);
-        c3.generate(c3package);
+        //c3.generate(c3package);
 
       }
 

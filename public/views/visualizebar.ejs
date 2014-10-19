@@ -203,7 +203,12 @@
       },
       updatePieCharts = function(yearID){
         if(PIE_CHART){
-          PIE_CHART.load(PIE_COLUMNS);
+          PIE_CHART.load({
+            columns:PIE_COLUMNS,
+            donut: {
+              title: yearID
+            }
+          });
         }else{
           PIE_CHART = c3.generate({
             bindto:'#pie-chart',

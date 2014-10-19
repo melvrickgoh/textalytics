@@ -217,7 +217,7 @@
               industryData.push(0);
             }
           }
-          data.columns.push(industryData);
+          c3package.data.columns.push(industryData);
         }
         console.log(c3package);
         c3.generate(c3package);
@@ -236,26 +236,19 @@
         var superMinMax = extractSuperMinMax(minMaxes);
         console.log('Super Min and Max');
         console.log(superMinMax);
-        console.log('Array calculate');
-        console.log(calculateMinMaxYears(superMinMax.min,superMinMax.max));
+        console.log('Array calculate >>> ' + JSON.stringify(calculateMinMaxYears(superMinMax.min,superMinMax.max)));
         return calculateMinMaxYears(superMinMax.min,superMinMax.max);
       }
 
       var calculateMinMaxYears = function(min,max){
-        console.log(min);
         min = parseInt(min);
-        console.log(parseInt(min));
-        console.log(max);
         max = parseInt(max);
-        console.log(parseInt(max));
         if (min!=max){
           console.log('processing min max' + typeof(min) + typeof max);
           var arr = [];
           for (var i = min; i<max+1; i++){
-            console.log(i);
             arr.push(i);
           }
-          console.log(arr);
           return arr;
         }else{
           return [min];

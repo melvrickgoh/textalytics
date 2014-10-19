@@ -199,7 +199,9 @@
         if (individualValues.value > 0) {
           PIE_COLUMNS.push([individualValues.id,individualValues.value]);
         }
-        console.log(PIE_COLUMNS);
+        //console.log(PIE_COLUMNS);
+
+        updatePieCharts(individualValues.x);
       },
       updatePieCharts = function(yearID){
         if(PIE_CHART){
@@ -267,7 +269,6 @@
             labels:true,
             onmouseover:function(e){
               mouseoverX(e);
-              setTimeout(function(){updatePieCharts(e.x);},500);
             }
           },
           axis: {

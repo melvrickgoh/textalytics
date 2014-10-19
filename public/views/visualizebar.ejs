@@ -409,7 +409,7 @@
           var filteredData = stackedBarData(data);
           console.log('ALL TEAMS FILTER');
           console.log(filteredData);
-          INDUSTRIES_NUMBER = filteredData.length;
+          INDUSTRIES_NUMBER = Object.keys(filteredData).length;
           c3StackedBarFilter(filteredData);
         });
       }

@@ -28,6 +28,8 @@
         <!-- Sidebar -->
         <div id="sidebar-wrapper">
           <div class='chart'>
+            <h3>Year Details</h3>
+            <p id="yd-des">Mouseover the bar chart by years to get a further breakdown</p>
             <div id='pie-chart'></div>
           </div>
         </div>
@@ -214,6 +216,7 @@
         }
       },
       updatePieCharts = function(yearID,noProjects){
+        $('#yd-des').empty();
         if(PIE_CHART){
           /*console.log(PIE_CHART);
           PIE_CHART.flush();*/
@@ -252,7 +255,7 @@
         }
       }
 
-      PIE_CHART = c3.generate({
+      /*PIE_CHART = c3.generate({
         bindto:'#pie-chart',
         data:{
           columns:[
@@ -267,7 +270,7 @@
         donut: {
           title: 2011
         }
-      });
+      });*/
 
       var c3StackedBarFilter = function(dictionary){
         var c3package = {
@@ -339,7 +342,6 @@
         //years.pop();
         //c3package.data.groups = years;
         c3.generate(c3package);
-
       }
 
       var captureYears = function(dictionary){

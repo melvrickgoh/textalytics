@@ -27,7 +27,6 @@
 
         <!-- Sidebar -->
         <div id="sidebar-wrapper">
-          <h3 id="pie-year">2011</h3>
           <div class='chart'>
             <div id='pie-chart'></div>
           </div>
@@ -250,7 +249,8 @@
             type:'bar',
             groups:[],
             onmouseover:function(e){
-              console.log(e);
+              mouseoverX(e);
+              setTimeout(500,function(e){updatePieCharts(e.x);});
             }
           },
           axis: {
@@ -305,7 +305,6 @@
           c3package.data.columns.push(industryData);
         }
         //years.pop();
-        console.log(c3package);
         //c3package.data.groups = years;
         c3.generate(c3package);
 

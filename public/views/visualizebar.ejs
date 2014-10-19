@@ -206,6 +206,10 @@
           PIE_CHART.destroy();
           PIE_CHART = c3.generate({
             bindto:'#pie-chart',
+            size:{
+              width:225,
+              height:225
+            },
             data:{
               columns:PIE_COLUMNS,
               type:'donut',

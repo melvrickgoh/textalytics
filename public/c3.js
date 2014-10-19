@@ -1194,9 +1194,7 @@
             hasNegativeValue = $$.hasNegativeValueInTargets(targets);
             for (j = 0; j < config.data_groups.length; j++) {
                 // Determine baseId
-                console.log(config);
-                console.log(config.data_groups[j]);
-                idsInGroup = config.data_groups[j].filter(function (id) { console.log('wanted id >>> ' + id); return ids.indexOf(id) >= 0; });
+                idsInGroup = config.data_groups[j].filter(function (id) { return ids.indexOf(id) >= 0; });
                 if (idsInGroup.length === 0) { continue; }
                 baseId = idsInGroup[0];
                 // Consider negative values

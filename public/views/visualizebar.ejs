@@ -184,12 +184,14 @@
       var c3StackedBarFilter = function(dictionary){
         var c3package = {
           bindto:'#chart',
+          size:{
+            height:550
+          }
           data: {
             x:'x',
             columns:[],
             type:'bar',
-            groups:[],
-            labels:true
+            groups:[]
           },
           axis: {
             x:{

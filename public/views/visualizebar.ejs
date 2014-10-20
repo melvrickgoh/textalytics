@@ -64,7 +64,7 @@
               <h4 class="modal-title" id="projectsModalTitle"></h4>
             </div>
             <div class="modal-body">
-                <div class="panel-group" id="accordion" id="projectsModalBody">
+                <div class="panel-group" id="accordion">
                   
                   
                 </div>
@@ -119,8 +119,8 @@
       }
 
       var generatePanels = function(industryName,year){
-        $('#projectsModalBody').empty();
-        console.log($('#projectsModalBody'));
+        $('#accordion').empty();
+        console.log($('#accordion'));
         var panelHTML = '<div class="panel panel-default">'
           +'<div class="panel-heading">'
             +'<h4 class="panel-title">'
@@ -142,9 +142,9 @@
           var team = teams[i];
 
           var modal = generateModal(team);
-          document.getElementById('projectsModalBody').appendChild(modal);
+          document.getElementById('accordion').appendChild(modal);
         }
-        console.log($('#projectsModalBody'));
+        console.log($('#accordion'));
       }
 
       function data() {

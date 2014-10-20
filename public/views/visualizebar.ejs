@@ -110,11 +110,25 @@
             +'</div>'
           +'</div>'
         +'</div>';
+
         var teams = DICTIONARY[industryName][year];
         console.log(teams);
         for (var i = 0; i<teams.length; i++){
           var team = teams[i];
-          console.log($('#projectsModalBody').append(panelHTML));
+          console.log($('#projectsModalBody').append('<div class="panel panel-default">'
+          +'<div class="panel-heading">'
+            +'<h4 class="panel-title">'
+              +'<a data-toggle="collapse" data-parent="#accordion" href="#'+team.teamname+'">'
+                +team.teamname
+              +'</a>'
+            +'</h4>'
+          +'</div>'
+          +'<div id="'+team.teamname+'" class="panel-collapse collapse in">'
+            +'<div class="panel-body">'
+              + 'Organization: ' + team.witorganizations
+            +'</div>'
+          +'</div>'
+        +'</div>'));
         }
       }
 

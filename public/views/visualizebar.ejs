@@ -97,11 +97,13 @@
       var genGroup = function(title,text){
         var row = document.createElement('tr');
         var tdTitle = document.createElement('td');
-        tdTitle.innerHTML = title;
+        tdTitle.innerHTML = '<b>'+title+'</b>';
+        var tdSpace = document.createElement('td');
         var tdValue = document.createElement('td');
         tdValue.innerHTML = text;
 
         row.appendChild(tdTitle);
+        row.appendChild(tdSpace);
         row.appendChild(tdValue);
         return row;
       }
@@ -119,7 +121,7 @@
         var hrefCollapse = document.createElement('a');
         hrefCollapse.setAttribute('data-toggle','collapse');
         hrefCollapse.setAttribute('data-parent','#accordion');
-        hrefCollapse.setAttribute('href','#'+team.teamname);
+        hrefCollapse.setAttribute('href','#'+team.id);
         hrefCollapse.innerHTML = team.teamname;
 
         header.appendChild(hrefCollapse);
@@ -129,7 +131,7 @@
         superDiv.appendChild(panelHeadingDiv);
 
         var bodyDiv = document.createElement('div');
-        bodyDiv.setAttribute('id',team.teamname);
+        bodyDiv.setAttribute('id',team.id);
         bodyDiv.setAttribute('class','panel-collapse collapse in');
 
         var bdDiv = document.createElement('div');

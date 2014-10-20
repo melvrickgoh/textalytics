@@ -93,9 +93,30 @@
         var industryKeys = Object.keys(dictionary);
         
       }
-      var generateModal = function(){
+      var generateModal = function(team){
         var superDiv = document.createElement('div');
-        superDiv.addClass('panel panel-default');
+        superDiv.addClass('panel');
+        superDiv.addClass('panel-default');
+
+        var panelHeadingDiv = document.createElement('div');
+        panelHeadingDiv.addClass('panel-heading');
+
+        var header = document.createElement('h4');
+        header.addClass('panel-title');
+
+        var hrefCollapse = document.createElement('a');
+        hrefCollapse.setAttribute('data-toggle','collapse');
+        hrefCollapse.setAttribute('data-parent','#accordion');
+        hrefCollapse.setAttribute('href','#'+team.teamname);
+        hrefCollapse.innerHTML = team.teamname;
+
+        header.appendChild(hrefCollapse);
+
+        panelHeadingDiv.appendChild(header);
+
+        superDiv.appendChild(panelHeadingDiv);
+
+        return superDiv;
       }
 
       var generatePanels = function(industryName,year){
@@ -121,20 +142,8 @@
         for (var i = 0; i<teams.length; i++){
           var team = teams[i];
 
-          $('#projectsModalBody').append($('<div class="panel panel-default">'
-          +'<div class="panel-heading">'
-            +'<h4 class="panel-title">'
-              +'<a data-toggle="collapse" data-parent="#accordion" href="#'+team.teamname+'">'
-                +team.teamname
-              +'</a>'
-            +'</h4>'
-          +'</div>'
-          +'<div id="'+team.teamname+'" class="panel-collapse collapse in">'
-            +'<div class="panel-body">'
-              + 'Organization: ' + team.witorganizations
-            +'</div>'
-          +'</div>'
-        +'</div>'));
+          var modal = generateModal(team);
+          $('#projectsModalBody').append($(modal));
         }
         console.log($('#projectsModalBody'));
       }

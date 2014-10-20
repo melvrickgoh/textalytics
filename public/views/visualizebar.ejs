@@ -242,6 +242,9 @@
         }
       },
       updateAndShowModal = function(group,year){
+        if(!year){
+          year == 2007;
+        }
         $('#projectsModalTitle').html(group + ' Projects for ' + year);
 
         $('#projectsModalButton').click();
@@ -262,6 +265,7 @@
               columns:PIE_COLUMNS,
               type:'donut',
               onclick: function (d, i) { 
+                updateAndShowModal(d.id,CURRENT_YEAR);
                 console.log("onclick", CURRENT_YEAR, d, i);
               },
               onmouseover: function (d, i) { console.log("onmouseover", d, i); },

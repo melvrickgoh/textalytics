@@ -142,7 +142,7 @@
           var team = teams[i];
 
           var modal = generateModal(team);
-          $('#projectsModalBody').append($(modal));
+          document.getElementById('projectsModalBody').appendChild(modal);
         }
         console.log($('#projectsModalBody'));
       }

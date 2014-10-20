@@ -140,10 +140,10 @@
         var table = document.createElement('table');
         table.appendChild(genGroup('TeamID',team.id));
         table.appendChild(genGroup('Sponsor',team.witorganizations));
-        table.appendChild(genGroup('Members',team.teammembers.replace(';',',')));
+        table.appendChild(genGroup('Members',team.teammembers.replaceAll(';',',')));
 
         if(team.teampage){
-          table.appendChild(genGroup('Team Wiki',team.teampage));
+          table.appendChild(genGroup('Team Wiki','<a href="'+team.teampage+'">'+team.teamname+'</a>'));
         }
 
         if(team.liname){

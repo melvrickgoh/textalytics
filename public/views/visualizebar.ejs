@@ -96,6 +96,7 @@
 
       var generatePanels = function(industryName,year){
         $('#projectsModalBody').empty();
+        console.log($('#projectsModalBody'));
         var panelHTML = '<div class="panel panel-default">'
           +'<div class="panel-heading">'
             +'<h4 class="panel-title">'
@@ -115,7 +116,8 @@
         console.log(teams);
         for (var i = 0; i<teams.length; i++){
           var team = teams[i];
-          console.log($('#projectsModalBody').append('<div class="panel panel-default">'
+
+          $('#projectsModalBody').append('<div class="panel panel-default">'
           +'<div class="panel-heading">'
             +'<h4 class="panel-title">'
               +'<a data-toggle="collapse" data-parent="#accordion" href="#'+team.teamname+'">'
@@ -128,8 +130,9 @@
               + 'Organization: ' + team.witorganizations
             +'</div>'
           +'</div>'
-        +'</div>'));
+        +'</div>');
         }
+        console.log($('#projectsModalBody'));
       }
 
       function data() {

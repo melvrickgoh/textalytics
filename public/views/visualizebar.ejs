@@ -55,6 +55,26 @@
 
     </div>
 
+    <div id="modal-party">
+      <div class="modal fade" id="projectsModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+              <h4 class="modal-title" id="projectsModalTitle"></h4>
+            </div>
+            <div class="modal-body" id="projectsModalBody"></div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <button class="btn btn-primary" data-toggle="modal" data-target="#projectsModal"></button>
+    </div>
+
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
@@ -64,6 +84,11 @@
     <script src="/c3.js"></script>
 
     <script>
+      var captureYearProjects = function(year,dictionary){
+        var industryKeys = Object.keys(dictionary);
+        
+      }
+
       function data() {
         return stream_layers(3,10+Math.random()*100,.1).map(function(data, i) {
           return {
@@ -231,7 +256,7 @@
             data:{
               columns:PIE_COLUMNS,
               type:'donut',
-              onclick: function (d, i) { console.log("onclick", d, i); },
+              onclick: function (d, i) { console.log("onclick", CURRENT_YEAR, d, i); },
               onmouseover: function (d, i) { console.log("onmouseover", d, i); },
               onmouseout: function (d, i) { console.log("onmouseout", d, i); }
             },
@@ -255,23 +280,6 @@
           });
         }
       }
-
-      /*PIE_CHART = c3.generate({
-        bindto:'#pie-chart',
-        data:{
-          columns:[
-            ['data1', 30],
-            ['data2', 120],
-          ],
-          type:'donut',
-          onclick: function (d, i) { console.log("onclick", d, i); }
-          //onmouseover: function (d, i) { console.log("onmouseover", d, i); },
-          //onmouseout: function (d, i) { console.log("onmouseout", d, i); }
-        },
-        donut: {
-          title: 2011
-        }
-      });*/
 
       var c3StackedBarFilter = function(dictionary){
         var c3package = {

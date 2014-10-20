@@ -63,22 +63,9 @@
               <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
               <h4 class="modal-title" id="projectsModalTitle"></h4>
             </div>
-            <div class="modal-body" id="projectsModalBody">
-                <div class="panel-group" id="accordion">
-                  <div class="panel panel-default">
-                    <div class="panel-heading">
-                      <h4 class="panel-title">
-                        <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
-                          Collapsible Group Item #1
-                        </a>
-                      </h4>
-                    </div>
-                    <div id="collapseOne" class="panel-collapse collapse in">
-                      <div class="panel-body">
-                        Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
-                      </div>
-                    </div>
-                  </div>
+            <div class="modal-body">
+                <div class="panel-group" id="accordion" id="projectsModalBody">
+                  
                   <div class="panel panel-default">
                     <div class="panel-heading">
                       <h4 class="panel-title">
@@ -118,6 +105,29 @@
       var captureYearProjects = function(year,dictionary){
         var industryKeys = Object.keys(dictionary);
         
+      }
+
+      var generatePanels = function(industryName,year){
+        $('#projectsModalBody').empty();
+        var panelHTML = '<div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+                Collapsible Group Item #1
+              </a>
+            </h4>
+          </div>
+          <div id="collapseOne" class="panel-collapse collapse in">
+            <div class="panel-body">
+              
+            </div>
+          </div>
+        </div>';
+        var teams = DICTIONARY[industryName][year];
+        for (var i = 0; i<teams.length; i++){
+          var team = teams[i];
+          $('#projectsModalBody').append(panelHTML);
+        }
       }
 
       function data() {
@@ -295,8 +305,9 @@
             data:{
               columns:PIE_COLUMNS,
               type:'donut',
-              onclick: function (d, i) { 
+              onclick: function (d, i) {
                 updateAndShowModal(d.id,CURRENT_YEAR);
+                generatePanels(d.id,CURRENT_YEAR);
                 console.log("onclick", CURRENT_YEAR, d, i);
               },
               onmouseover: function (d, i) { console.log("onmouseover", d, i); },
@@ -461,11 +472,12 @@
           return false;
         }
       }
-
+      var DICTIONARY;
       var getAllTeamsData = function(){
         xhr('/allteamsdata',function(results){
           var data = JSON.parse(results);
           var filteredData = stackedBarData(data);
+          DICTIONARY = filteredData;
           console.log('ALL TEAMS FILTER');
           console.log(filteredData);
           INDUSTRIES_NUMBER = Object.keys(filteredData).length;

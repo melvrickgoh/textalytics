@@ -93,6 +93,19 @@
         var industryKeys = Object.keys(dictionary);
         
       }
+
+      var genGroup = function(title,text){
+        var row = document.createElement('tr');
+        var tdTitle = document.createElement('td');
+        tdTitle.innerHTML = title;
+        var tdValue = document.createElement('td');
+        tdValue.innerHTML = text;
+
+        tr.appendChild(tdTitle);
+        tr.appendChild(tdValue);
+        return tr;
+      }
+
       var generateModal = function(team){
         var superDiv = document.createElement('div');
         superDiv.setAttribute('class','panel panel-default');
@@ -114,6 +127,32 @@
         panelHeadingDiv.appendChild(header);
 
         superDiv.appendChild(panelHeadingDiv);
+
+        var bodyDiv = document.createElement('div');
+        bodyDiv.setAttribute('id',team.teamname);
+        bodyDiv.setAttribute('class','panel-collapse collapse in');
+
+        var bdDiv = document.createElement('div');
+        bdDiv.setAttribute('class','panel-body');
+
+        var table = document.createElement('table');
+        table.appendChild(genGroup('TeamID',team.id));
+        table.appendChild(genGroup('Sponsor',team.witorganizations));
+        table.appendChild(genGroup('Members',team.teammembers.replace(';',',')));
+
+        if(team.teampage){
+          table.appendChild(genGroup('Team Wiki',team.teampage));
+        }
+
+        if(team.liname){
+          table.appendChild(genGroup('Sponsor',team.liname));
+        }
+
+        bdDiv.appendChild(table);
+
+        bodyDiv.appendChild(bdDiv);
+
+        superDiv.appendChild(bodyDiv);
 
         return superDiv;
       }

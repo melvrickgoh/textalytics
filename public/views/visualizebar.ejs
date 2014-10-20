@@ -124,6 +124,7 @@
           +'</div>'
         +'</div>';
         var teams = DICTIONARY[industryName][year];
+        console.log(teams);
         for (var i = 0; i<teams.length; i++){
           var team = teams[i];
           $('#projectsModalBody').append(panelHTML);
@@ -310,8 +311,8 @@
                 generatePanels(d.id,CURRENT_YEAR);
                 console.log("onclick", CURRENT_YEAR, d, i);
               },
-              onmouseover: function (d, i) { console.log("onmouseover", d, i); },
-              onmouseout: function (d, i) { console.log("onmouseout", d, i); }
+              onmouseover: function (d, i) { },//console.log("onmouseover", d, i); },
+              onmouseout: function (d, i) { }//console.log("onmouseout", d, i); }
             },
             donut: {
               title: yearID + '(' + noProjects + ' projects)'

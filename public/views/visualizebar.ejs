@@ -288,7 +288,7 @@
           year == 2007;
         }
         $('#projectsModalTitle').html(group + ' Projects for ' + year);
-        generatePanels(d.id,CURRENT_YEAR);
+        generatePanels(group,year);
         $('#projectsModalButton').click();
       },
       updatePieCharts = function(yearID,noProjects){

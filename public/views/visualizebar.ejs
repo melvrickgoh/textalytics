@@ -260,7 +260,7 @@
         return valuesData;
       }
 
-      var CURRENT_YEAR = 0,
+      var CURRENT_YEAR = 2007,
       PIE_CHART,
       PIE_COLUMNS = [],
       PIE_CHART_PROJECTS_COUNTER = 0,
@@ -309,7 +309,7 @@
               onclick: function (d, i) {
                 updateAndShowModal(d.id,CURRENT_YEAR);
                 
-                console.log("onclick", CURRENT_YEAR, d, i);
+                //console.log("onclick", CURRENT_YEAR, d, i);
               },
               onmouseover: function (d, i) { },//console.log("onmouseover", d, i); },
               onmouseout: function (d, i) { }//console.log("onmouseout", d, i); }

@@ -109,20 +109,20 @@
 
       var generatePanels = function(industryName,year){
         $('#projectsModalBody').empty();
-        var panelHTML = '<div class="panel panel-default">
-          <div class="panel-heading">
-            <h4 class="panel-title">
-              <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
-                Collapsible Group Item #1
-              </a>
-            </h4>
-          </div>
-          <div id="collapseOne" class="panel-collapse collapse in">
-            <div class="panel-body">
+        var panelHTML = '<div class="panel panel-default">'
+          +'<div class="panel-heading">'
+            +'<h4 class="panel-title">'
+              +'<a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">'
+                +'Collapsible Group Item #1'
+              +'</a>'
+            +'</h4>'
+          +'</div>'
+          +'<div id="collapseOne" class="panel-collapse collapse in">'
+            +'<div class="panel-body">'
               
-            </div>
-          </div>
-        </div>';
+            +'</div>'
+          +'</div>'
+        +'</div>';
         var teams = DICTIONARY[industryName][year];
         for (var i = 0; i<teams.length; i++){
           var team = teams[i];

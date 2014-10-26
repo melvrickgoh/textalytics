@@ -153,7 +153,21 @@
           
           updateDisplayPhase1(startTimePhase1,endTimePhase1,projectDescription,keywordsArray,keyphrasesArray);
 
+          var startTimePhase2 = new Date().getMilliseconds();
+          phase2URL = '/api/wit?name='+ teamName + '&id=' + results.ID + '&sponsor=' + sponsorDescription;
+          XHR('GET',phase2URL,function(phase2results){
+            
+            console.log(phase2results);
+
+          });
+
+
         });
+      }
+
+      var classifySponsors = function(){
+
+
       }
 
       var updateDisplayPhase1 = function(startTime,endTime,projectDescription,keywordsArray,keyphrasesArray){

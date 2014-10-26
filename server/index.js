@@ -189,6 +189,43 @@ main_router.route('/linkedin/processSearch')
 		});
 	});
 
+main_router.route('/api/wit')
+	.all(function(req,res){
+		req.setTimeout(200000000,function () {
+		  req.abort();
+		  console.log("timeout");
+		  self.emit('pass',message);
+		});
+		var teamName = req.query.name,
+		teamID = req.query.id,
+		teamSponsor = req.query.sponsor;
+
+		var team = {
+			id:teamID,
+			team:teamName,
+			sponsor:teamSponsor
+		};
+
+		var sponsorIntepretation = wit.requestWit(team);
+		sponsorIntepretation.when(function(err,response){
+			if (err) console.log(err); // handle error here
+			//team.intepretation = response;
+			var processedResults = wit.processWitResults(response);
+			if (processedResults.outcome && processedResults.outcome.intent == 'sponsor'){
+				tDAO.updateTeamWitData(response.id,processedResults,function(isSuccess){
+					res.json(processedResults);
+				});
+			}else{
+				tDAO.updateInvalidIntent(response.id,processedResults,function(isSuccess){
+					if (witCounter == results.length-1) {
+						res.json('Invalid Intent');
+					}
+				});
+			}
+		});
+
+	});
+
 main_router.route('/teamwit')
 	.all(function(req,res){
 		req.setTimeout(200000000,function () {

@@ -94,8 +94,20 @@
 
           <div class="blog-post">
             <h2 class="blog-post-title">Phase 1: Keyphrase Extraction</h2>
-            <p class="blog-post-meta" id="phase1tracking">January 1, 2014 by Java Platform</p>
+            <p class="blog-post-meta" id="phase1tracking">January 1, 2014 by Lucene/OpenNLP (Java Platform)</p>
             <div id="keyphraseDes">
+
+            </div>
+          </div><!-- /.blog-post -->
+
+        </div>
+
+        <div id="phase2">
+
+          <div class="blog-post">
+            <h2 class="blog-post-title">Phase 2: Sponsor Classification</h2>
+            <p class="blog-post-meta" id="phase2tracking">January 1, 2014 on Wit.AI (NodeJS Platform)</p>
+            <div id="witDes">
 
             </div>
           </div><!-- /.blog-post -->
@@ -173,7 +185,7 @@
       var updateDisplayPhase1 = function(startTime,endTime,projectDescription,keywordsArray,keyphrasesArray){
         var timeDifference = (endTime - startTime)/1000;
         var phase1tracking = document.getElementById('phase1tracking');
-        phase1tracking.innerHTML = 'Process completed in ' + timeDifference + ' seconds';
+        phase1tracking.innerHTML = 'Process completed in ' + timeDifference + ' seconds on Lucene/OpenNLP (Java Platform)';
 
         var phase1Des = document.getElementById('keyphraseDes');
         console.log(phase1Des);
@@ -281,6 +293,7 @@
       $(document).ready(function() {
         //textalyticsKeyphrase();
         $('#phase1').hide();
+        $('#phase2').hide();
       } );
     </script>
 

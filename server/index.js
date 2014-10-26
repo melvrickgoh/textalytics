@@ -201,7 +201,7 @@ main_router.route('/api/wit')
 		teamSponsor = req.query.sponsor;
 
 		var team = {
-			id:teamID,
+			id:parseInt(teamID),
 			team:teamName,
 			sponsor:teamSponsor
 		};

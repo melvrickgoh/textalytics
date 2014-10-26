@@ -166,7 +166,7 @@
           updateDisplayPhase1(startTimePhase1,endTimePhase1,projectDescription,keywordsArray,keyphrasesArray);
 
           var startTimePhase2 = new Date().getMilliseconds();
-          phase2URL = '/api/wit?name='+ teamName + '&id=' + results.ID + '&sponsor=' + sponsorDescription;
+          phase2URL = '/api/wit?name='+ teamName + '&id=' + jsonResults.ID + '&sponsor=' + sponsorDescription;
           XHR('GET',phase2URL,function(phase2results){
             
             console.log(phase2results);

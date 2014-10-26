@@ -193,7 +193,7 @@
         var keywordsTable = document.createElement('table');
         keywordsTable.className = 'table';
 
-        var tableHeader = document.createElement('thread');
+        var tableHeader = document.createElement('thead');
         var trHead = document.createElement('tr');
         trHead.appendChild(generateTh('Stem'));
         trHead.appendChild(generateTh('Frequency'));
@@ -216,7 +216,7 @@
         phase1Des.appendChild(keyphrasesTitle);
 
         var keyphrasesDes = document.createElement('p');
-        keyphrasesDes.innerHTML='Keyphrases are acquired by cross-referencing frequency analyses results with POS-Tagged groups.';
+        keyphrasesDes.innerHTML='Keyphrases are acquired by cross-referencing frequency analyses results with POS-Tagged groups. The keyphrases identified are from the above input are listed as follows:';
         phase1Des.appendChild(keyphrasesDes);
         phase1Des.appendChild(document.createElement('br'));
 

@@ -113,6 +113,18 @@
           </div><!-- /.blog-post -->
 
         </div>
+
+        <div id="phase3">
+
+          <div class="blog-post">
+            <h2 class="blog-post-title">Phase 3: Industry Classification</h2>
+            <p class="blog-post-meta" id="phase3tracking"></p>
+            <div id="linkedInDes">
+
+            </div>
+          </div><!-- /.blog-post -->
+
+        </div>
       </div>
     </div>
 
@@ -175,10 +187,86 @@
             document.getElementById('phase2tracking').innerHTML = 'Process completed in ' + timeDifference + ' seconds on Wit.AI (NodeJS Platform) with a confidence of ' + jsonResults.confidence;
             updateDisplayPhase2(jsonResults);
 
+            var startTimePhase3 = new Date().getMilliseconds();
+            if (jsonResults.organizations.length > 0) {
+              phase3URL = '/api/linkedin?company=' + jsonResults.organizations[0] + '&id=' + jsonResults.ID;
+              XHR('GET',phase3URL,function(phase3Results){
+                var phase3JSON = JSON.parse(phase3Results);
+                var liWorking = phase3JSON.liWorked,
+                linkedInResults = phase3JSON.linkedin,
+                dbResults = phase3JSON.db;
+
+                if (liWorking){
+                  updateDisplayPhase3('linkedin',startTimePhase3,jsonResults.organizations[0],linkedInResults);
+                }
+              });
+            }else{
+              if (jsonResults.startup){
+                updateDisplayPhase3('startup');
+              }else{
+                updateDisplayPhase3('noresults');
+              }
+            }
+            
+
           });
-
-
         });
+      }
+
+      var updateDisplayPhase3 = function(caseType,startTime,company,linkedInResults){
+        var linkedInDisplay = function(company,lir){
+          var endTimePhase3 = new Date().getMilliseconds(),
+          timeDifference = (endTimePhase3-startTime)/1000;
+          document.getElementById('phase3tracking').innerHTML = 'Process completed in ' + timeDifference + ' seconds on LinkedIn Search (NodeJS Platform)';
+
+          var linkedInDescription = document.getElementById('linkedInDes');
+
+          var originalTitle = document.createElement('h3');
+          originalTitle.innerHTML = 'Original Content';
+          linkedInDescription.appendChild(originalTitle);
+
+          var originalContent = document.createElement('p');
+          originalContent.innerHTML = company;
+          linkedInDescription.appendChild(originalContent);
+          linkedInDescription.appendChild(document.createElement('br'));
+
+          var descriptionPara = document.createElement('p');
+          descriptionPara.innerHTML = 'Classification by industry is done via meta-search through linkedin. Future work could include abstracting the classification up the higher levels. Too many industry groups might not be the best idea';
+          linkedInDescription.appendChild(descriptionPara);
+          linkedInDescription.appendChild(document.createElement('br'));
+
+          var table = document.createElement('table');
+          table.className = 'table';
+          linkedInDescription.appendChild(table);
+
+          var thead = document.createElement('thead'),
+          headRow = document.createElement('tr');
+          table.appendChild(thead);
+          thead.appendChild(headRow);
+          headRow.appendChild(generateTh('Component'));
+          headRow.appendChild(generateTh('Results'));
+
+          var tbody = document.createElement('tbody');
+          table.appendChild(tbody);
+
+          var resultsArr = Object.keys(lir);
+          for (var i in resultsArr){
+            var key = resultsArr[i];
+            tbody.appendChild(generateP3TableRow(key,lir[key]));
+          }
+        }
+
+        switch(caseType){
+          case 'startup':
+            document.getElementById('phase3tracking').innerHTML = 'Classified as a startup project, hence LinkedIn industry classification is not applied';
+            break;
+          case 'noresults':
+            document.getElementById('phase3tracking').innerHTML = 'No organizations identified, unable to classify this project description';
+            break;
+          default:
+            linkedInDisplay(company,linkedInResults);
+        }
+        $('#phase3').show();
       }
 
       var updateDisplayPhase2 = function(results){
@@ -315,6 +403,18 @@
 
         $('#phase0').hide();
         $('#phase1').show();
+      }
+
+      var generateP3TableRow = function(name,value){
+        var row = document.createElement('tr');
+        var td1 = document.createElement('td');
+        td1.innerHTML = name;
+        var td2 = document.createElement('td');
+        td2.innerHTML = value;
+
+        row.appendChild(td1);
+        row.appendChild(td2);
+        return row;
       }
 
       var generateP2TableRow = function(name,valuesArr){

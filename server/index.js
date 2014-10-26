@@ -189,6 +189,22 @@ main_router.route('/linkedin/processSearch')
 		});
 	});
 
+main_router.route('/api/linkedin')
+	.all(function(req,res){
+		var company = req.query.company,
+		teamID = req.query.id;
+		_matchAndSearchCompanySingapore(company,function(isSuccess,results){
+			if(isSuccess){
+				tDAO.updateTeamLinkedInData(teamID,company,results,function(isSuccess){
+					res.json({liWorked:isSuccess,linkedin: results, db: isSuccess});
+				});
+			}else{
+				console.log('cannot find company');
+				res.json({liWorked:isSuccess,linkedin:results});
+			}
+		});
+	});
+
 main_router.route('/api/wit')
 	.all(function(req,res){
 		req.setTimeout(200000000,function () {

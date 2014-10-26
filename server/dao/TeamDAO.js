@@ -175,6 +175,65 @@ TeamDAO.prototype.updateTeamWitData = function(teamID,witData,callback){
 	});
 }
 
+TeamDAO.prototype.updateRecommendedLinkedInData = function(teamID,rawName,linkedInDetails,callback){
+	var updateTeamLinkedInDataDetails = {
+		name:TABLENAME,
+		values:[{
+			name:LI_NAME,
+			type:'string',
+			value:linkedInDetails.name
+		},{
+			name:LI_ID,
+			type:'string',
+			value:linkedInDetails.id
+		},{
+			name:LI_DESCRIPTION,
+			type:'string',
+			value:linkedInDetails.description
+		},{
+			name:LI_FOUNDINGYEAR,
+			type:'string',
+			value:linkedInDetails.foundedYear? linkedInDetails.foundedYear:''
+		},{
+			name:LI_EMPLOYEES,
+			type:'string',
+			value:linkedInDetails.employees? linkedInDetails.employees:''
+		},{
+			name:LI_INDUSTRIES,
+			type:'string',
+			value:linkedInDetails.industries? _liIndustryArrayToString(linkedInDetails.industries):''
+		},{
+			name:LI_UNIVERSALNAME,
+			type:'string',
+			value:linkedInDetails.universalName? linkedInDetails.universalName: ''
+		},{
+			name:LI_WEBSITE,
+			type:'string',
+			value:linkedInDetails.website? linkedInDetails.website:''
+		},{
+			name:LI_SPECIALITIES,
+			type:'string',
+			value:linkedInDetails.specialities? ( _arrayToString(company.specialities).length>0 ? _arrayToString(company.specialities) : '' ) : ''
+		},{
+			name:LI_RAWNAME,
+			type:'string',
+			value:rawName
+		}],
+		conditions:['id = ' + teamID ]
+	}
+	dao.update(updateTeamLinkedInDataDetails,function(isSuccess,result){
+		if (result.rowCount >= 1){
+			callback(true);//selected length >= 1
+		}else{
+			try{
+				callback(false);//selected length is 0 or less
+			}catch(err){
+				console.log(err);
+			}
+		}
+	});
+}
+
 TeamDAO.prototype.updateTeamLinkedInData = function(teamID,linkedInDetails,callback){
 
 	var processedCompaniesLIData = _linkedInMultiArray(linkedInDetails);

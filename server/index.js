@@ -195,7 +195,7 @@ main_router.route('/api/linkedin')
 		teamID = req.query.id;
 		_matchAndSearchCompanySingapore(company,function(isSuccess,results){
 			if(isSuccess){
-				tDAO.updateTeamLinkedInData(teamID,company,results,function(isSuccess){
+				tDAO.updateRecommendedLinkedInData(teamID,company,results,function(isSuccess){
 					res.json({liWorked:isSuccess,linkedin: results, db: isSuccess});
 				});
 			}else{

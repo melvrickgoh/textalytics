@@ -44,11 +44,11 @@
         <label for="projectDescription">Project Description</label>
         <textarea id="projectDescription" class="form-control" placeholder="Enter project description" rows="5" value="Development of an application that serves as a practical solution for advancing Singapore Airline's current workflow and improving their ground manpower management. Due to the limits of current man-management and increasing pressure on providing optimized insights, our application provides a natural platform for managing manpower distribution  and streamlines the time and number of personnel, allowing Singapore Airlines to provide quicker hence more accurate statistics to ground controllers. The GroundNav application comprises of a web-based dashboard and an android mobile application:
           AirBoard (Web Application Dashboard)
-          AirNav (Mobile Application)"/>
+          AirNav (Mobile Application)"></textarea>
       </div>
       <div class="form-group">
         <label for="sponsorDescription">Sponsors Description</label>
-        <textarea class="form-control" id="sponsorDescription" placeholder="Enter sponsor description" rows="5" value="Dr. James Dean, Mr. Chou En-Lai, Singapore Airlines"/>
+        <textarea class="form-control" id="sponsorDescription" placeholder="Enter sponsor description" rows="5" value="Dr. James Dean, Mr. Chou En-Lai, Singapore Airlines"/></textarea>
       </div>
       <button type="submit" onclick="flowthrough" class="btn btn-default">Submit</button>
     </form>
@@ -77,9 +77,11 @@
       }
 
       var flowthrough = function(){
-        var teamName = $('#teamName')[0].value,
-        projectDescription = $('#projectDescription')[0].value,
-        sponsorDescription = $('#sponsorDescription')[0].value;
+        var teamName = $('#teamName')[0].value.trim(),
+        projectDescription = $('#projectDescription')[0].value.trim(),
+        sponsorDescription = $('#sponsorDescription')[0].value.trim();
+
+
       }
 
       var textalyticsKeyphrase = function(){

@@ -88,73 +88,16 @@
           <button type="button" onclick="flowthrough()" class="btn btn-default">Submit</button>
         </form>
       </div>
-      <div id="phase1">
-        <h2>Keyphrase Extraction</h2>
-        <div class="col-sm-8 blog-main">
+      <div class="blog-main">
+        <div id="phase1">
 
           <div class="blog-post">
-            <h2 class="blog-post-title">Sample blog post</h2>
-            <p class="blog-post-meta">January 1, 2014 by <a href="#">Mark</a></p>
+            <h2 class="blog-post-title">Keyphrase Extraction</h2>
+            <p class="blog-post-meta" id="phase1tracking">January 1, 2014 by Java Platform</p>
+            <div id="keyphraseDes">
 
-            <p>This blog post shows a few different types of content that's supported and styled with Bootstrap. Basic typography, images, and code are all supported.</p>
-            <hr>
-            <p>Cum sociis natoque penatibus et magnis <a href="#">dis parturient montes</a>, nascetur ridiculus mus. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum. Sed posuere consectetur est at lobortis. Cras mattis consectetur purus sit amet fermentum.</p>
-            <blockquote>
-              <p>Curabitur blandit tempus porttitor. <strong>Nullam quis risus eget urna mollis</strong> ornare vel eu leo. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
-            </blockquote>
-            <p>Etiam porta <em>sem malesuada magna</em> mollis euismod. Cras mattis consectetur purus sit amet fermentum. Aenean lacinia bibendum nulla sed consectetur.</p>
-            <h2>Heading</h2>
-            <p>Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.</p>
-            <h3>Sub-heading</h3>
-            <p>Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.</p>
-            <pre><code>Example code block</code></pre>
-            <p>Aenean lacinia bibendum nulla sed consectetur. Etiam porta sem malesuada magna mollis euismod. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa.</p>
-            <h3>Sub-heading</h3>
-            <p>Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Aenean lacinia bibendum nulla sed consectetur. Etiam porta sem malesuada magna mollis euismod. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
-            <ul>
-              <li>Praesent commodo cursus magna, vel scelerisque nisl consectetur et.</li>
-              <li>Donec id elit non mi porta gravida at eget metus.</li>
-              <li>Nulla vitae elit libero, a pharetra augue.</li>
-            </ul>
-            <p>Donec ullamcorper nulla non metus auctor fringilla. Nulla vitae elit libero, a pharetra augue.</p>
-            <ol>
-              <li>Vestibulum id ligula porta felis euismod semper.</li>
-              <li>Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.</li>
-              <li>Maecenas sed diam eget risus varius blandit sit amet non magna.</li>
-            </ol>
-            <p>Cras mattis consectetur purus sit amet fermentum. Sed posuere consectetur est at lobortis.</p>
+            </div>
           </div><!-- /.blog-post -->
-
-          <div class="blog-post">
-            <h2 class="blog-post-title">Another blog post</h2>
-            <p class="blog-post-meta">December 23, 2013 by <a href="#">Jacob</a></p>
-
-            <p>Cum sociis natoque penatibus et magnis <a href="#">dis parturient montes</a>, nascetur ridiculus mus. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum. Sed posuere consectetur est at lobortis. Cras mattis consectetur purus sit amet fermentum.</p>
-            <blockquote>
-              <p>Curabitur blandit tempus porttitor. <strong>Nullam quis risus eget urna mollis</strong> ornare vel eu leo. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
-            </blockquote>
-            <p>Etiam porta <em>sem malesuada magna</em> mollis euismod. Cras mattis consectetur purus sit amet fermentum. Aenean lacinia bibendum nulla sed consectetur.</p>
-            <p>Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.</p>
-          </div><!-- /.blog-post -->
-
-          <div class="blog-post">
-            <h2 class="blog-post-title">New feature</h2>
-            <p class="blog-post-meta">December 14, 2013 by <a href="#">Chris</a></p>
-
-            <p>Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Aenean lacinia bibendum nulla sed consectetur. Etiam porta sem malesuada magna mollis euismod. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
-            <ul>
-              <li>Praesent commodo cursus magna, vel scelerisque nisl consectetur et.</li>
-              <li>Donec id elit non mi porta gravida at eget metus.</li>
-              <li>Nulla vitae elit libero, a pharetra augue.</li>
-            </ul>
-            <p>Etiam porta <em>sem malesuada magna</em> mollis euismod. Cras mattis consectetur purus sit amet fermentum. Aenean lacinia bibendum nulla sed consectetur.</p>
-            <p>Donec ullamcorper nulla non metus auctor fringilla. Nulla vitae elit libero, a pharetra augue.</p>
-          </div><!-- /.blog-post -->
-
-          <ul class="pager">
-            <li><a href="#">Previous</a></li>
-            <li><a href="#">Next</a></li>
-          </ul>
 
         </div>
       </div>
@@ -194,6 +137,7 @@
       }
 
       var extractKeywordsPhrases = function(teamName,projectDescription,sponsorDescription,teamMembers,year,semester){
+        var startTimePhase1 = new Date().getMilliseconds();
         var url = 'http://textalytics.herokuapp.com/api/keyphrase';
 
         url += '?tn=' +teamName + '&pd=' + projectDescription + '&sd=' + sponsorDescription + '&tm=' + teamMembers + '&y=' + year + '&s=' + semester;
@@ -204,14 +148,110 @@
           keywordsArray = jsonResults.keywords,
           keyphrasesArray = jsonResults.keyphrases;
 
-          $('phase0').hide();
-          $('phase1').show();
-
+          var endTimePhase1 = new Date().getMilliseconds();
+          
+          updateDisplayPhase1(startTimePhase1,endTimePhase1,projectDescription,keywordsArray,keyphrasesArray);
 
         });
       }
 
-      var updateDisplay
+      var updateDisplayPhase1 = function(startTime,endTime,projectDescription,keywordsArray,keyphrasesArray){
+        var timeDifference = (endTime - startTime)/1000;
+        var phase1tracking = document.getElementById('phase1tracking');
+        phase1tracking.innerHTML = 'Process completed in ' + timeDifference + ' seconds';
+
+        var phase1Des = document.getElementById('keyphraseDes');
+
+        var originalTitle = document.createElement('h3');
+        originalTitle.innerHTML = 'Original Content';
+        phase1Des.appendChild(originalTitle);
+
+        var originalContent = document.createElement('p');
+        originalContent.innerHTML = projectDescription;
+        phase1Des.appendChild(originalContent);
+
+        var keywordsTitle = document.createElement('h3');
+        keywordsTitle.innerHTML = 'Keywords';
+        phase1Des.appendChild(keywordsTitle);
+
+        var keywordsDes = document.createElement('p');
+        keywordsDes.innerHTML='Keywords are acquired after the following pre-processing techniques';
+        phase1Des.appendChild(keywordsDes);
+        phase1Des.appendChild(document.createElement('br'));
+
+        var uList = document.createElement('ul');
+        uList.appendChild(generateLi('Tokenization'));
+        uList.appendChild(generateLi('POS-Tagging'));
+        uList.appendChild(generateLi('Stemming (Porter\'s Stemmer)'));
+        uList.appendChild(generateLi('Term Frequency'));
+        phase1Des.appendChild(uList);
+        phase1Des.appendChild(document.createElement('br'));
+        phase1Des.appendChild(document.createElement('br'));
+
+        var keywordsTable = document.createElement('table');
+        keywordsTable.className = 'table';
+
+        var tableHeader = document.createElement('thread');
+        var trHead = document.createElement('tr');
+        trHead.appendChild(generateTh('Stem'));
+        trHead.appendChild(generateTh('Frequency'));
+        trHead.appendChild(generateTh('Term Frequency'));
+        tableHeader.appendChild(trHead);
+        keywordsTable.appendChild(tableHeader);
+
+        for(var i in keywordsArray){
+          var keywordObj = keywordsArray[i];
+          keywordsTable.appendChild(generateTableRow(keywordObj));
+        }
+        phase1Des.appendChild(keywordsTable);
+        phase1Des.appendChild(document.createElement('br'));
+        phase1Des.appendChild(document.createElement('br'));
+
+        var keyphrasesTitle = document.createElement('h3');
+        keyphrasesTitle.innerHTML = 'Keyphrases';
+        phase1Des.appendChild(keyphrasesTitle);
+
+        var keyphrasesDes = document.createElement('p');
+        keyphrasesDes.innerHTML='Keyphrases are acquired by cross-referencing frequency analyses results with POS-Tagged groups.';
+        phase1Des.appendChild(keyphrasesDes);
+        phase1Des.appendChild(document.createElement('br'));
+
+        var uListKeyphrases = document.createElement('ul');
+        for (var i in keyphrasesArray){
+          var keyp = keyphrasesArray[i];
+          uListKeyphrases.appendChild(generateLi(keyp));
+        }
+        phase1Des.appendChild(uListKeyphrases);
+
+        $('phase0').hide();
+        $('phase1').show();
+      }
+
+      var generateTableRow = function(object){
+        var row = document.createElement('tr');
+        var td1 = document.createElement('td');
+        td1.innerHTML = object.stem;
+        var td2 = document.createElement('td');
+        td2.innerHTML = object.frequency;
+        var td3 = document.createElement('td');
+        td3.innerHTML = object.tf;
+        row.appendChild(td1);
+        row.appendChild(td2);
+        row.appendChild(td3);
+        return row;
+      }
+
+      var generateTh = function(content){
+        var th = document.createElement('th');
+        th.innerHTML = content;
+        return th;
+      }
+
+      var generateLi = function(content){
+        var li = document.createElement('li');
+        li.innerHTML = content;
+        return li;
+      }
 
       var textalyticsKeyphrase = function(){
         XHR('GET','http://textalytics.herokuapp.com/api/keyphrase',function(results){
@@ -221,7 +261,7 @@
 
       $(document).ready(function() {
         //textalyticsKeyphrase();
-        //$('#phase1').hide();
+        $('#phase1').hide();
       } );
     </script>
 

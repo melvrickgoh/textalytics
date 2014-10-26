@@ -93,7 +93,7 @@
         <div id="phase1">
 
           <div class="blog-post">
-            <h2 class="blog-post-title">Keyphrase Extraction</h2>
+            <h2 class="blog-post-title">Phase 1: Keyphrase Extraction</h2>
             <p class="blog-post-meta" id="phase1tracking">January 1, 2014 by Java Platform</p>
             <div id="keyphraseDes">
 
@@ -201,10 +201,12 @@
         tableHeader.appendChild(trHead);
         keywordsTable.appendChild(tableHeader);
 
+        var tbody = document.createElement('tbody');
         for(var i in keywordsArray){
           var keywordObj = keywordsArray[i];
-          keywordsTable.appendChild(generateTableRow(keywordObj));
+          tbody.appendChild(generateTableRow(keywordObj));
         }
+        keywordsTable.appendChild(tbody);
         phase1Des.appendChild(keywordsTable);
         phase1Des.appendChild(document.createElement('br'));
         phase1Des.appendChild(document.createElement('br'));

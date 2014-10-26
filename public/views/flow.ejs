@@ -179,6 +179,7 @@
 
           var startTimePhase2 = new Date().getMilliseconds();
           phase2URL = '/api/wit?name='+ teamName + '&id=' + jsonResults.ID + '&sponsor=' + sponsorDescription;
+          var teamID = jsonResults.ID;
           XHR('GET',phase2URL,function(phase2results){
 
             var jsonResults = JSON.parse(phase2results),
@@ -189,7 +190,7 @@
 
             var startTimePhase3 = new Date().getMilliseconds();
             if (jsonResults.organizations.length > 0) {
-              phase3URL = '/api/linkedin?company=' + jsonResults.organizations[0] + '&id=' + jsonResults.ID;
+              phase3URL = '/api/linkedin?company=' + jsonResults.organizations[0] + '&id=' + teamID;
               XHR('GET',phase3URL,function(phase3Results){
                 var phase3JSON = JSON.parse(phase3Results);
                 var liWorking = phase3JSON.liWorked,
@@ -465,6 +466,7 @@
         //textalyticsKeyphrase();
         $('#phase1').hide();
         $('#phase2').hide();
+        $('#phase3').hide();
       } );
     </script>
 

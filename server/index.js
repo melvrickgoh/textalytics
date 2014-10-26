@@ -42,6 +42,12 @@ main_router.route('/ebola')
 		//res.send('welcome to head');
 	});
 
+main_router.route('/play')
+	.all(function(req,res){
+		res.render('flow.ejs');
+		//res.send('welcome to head');
+	});
+
 main_router.route('/nv')
 	.all(function(req,res){
 		res.render('visualize.ejs');

@@ -168,8 +168,12 @@
           var startTimePhase2 = new Date().getMilliseconds();
           phase2URL = '/api/wit?name='+ teamName + '&id=' + jsonResults.ID + '&sponsor=' + sponsorDescription;
           XHR('GET',phase2URL,function(phase2results){
-            
-            console.log(phase2results);
+
+            var jsonResults = JSON.parse(phase2results),
+            endTimePhase2 = new Date().getMilliseconds(),
+            timeDifference = (endTimePhase2 - startTimePhase2)/1000;
+            document.getElementById('phase2tracking').innerHTML = 'Process completed in ' + timeDifference + ' seconds on Wit.AI (NodeJS Platform) with a confidence of ' + jsonResults.confidence;
+            updateDisplayPhase2(jsonResults);
 
           });
 
@@ -177,9 +181,64 @@
         });
       }
 
-      var classifySponsors = function(){
+      var updateDisplayPhase2 = function(results){
+        var witDes = document.getElementById('witDes');
 
+        var originalTitle = document.createElement('h3');
+        originalTitle.innerHTML = 'Original Content';
+        witDes.appendChild(originalTitle);
 
+        var originalContent = document.createElement('p');
+        originalContent.innerHTML = results.raw;
+        witDes.appendChild(originalContent);
+        witDes.appendChild(document.createElement('br'));
+
+        var descriptionPara = document.createElement('p');
+        descriptionPara.innerHTML = 'The classification process is based on a decision tree based on a trained dataset tuned to the IS480 wiki dataset. The database backing the decision tree is continuously updated validated inputs that now become part of the trained dataset.';
+        witDes.appendChild(descriptionPara);
+        witDes.appendChild(document.createElement('br'));
+
+        var table = document.createElement('table');
+        table.className = 'table';
+        witDes.appendChild(table);
+
+        var thead = document.createElement('thead'),
+        headRow = document.createElement('tr');
+        table.appendChild(thead);
+        thead.appendChild(headRow);
+        headRow.appendChild(generateTh('Component'));
+        headRow.appendChild(generateTh('Results'));
+
+        var tbody = document.createElement('tbody');
+        table.appendChild(tbody);
+
+        var confidence = results.confidence,
+        organizations = results.organizations,
+        acronyms = results.acronyms,
+        departments = results.departments,
+        persons = results.persons,
+        locations = results.locations,
+        emails = results.emails,
+        isStartup = results.startup,
+        array = [{name:'Person(s)',arr:persons},{name:'Organization(s)',arr:organizations},{name:'Department(s)',arr:departments},{name:'Acronym(s)',arr:acronyms},{name:'Location(s)',arr:locations},{name:'Email(s)',arr:emails}];
+
+        var rowStartup = document.createElement('tr'),
+        desRS = document.createElement('td'),
+        valueRS = document.createElement('td');
+        desRS.innerHTML = 'Is sponsor a Startup?';
+        valueRS.innerHTML = isStartup;
+        rowStartup.appendChild(desRS);
+        rowStartup.appendChild(valueRS);
+        tbody.appendChild(rowStartup);
+        for (var i in array){
+          var subName = array[i].name,
+          subArray = array[i].arr;
+          if (subArray.length > 0) {
+            tbody.appendChild(generateP2TableRow(subName,subArray));
+          }
+        }
+
+        $('#phase2').show();
       }
 
       var updateDisplayPhase1 = function(startTime,endTime,projectDescription,keywordsArray,keyphrasesArray){
@@ -256,6 +315,18 @@
 
         $('#phase0').hide();
         $('#phase1').show();
+      }
+
+      var generateP2TableRow = function(name,valuesArr){
+        var row = document.createElement('tr');
+        var td1 = document.createElement('td');
+        td1.innerHTML = name;
+        var td2 = document.createElement('td');
+        td2.innerHTML = valuesArr.join();
+
+        row.appendChild(td1);
+        row.appendChild(td2);
+        return row;
       }
 
       var generateTableRow = function(object){

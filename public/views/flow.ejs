@@ -138,7 +138,7 @@
 
       var extractKeywordsPhrases = function(teamName,projectDescription,sponsorDescription,teamMembers,year,semester){
         var startTimePhase1 = new Date().getMilliseconds();
-        var url = 'http://textalytics.herokuapp.com/api/keyphrase';
+        var url = 'http://localhost:8080/Textalytics470/api/keyphrase';
 
         url += '?tn=' +teamName + '&pd=' + projectDescription + '&sd=' + sponsorDescription + '&tm=' + teamMembers + '&y=' + year + '&s=' + semester;
         XHR('GET',url,function(results){

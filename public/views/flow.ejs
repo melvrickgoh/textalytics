@@ -38,7 +38,7 @@
     <div class="jumbotron">
       <div class="container">
         <h1>The Summarization Flowthrough</h1>
-        <p>...</p>
+        <p>This concept being demonstrated here is that given a new project team with the project description, we'd like to reccommend a project supervisor based on his/her experience as being best suited to mentor this new project. This flowthrough demonstrates the entire process of techniques involved</p>
       </div>
     </div>
 
@@ -48,6 +48,11 @@
         <div class="form-group">
           <label for="teamName">Team Name</label>
           <input type="text" class="form-control" id="teamName" placeholder="Team Name" value="Flowthrough1">
+        </div>
+
+        <div class="form-group">
+          <label for="teamName">Team Members</label>
+          <input type="text" class="form-control" id="teamMembers" placeholder="Team Members" value="Harry Truman; Doris Day; Johnnie Ray; Walter Winchell; Joe DiMaggio">
         </div>
 
         <div class="form-group">
@@ -88,11 +93,16 @@
       }
 
       var flowthrough = function(){
-        var teamName = $('#teamName')[0].value.trim(),
-        projectDescription = $('#projectDescription')[0].value.trim(),
-        sponsorDescription = $('#sponsorDescription')[0].value.trim();
+        var teamName = $('#teamName')[0].value.trim(),//tn
+        projectDescription = $('#projectDescription')[0].value.trim(),//pd
+        sponsorDescription = $('#sponsorDescription')[0].value.trim(),//sd
+        teamMembers = $('#teamMembers')[0].value.trim(),
+        url = 'http://textalytics.herokuapp.com/api/keyphrase';
 
-
+        url += '?tn=' +teamName + '&pd=' + projectDescription + '&sd=' + sponsorDescription + '&tm=' + teamMembers;
+        XHR('GET',url,function(results){
+          alert(results);
+        });
       }
 
       var textalyticsKeyphrase = function(){

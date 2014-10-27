@@ -202,7 +202,14 @@ main_router.route('/api/recommendation')
 			sDAO.getAllSupervisorRecords(function(isSuccess,sResults){
 				iDAO.getAllIndustries(function(isSuccess,iResults){
 					var industryDictionary = sortTeamsByIndustries(tResults,sResults,iResults);
-					res.json(industryDictionary);
+					
+					var wantedIndustryGroup = industryDictionary[industry.trim()];
+					if (wantedIndustryGroup){
+						var rankResults = _organizeAndRankByProfessors(wantedIndustryGroup);
+						res.json(rankResults);
+					}else{
+						//work on capturing by other groups
+					}
 				});
 			});
 		});
@@ -351,6 +358,56 @@ main_router.route('/teamwit')
 			}
 		});
 	});
+
+function _organizeAndRankByProfessors(industryArray){
+	var highestCounter = 0,
+	highestProfessor;
+
+	var professorLog = {};
+	for (var i in industryArray){
+		var industryProject = industryArray[i];
+		var supervisor = industryProject.supervisor.supervisor;
+		if (!professorLog[supervisor]) {
+			professorLog[supervisor] = {tf:0,array:[]};
+		}
+
+		professorLog[supervisor].array.push(industryProject);
+
+		if (professorLog[supervisor].length>highestCounter){
+			highestCounter = professorLog[supervisor].length;
+			highestProfessor = supervisor;
+		}
+	}
+
+	var professorLogKeys = Object.keys(professorLog);
+	for (var k in professorLogKeys){
+		var professorGroup = professorLog[professorLogKeys[k]];
+		professorGroup.tf = professorGroup.array.length/highestCounter;
+	}
+
+	var sortedProfessorLog = _sortProfessorLog(professorLog);
+
+	return {highestCounter:highestCounter,profLog:professorLog,sortArray:sortedProfessorLog};
+}
+
+function _sortProfessorLog(logs){
+	var logsKeys = Object.keys(logs),
+	sortable = [];
+
+	for (var i in logsKeys){
+		sortable.push(logs[logsKeys[i]]);
+	}
+
+	if (logsKeys.length > 1){
+		sortable.sort(function(a,b){
+			var atf = a.tf,
+			btf = b.tf;
+			return atf < btf ? -1 : (atf > btf ? 1 : 0);
+		});
+	}
+
+	return sortable;
+}
 
 function _matchAndSearchCompanySingapore(companyName,callback,companyID){
 	linkedIn.companyMatch(companyName,function(e,results){

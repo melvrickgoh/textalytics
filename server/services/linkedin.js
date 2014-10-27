@@ -90,7 +90,7 @@ LinkedIn.prototype.companySingaporeSearch = function(companyName,callback){
 	 
 	    request.get({url:url, oauth:oauth, json:true}, function (e, r, body) {
 	        if (e) return callback(e);
-	        console.log(body);
+
 	        return callback(null, body);
 	    });
 	}
@@ -124,9 +124,9 @@ LinkedIn.prototype.companyMatch = function(companyName,callback){
 LinkedIn.prototype.extractFirstSearchCompany = function(bulkResults){
 	var companyValues = bulkResults.companies.values;
 
-	/*for (var i = 0; i < companyValues.length; i++) {
-
-	}*/
+	for (var i = 0; i < companyValues.length; i++) {
+		console.log(companyValues[i].name);
+	}
 	return this.getCompanyDetails(companyValues[0]);
 }
 

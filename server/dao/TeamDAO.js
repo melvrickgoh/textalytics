@@ -213,7 +213,7 @@ TeamDAO.prototype.updateRecommendedLinkedInData = function(teamID,rawName,linked
 		},{
 			name:LI_SPECIALITIES,
 			type:'string',
-			value:linkedInDetails.specialities? ( _arrayToString(company.specialities).length>0 ? _arrayToString(company.specialities) : '' ) : ''
+			value:linkedInDetails.specialities? ( _arrayToString(linkedInDetails.specialities).length>0 ? _arrayToString(linkedInDetails.specialities) : '' ) : ''
 		},{
 			name:LI_RAWNAME,
 			type:'string',

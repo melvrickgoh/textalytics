@@ -20,7 +20,7 @@ SupervisorsDAO.prototype.getAllSupervisorRecords = function(callback){
 		distinct:false,
 		attributes:[ID,SUPERVISOR,TEAM,YEAR,SEMESTER]
 	};
-	dao.select(selectIndustriesDetails,function(isSuccess,result){
+	dao.select(selectSupervisorsDetails,function(isSuccess,result){
 		if (result.length >= 1){
 			callback(true,result);//selected length >= 1
 		}else{

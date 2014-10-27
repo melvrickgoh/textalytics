@@ -174,6 +174,7 @@
       }
 
       var extractKeywordsPhrases = function(teamName,projectDescription,sponsorDescription,teamMembers,year,semester){
+        //PHASE 1: PRE-PROCESSING
         var startTimePhase1 = new Date().getMilliseconds();
         var url = 'http://localhost:8080/Textalytics470/api/keyphrase';
 
@@ -189,6 +190,7 @@
           
           updateDisplayPhase1(startTimePhase1,endTimePhase1,projectDescription,keywordsArray,keyphrasesArray);
 
+          //PHASE 2: WIT DECISION TREE CLASSIFICATION
           var startTimePhase2 = new Date().getMilliseconds();
           phase2URL = '/api/wit?name='+ teamName + '&id=' + jsonResults.ID + '&sponsor=' + sponsorDescription;
           var teamID = jsonResults.ID;
@@ -200,6 +202,7 @@
             document.getElementById('phase2tracking').innerHTML = 'Process completed in ' + timeDifference + ' seconds on Wit.AI (NodeJS Platform) with a confidence of ' + jsonResults.confidence;
             updateDisplayPhase2(jsonResults);
 
+            //PHASE 3: LINKEDIN INDUSTRY IDENTIFICATION
             var startTimePhase3 = new Date().getMilliseconds();
             if (jsonResults.organizations.length > 0) {
               phase3URL = '/api/linkedin?company=' + jsonResults.organizations[0] + '&id=' + teamID;
@@ -212,6 +215,7 @@
                 if (linkedInResults.name){
                   updateDisplayPhase3('linkedin',startTimePhase3,jsonResults.organizations[0],linkedInResults);
                 }
+
               });
             }else{
               if (jsonResults.startup){
@@ -267,6 +271,15 @@
             var key = resultsArr[i];
             tbody.appendChild(generateP3TableRow(key,lir[key]));
           }
+
+          //PHASE 4: INDUSTRY CLASSIFICATION
+          var industry = lir.industries[0].name,
+          industryCode = lir.industries[0].code;
+          var phase4URL = '/api/recommendation?company=' + lir.name + '&industry=' + industry + '&industryCode=' + industryCode;
+          XHR('GET',phase4URL,function(phase4Results){
+            var p4Results = JSON.parse(phase4Results);
+            console.log(p4Results);
+          });
         }
 
         switch(caseType){

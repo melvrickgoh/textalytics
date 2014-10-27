@@ -17,6 +17,8 @@ var rl = readline.createInterface({
 });
 
 var tDAO = new TeamDAO(),
+sDAO = new SupervisorsDAO(),
+iDAO = new IndustriesDAO(),
 wit = new Wit(),
 linkedIn = new LinkedIn();
 
@@ -127,7 +129,6 @@ main_router.route('/teamextracts')
 			}else{
 				res.json(results);
 			}
-			
 		});
 	});
 
@@ -195,7 +196,14 @@ main_router.route('/api/recommendation')
 		industry = req.query.industry,
 		industryCode = req.query.industryCode;
 			
-		
+		tDAO.getAllTeams(function(isSuccess,tResults){
+			sDAO.getAllSupervisorRecords(function(isSuccess,sResults){
+				iDAO.getAllIndustries(function(isSuccess,iResults){
+					var industryDictionary = sortTeamsByIndustries(tResults,sResults,iResults);
+					res.json(industryDictionary);
+				});
+			});
+		});
 	});
 
 main_router.route('/api/linkedin')
@@ -428,6 +436,46 @@ function _getTeamSponsorsInfo(callback){
 	});
 }
 
+function sortTeamsByIndustries(teams,supervisorRecords,industriesList){
+	var industriesDictionary = {
+		startup:[],
+		unclassified:[]
+	},
+	supervisorMap = mapSupervisors(supervisorRecords);
 
+	for (var i in teams){
+		var team = teams[i],
+		teamSRID = ''+team.teamname + team.year + team.semester;
+		team.supervisor = supervisorMap[teamSRID];
+		if (team.witstartup) {
+			industriesDictionary.startup.push(team);
+		}else{
+			if (team.liindustries && team.liindustries.length>0){
+				var industry = intepretIndustries(liindustries);
+				if (!industriesDictionary[industry]){
+					industriesDictionary[industry] = [];
+				}
+				industriesDictionary[industry].push(team);
+			}else{
+				industriesDictionary.unclassified.push(team);
+			}
+		}
+	}
+	return industriesDictionary;
+}
+
+function mapSupervisors(supervisorRecords){
+	var teamMap = {};
+	for (var i in supervisorRecords){
+		var sr = supervisorRecords[i],
+		srID = sr.team + sr.year + sr.semester;
+		teamMap[srID] = sr;
+	}
+	return teamMap;
+}
+
+function intepretIndustries(dbString){
+	return dbString.trim().split('III')[1];
+}
 
 exports.index = main_router;

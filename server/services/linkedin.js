@@ -90,7 +90,7 @@ LinkedIn.prototype.companySingaporeSearch = function(companyName,callback){
 	 
 	    request.get({url:url, oauth:oauth, json:true}, function (e, r, body) {
 	        if (e) return callback(e);
-
+	        console.log(body);
 	        return callback(null, body);
 	    });
 	}

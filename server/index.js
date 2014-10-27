@@ -453,7 +453,7 @@ function sortTeamsByIndustries(teams,supervisorRecords,industriesList){
 			industriesDictionary.startup.push(team);
 		}else{
 			if (team.liindustries && team.liindustries.length>0){
-				var industry = intepretIndustries(liindustries);
+				var industry = intepretIndustries(team.liindustries);
 				if (!industriesDictionary[industry]){
 					industriesDictionary[industry] = [];
 				}

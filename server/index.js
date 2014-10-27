@@ -189,6 +189,15 @@ main_router.route('/linkedin/processSearch')
 		});
 	});
 
+main_router.route('/api/recommendation')
+	.all(function(req,res){
+		var company = req.query.company,
+		industry = req.query.industry,
+		industryCode = req.query.industryCode;
+			
+		
+	});
+
 main_router.route('/api/linkedin')
 	.all(function(req,res){
 		var company = req.query.company,

@@ -194,6 +194,12 @@ main_router.route('/linkedin/processSearch')
 
 main_router.route('/api/recommendation')
 	.all(function(req,res){
+		req.setTimeout(200000000,function () {
+		  req.abort();
+		  console.log("timeout");
+		  self.emit('pass',message);
+		});
+
 		var company = req.query.company,
 		industry = req.query.industry,
 		industryCode = req.query.industryCode;
@@ -204,6 +210,7 @@ main_router.route('/api/recommendation')
 					var industryDictionary = sortTeamsByIndustries(tResults,sResults,iResults);
 					
 					var wantedIndustryGroup = industryDictionary[industry.trim()];
+					console.log(wantedIndustryGroup);
 					if (wantedIndustryGroup){
 						var rankResults = _organizeAndRankByProfessors(wantedIndustryGroup);
 						res.json(rankResults);

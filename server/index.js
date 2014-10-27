@@ -5,6 +5,8 @@
 var express = require('express'),
 
 TeamDAO = require('./dao/TeamDAO'),
+SupervisorsDAO = require('./dao/SupervisorsDAO'),
+IndustriesDAO = require('./dao/IndustriesDAO'),
 Wit = require('./services/wit'),
 LinkedIn = require('./services/linkedin'),
 main_router = express.Router();

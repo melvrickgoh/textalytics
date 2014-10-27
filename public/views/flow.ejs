@@ -411,8 +411,13 @@
         var td1 = document.createElement('td');
         td1.innerHTML = name;
         var td2 = document.createElement('td');
-        td2.innerHTML = value;
 
+        if (name == 'industries'){
+          td2.innerHTML = value[0].name;
+        }else{
+          td2.innerHTML = value;
+        }
+        
         row.appendChild(td1);
         row.appendChild(td2);
         return row;

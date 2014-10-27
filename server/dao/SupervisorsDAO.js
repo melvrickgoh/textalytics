@@ -29,4 +29,4 @@ SupervisorsDAO.prototype.getAllSupervisorRecords = function(callback){
 	});
 }
 
-module.exports = IndustriesDAO;
+module.exports = SupervisorsDAO;

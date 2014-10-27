@@ -208,8 +208,9 @@ main_router.route('/api/recommendation')
 			sDAO.getAllSupervisorRecords(function(isSuccess,sResults){
 				iDAO.getAllIndustries(function(isSuccess,iResults){
 					var industryDictionary = sortTeamsByIndustries(tResults,sResults,iResults);
-					
-					var wantedIndustryGroup = industryDictionary[industry.trim()];
+					console.log(Object.keys(industryDictionary));
+					console.log(industry);
+					var wantedIndustryGroup = industryDictionary[industry];
 					console.log(wantedIndustryGroup);
 					if (wantedIndustryGroup){
 						var rankResults = _organizeAndRankByProfessors(wantedIndustryGroup);

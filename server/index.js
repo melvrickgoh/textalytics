@@ -196,6 +196,7 @@ main_router.route('/api/linkedin')
 		_matchAndSearchCompanySingapore(company,function(isSuccess,results){
 			if(isSuccess){
 				tDAO.updateRecommendedLinkedInData(teamID,company,results,function(isSuccess){
+					console.log('company data found');
 					res.json({liWorked:isSuccess,linkedin: results, db: isSuccess});
 				});
 			}else{

@@ -1,5 +1,5 @@
 //instantiate the model
-var covectric = require('covectric');
+var covectric = require('.../covectric');
 var model = new covectric.Model();
 
 function Covectric(options){

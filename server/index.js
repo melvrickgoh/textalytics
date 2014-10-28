@@ -64,7 +64,7 @@ main_router.route('/nv')
 		res.render('visualize.ejs');
 	});
 
-main_router.rout('/covectric')
+main_router.route('/covectric')
 	.all(function(req,res){
 		var search = req.query.q;
 		var results = covectric.searchIndustry(search);

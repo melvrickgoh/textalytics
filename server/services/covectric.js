@@ -23,7 +23,7 @@ Covectric.prototype.setIndustries = function(industryResults){
 }
 
 Covectric.prototype.searchIndustry = function(searchString){
-	return industryModel.search(searchString, 3);
+	return industryModel.search(searchString, 5);
 }
 
 module.exports = Covectric;

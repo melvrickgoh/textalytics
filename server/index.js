@@ -9,7 +9,6 @@ SupervisorsDAO = require('./dao/SupervisorsDAO'),
 IndustriesDAO = require('./dao/IndustriesDAO'),
 Wit = require('./services/wit'),
 LinkedIn = require('./services/linkedin'),
-Covectric = require('./services/covectric'),
 main_router = express.Router();
 //svc acct pw: notasecret
 var readline = require('readline');

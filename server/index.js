@@ -25,6 +25,12 @@ iDAO = new IndustriesDAO(),
 wit = new Wit(),
 linkedIn = new LinkedIn();
 covectric = new Covectric();
+
+//SET COVECTRIC BASELINES
+iDAO.getAllIndustries(function(isSuccess,results){
+	covectric.setIndustries(results);
+});
+
 /*
 * APP Classes hello
 */
@@ -56,6 +62,13 @@ main_router.route('/play')
 main_router.route('/nv')
 	.all(function(req,res){
 		res.render('visualize.ejs');
+	});
+
+main_router.rout('/covectric')
+	.all(function(req,res){
+		var search = req.query.q;
+		var results = covectric.searchIndustry(search);
+		res.json(results);
 	});
 
 main_router.route('/visualize')

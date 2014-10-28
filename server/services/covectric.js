@@ -1,18 +1,6 @@
 //instantiate the model
 var covectric = require('covectric');
-var model = new covectric.Model();
-
-//populate the vector space and weight tokens based on term frequency
-var id = 1;
-['hello','hi','hi there','hey','hi to you'].forEach(function(t) {
-    model.upsertDocument(id++, t, t);
-});
-model.recomputeVectorBaseTokenWeights();
-
-//search the vector space
-
-var results = model.search("hi bob", 3);
-console.log("Search Results:", results);
+var industryModel = new covectric.Model();
 
 function Covectric(){
 
@@ -20,8 +8,22 @@ function Covectric(){
 
 Covectric.prototype.constructor = Covectric;
 
-Covectric.prototype.searchIndustry = function(searchString){
+Covectric.prototype.setIndustries = function(industryResults){
+	var industryVectors = [];
+	for (var i in industryResults){
+		var result = industryResults[i];
+		industryVectors.push(result.description);
+	}
+	//populate the industry vector space and weight tokens based on term frequency
+	var id = 1;
+	industryVectors.forEach(function(t) {
+	    industryModel.upsertDocument(id++, t, t);
+	});
+	industryModel.recomputeVectorBaseTokenWeights();
+}
 
+Covectric.prototype.searchIndustry = function(searchString){
+	return industryModel.search(searchString, 3);
 }
 
 module.exports = Covectric;

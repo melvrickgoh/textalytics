@@ -9,6 +9,7 @@ SupervisorsDAO = require('./dao/SupervisorsDAO'),
 IndustriesDAO = require('./dao/IndustriesDAO'),
 Wit = require('./services/wit'),
 LinkedIn = require('./services/linkedin'),
+Covectric = require('./services/covectric'),
 main_router = express.Router();
 //svc acct pw: notasecret
 var readline = require('readline');
@@ -23,23 +24,7 @@ sDAO = new SupervisorsDAO(),
 iDAO = new IndustriesDAO(),
 wit = new Wit(),
 linkedIn = new LinkedIn();
-
-//instantiate the model
-var covectric = require('covectric');
-var model = new covectric.Model();
-
-//populate the vector space and weight tokens based on term frequency
-var id = 1;
-['hello','hi','hi there','hey','hi to you'].forEach(function(t) {
-    model.upsertDocument(id++, t, t);
-});
-model.recomputeVectorBaseTokenWeights();
-
-//search the vector space
-
-var results = model.search("hi bob", 3);
-console.log("Search Results:", results);
-
+covectric = new Covectric();
 /*
 * APP Classes hello
 */

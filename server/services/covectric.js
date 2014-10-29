@@ -16,7 +16,7 @@ Covectric.prototype.setIndustries = function(industryResults){
 		var description = t.description;
 		if (description.indexOf('/') > -1){
 			var replacedDes = description;
-			replacedDes.replace('/',' / ');
+			replacedDes.replace('/',' / ');//hello
 			industryModMap[replaceDes] = description;
 			industryModel.upsertDocument(t.id, replaceDes, replaceDes);
 		}else{

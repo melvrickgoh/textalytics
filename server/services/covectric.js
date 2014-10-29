@@ -11,24 +11,17 @@ Covectric.prototype.constructor = Covectric;
 
 Covectric.prototype.setIndustries = function(industryResults){
 	//populate the industry vector space and weight tokens based on term frequency
-	var id = 1;
 	industryResults.forEach(function(t) {
-		console.log(t);
-		var description = t.description;
-		console.log(description);
-		if (description.indexOf('/') > -1){
-			var replacedDes = description;
-			replacedDes.replace('/',' / ');//hello
-			industryModMap[replaceDes] = description;
-			industryModel.upsertDocument(t.id, replaceDes, replaceDes);
-		}else{
-			industryModel.upsertDocument(t.id, t.description, t.description);
-		}
+		industryModel.upsertDocument(t.code, t.description, t.description);
 	});
 	industryModel.recomputeVectorBaseTokenWeights();
 }
 
 Covectric.prototype.searchIndustry = function(searchString){
+	if (searchString.indexOf('/') > -1){
+		searchString.replace('/',' or ');
+	}
+	console.log(searchString);
 	return industryModel.search(searchString, 2);
 }
 

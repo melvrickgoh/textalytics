@@ -13,7 +13,9 @@ Covectric.prototype.setIndustries = function(industryResults){
 	//populate the industry vector space and weight tokens based on term frequency
 	var id = 1;
 	industryResults.forEach(function(t) {
+		console.log(t);
 		var description = t.description;
+		console.log(description);
 		if (description.indexOf('/') > -1){
 			var replacedDes = description;
 			replacedDes.replace('/',' / ');//hello

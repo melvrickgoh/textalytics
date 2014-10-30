@@ -446,6 +446,7 @@ function _organizeAndRankByProfessors(industryArray){
 	var professorLogKeys = Object.keys(professorLog);
 	for (var k in professorLogKeys){
 		var professorGroup = professorLog[professorLogKeys[k]];
+		console.log(professorGroup.array.length/highestCounter);
 		professorGroup.tf = professorGroup.array.length/highestCounter;
 	}
 

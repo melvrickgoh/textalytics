@@ -210,7 +210,6 @@ main_router.route('/api/recommendation')
 	.all(function(req,res){
 		req.setTimeout(200000000,function () {
 		  req.abort();
-		  console.log("timeout");
 		  self.emit('pass',message);
 		});
 
@@ -222,7 +221,7 @@ main_router.route('/api/recommendation')
 			sDAO.getAllSupervisorRecords(function(isSuccess,sResults){
 				iDAO.getAllIndustries(function(isSuccess,iResults){
 					var industryDictionary = sortTeamsByIndustries(tResults,sResults,iResults);
-					console.log(Object.keys(industryDictionary));
+					//console.log(Object.keys(industryDictionary));
 					console.log(industry);
 					var wantedIndustryGroup;
 					if (industry.indexOf('/')>-1){

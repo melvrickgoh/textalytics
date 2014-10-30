@@ -282,6 +282,8 @@
           XHR('GET',phase4URL,function(phase4Results){
             var p4Results = JSON.parse(phase4Results);
             console.log(p4Results);
+
+            updateDisplayPhase4(p4Results);
           });
         }
 
@@ -296,6 +298,93 @@
             linkedInDisplay(company,linkedInResults);
         }
         $('#phase3').show();
+      }
+
+      var updateDisplayPhase4 = function(results){
+        var sortedArray = results.sortArray;
+        var sumProjects = function(sortedArray){
+          int count = 0;
+          for (var i in sortedArray){
+            count += sortedArray[i].array.length;
+          }
+          return count;
+        }
+        var projectsTotal = sumProjects(sortedArray);
+        var descriptionDiv = document.getElementById('supervisorDes'),
+        descriptionPara = document.getElementById('phase4tracking');
+        descriptionPara.innerHTML = 'Recommending a professor as a supervisor at this stage is primarily a matching of incoming projects to those of the past. The vector space model is also applied to include projects of similar classes in the results. Term frequency is used to score the most suitable professors. Naturally, this is a naive approach of scoring that can definitely be improved in the following ways:';
+
+        var unorderedList = document.createElement('ul');
+        descriptionDiv.appendChild(unorderedList);
+
+        unorderedList.appendChild(generateLi('Similarity comparison of description'));
+        unorderedList.appendChild(generateLi('Weighted scoring of matching and similar categories'));
+        unorderedList.appendChild(generateLi('Time-based weighting of projects (Relevance by time)'));
+
+        descriptionDiv.appendChild(document.createElement('br'));
+        descriptionDiv.appendChild(document.createElement('br'));
+
+        var recommendationResults = document.createElement('h3');
+        recommendationResults.innerHTML = 'Recommended Professors';
+        descriptionDiv.appendChild(recommendationResults);
+
+        var projectNumbers = document.createElement('p');
+        projectNumbers.innerHTML = 'Relevant Projects: ' + projectsTotal;
+        descriptionDiv.appendChild(document.createElement('br'));
+        descriptionDiv.appendChild(document.createElement('br'));
+
+        //START TABLE
+
+        var table = document.createElement('table');
+        table.className = 'table';
+        descriptionDiv.appendChild(table);
+
+        var thead = document.createElement('thead'),
+        headRow = document.createElement('tr');
+        table.appendChild(thead);
+        thead.appendChild(headRow);
+        headRow.appendChild(generateTh('Professor'));
+        headRow.appendChild(generateTh('Score (out of 1)'));
+        headRow.appendChild(generateTh('Projects'));
+
+        var tbody = document.createElement('tbody');
+        table.appendChild(tbody);
+
+        var generateProfessorRecommendationRow = function(profGroup){
+          var row = document.createElement('tr'),
+          supervisor = profGroup.supervisor,
+          score = profGroup.tf;
+
+          var tdSupervisor = document.createElement('td');
+          tdSupervisor.innerHTML = supervisor;
+          row.appendChild(tdSupervisor);
+
+          var tdScore = document.createElement('td');
+          tdScore.innerHTML = score;
+          row.appendChild(tdScore);
+
+          var tdProjects = document.createElement('td');
+          var olProjects = document.createElement('ol');
+          tdProjects.appendChild(olProjects);
+          for (var i in profGroup.array){
+            var project = profGroup.array[i],
+            projectLink = document.createElement('a'),
+            projectLink.href = project.teampage,
+            projectLink.innerHTML = project.teamname + '- ' + project.witorganizations + ' (' + project.year + ')');
+
+            olProjects.appendChild(projectLink);
+          }
+          return row;
+        }
+
+        for (var i in sortedArray) {
+          var professorRow = generateProfessorRecommendationRow(sortedArray[i]);
+          tbody.appendChild(professorRow);
+        }
+
+        //END TABLE
+
+        $('#phase4').show();
       }
 
       var updateDisplayPhase2 = function(results){

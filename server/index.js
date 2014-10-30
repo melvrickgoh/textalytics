@@ -216,6 +216,10 @@ main_router.route('/api/recommendation')
 		var company = req.query.company,
 		industry = req.query.industry,
 		industryCode = req.query.industryCode;
+
+		if (industry.indexOf('XandX')>-1){
+			industry.replace('XandX','&');
+		}
 			
 		tDAO.getAllTeams(function(isSuccess,tResults){
 			sDAO.getAllSupervisorRecords(function(isSuccess,sResults){

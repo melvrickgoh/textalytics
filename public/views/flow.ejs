@@ -274,6 +274,9 @@
           //PHASE 4: INDUSTRY CLASSIFICATION
           var industry = lir.industries[0].name,
           industryCode = lir.industries[0].code;
+          if (industry.indexOf('&')>-1){
+            industry.replace('&','XandX');
+          }
           var phase4URL = '/api/recommendation?company=' + lir.name + '&industry=' + industry + '&industryCode=' + industryCode;
           XHR('GET',phase4URL,function(phase4Results){
             var p4Results = JSON.parse(phase4Results);

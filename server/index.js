@@ -237,13 +237,13 @@ main_router.route('/api/recommendation')
 						wantedIndustryGroup = industryDictionary[industry];
 					}
 					console.log('------------ wanted group ----------');
-					console.log(wantedIndustryGroup);
+					//console.log(wantedIndustryGroup);
 					if (!wantedIndustryGroup){//if undefined, check out for similar groups
 						var similarResults = covectric.searchIndustry(industry);
 						if (similarResults.length>0){
 							var aggregateSimilarProjects = _aggregateSimilarProjects(similarResults,industryDictionary,industry);
 							console.log('------------- aggregated projects --------------');
-							console.log(aggregateSimilarProjects);
+							//console.log(aggregateSimilarProjects);
 							var rankResults = _organizeAndRankByProfessors(wantedIndustryGroup);
 							res.json(rankResults);
 						}else{
@@ -426,7 +426,10 @@ function _organizeAndRankByProfessors(industryArray){
 
 	var professorLog = {};
 	for (var i in industryArray){
+		console.log('----------- ranking groups ' + i + ' ---------------' );
 		var industryProject = industryArray[i];
+		console.log(industryProject.supervisor);
+		console.log(industryProject.supervisor.supervisor);
 		var supervisor = industryProject.supervisor.supervisor;
 		if (!professorLog[supervisor]) {
 			professorLog[supervisor] = {tf:0,array:[]};

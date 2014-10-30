@@ -18,6 +18,7 @@
     <link href="http://getbootstrap.com/examples/jumbotron/jumbotron.css" rel="stylesheet">
     <!-- Custom styles for blog template -->
     <link href="blog.css" rel="stylesheet">
+    <link href="chardinjs.css" rel="stylesheet">
   </head>
 
   <body>
@@ -40,7 +41,7 @@
     <div class="jumbotron">
       <div class="container">
         <h1>The Summarization Flowthrough</h1>
-        <p>This concept being demonstrated here is that given a new project team with the project description, we'd like to reccommend a project supervisor based on his/her experience as being best suited to mentor this new project. This flowthrough demonstrates the entire process of techniques involved</p>
+        <p>This concept being demonstrated here is that given a new project team with the project description, we'd like to reccommend a project supervisor based on his/her experience as being best suited to mentor this new project. This flowthrough <a onclick="$('body').chardinJs('toggle')">demonstrates</a> the entire process of techniques involved</p>
       </div>
     </div>
 
@@ -77,14 +78,14 @@
 
           <div class="form-group">
             <label for="projectDescription">Project Description</label>
-            <textarea id="projectDescription" class="form-control" placeholder="Enter project description" rows="8">Development of an application that serves as a practical solution for advancing Changi Airport Group (CAG) current manpower workflow and improving their ground staff manpower management. Due to the limits of current man-management and increasing pressure on providing optimized insights, our application provides Changi Airport Group a natural platform for managing manpower distribution  and streamlines the time and number of personnel allocated, allowing Changi Airport Group to provide quicker hence more accurate statistics to ground controllers. The GroundNav application comprises of a web-based dashboard and an android mobile application:
+            <textarea id="projectDescription" class="form-control" placeholder="Enter project description" rows="8" data-intro="Keyphrase extraction performed here. All the content for pre-processing is gleaned here" data-position="right">Development of an application that serves as a practical solution for advancing Changi Airport Group (CAG) current manpower workflow and improving their ground staff manpower management. Due to the limits of current man-management and increasing pressure on providing optimized insights, our application provides Changi Airport Group a natural platform for managing manpower distribution  and streamlines the time and number of personnel allocated, allowing Changi Airport Group to provide quicker hence more accurate statistics to ground controllers. The GroundNav application comprises of a web-based dashboard and an android mobile application:
               AirBoard (Web Application Dashboard)
               AirNav (Mobile Application)
               AirBoard allows ground controllers to view their manpower distributed on the ground as well as capture the hotzones of people movement. AirNav facilitates personnel movement in moving from task to task.</textarea>
           </div>
           <div class="form-group">
             <label for="sponsorDescription">Sponsors Description</label>
-            <textarea class="form-control" id="sponsorDescription" placeholder="Enter sponsor description" rows="3">Dr. James Dean, Mr. Chou En-Lai, Changi Airport Group</textarea>
+            <textarea class="form-control" id="sponsorDescription" placeholder="Enter sponsor description" rows="3" data-intro="Decision trees for classifying content, vector space model for retrieving relevant industrial contexts" data-position="left">Dr. James Dean, Mr. Chou En-Lai, Changi Airport Group</textarea>
           </div>
           <button type="button" onclick="flowthrough()" class="btn btn-default">Submit</button>
         </form>
@@ -144,6 +145,7 @@
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="http://code.jquery.com/jquery-2.1.0.min.js"></script>
+    <script src="chardin.js"></script>
 
     <script>
       var XHR = function(connType,address,callback){

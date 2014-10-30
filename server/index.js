@@ -442,8 +442,6 @@ function _organizeAndRankByProfessors(industryArray){
 			highestProfessor = supervisor;
 		}
 	}
-	console.log('highest counter > ' + highestCounter);
-	console.log('highest professor > ' + highestProfessor);
 
 	var professorLogKeys = Object.keys(professorLog);
 	for (var k in professorLogKeys){

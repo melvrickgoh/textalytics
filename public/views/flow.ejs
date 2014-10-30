@@ -368,8 +368,8 @@
           tdProjects.appendChild(olProjects);
           for (var i in profGroup.array){
             var project = profGroup.array[i],
-            projectLink = document.createElement('a'),
-            projectLink.href = project.teampage,
+            projectLink = document.createElement('a');
+            projectLink.href = project.teampage;
             projectLink.innerHTML = project.teamname + '- ' + project.witorganizations + ' (' + project.year + ')');
 
             olProjects.appendChild(projectLink);

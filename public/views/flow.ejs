@@ -279,11 +279,12 @@
             industry = industry.replace('&','XandX');
           }
           var phase4URL = '/api/recommendation?company=' + lir.name + '&industry=' + industry + '&industryCode=' + industryCode;
+          var phase4startTime = new Date().getMilliseconds();
           XHR('GET',phase4URL,function(phase4Results){
             var p4Results = JSON.parse(phase4Results);
             console.log(p4Results);
 
-            updateDisplayPhase4(p4Results);
+            updateDisplayPhase4(p4Results,phase4startTime);
           });
         }
 
@@ -300,7 +301,7 @@
         $('#phase3').show();
       }
 
-      var updateDisplayPhase4 = function(results){
+      var updateDisplayPhase4 = function(results,startTime){
         var sortedArray = results.sortArray;
         var sumProjects = function(sortedArray){
           var count = 0;
@@ -312,7 +313,12 @@
         var projectsTotal = sumProjects(sortedArray);
         var descriptionDiv = document.getElementById('supervisorDes'),
         descriptionPara = document.getElementById('phase4tracking');
-        descriptionPara.innerHTML = 'Recommending a professor as a supervisor at this stage is primarily a matching of incoming projects to those of the past. The vector space model is also applied to include projects of similar classes in the results. Term frequency is used to score the most suitable professors. Naturally, this is a naive approach of scoring that can definitely be improved in the following ways:';
+        var endTime = new Date().getMilliseconds();
+        descriptionPara.innerHTML = 'Process completed in ' + (endTime-startTime)/1000 + ' seconds on NodeJS';
+
+        var explanation = document.createElement('p');
+        explanation.innerHTML = 'Recommending a professor as a supervisor at this stage is primarily a matching of incoming projects to those of the past. The vector space model is also applied to include projects of similar classes in the results. Term frequency is used to score the most suitable professors. Naturally, this is a naive approach of scoring that can definitely be improved in the following ways:';
+        descriptionDiv.appendChild(explanation);
 
         var unorderedList = document.createElement('ul');
         descriptionDiv.appendChild(unorderedList);
@@ -379,6 +385,7 @@
 
         for (var i in sortedArray) {
           var professorRow = generateProfessorRecommendationRow(sortedArray[i]);
+          console.log(professorRow);
           tbody.appendChild(professorRow);
         }
 

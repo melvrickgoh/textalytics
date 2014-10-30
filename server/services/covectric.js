@@ -19,9 +19,8 @@ Covectric.prototype.setIndustries = function(industryResults){
 
 Covectric.prototype.searchIndustry = function(searchString){
 	if (searchString.indexOf('/') > -1){
-		searchString.replace('/',' or ');
+		searchString = searchString.replace('/',' or ');
 	}
-	console.log(searchString);
 	return industryModel.search(searchString, 2);
 }
 

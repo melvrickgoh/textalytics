@@ -236,6 +236,7 @@ main_router.route('/api/recommendation')
 					}else{
 						wantedIndustryGroup = industryDictionary[industry];
 					}
+					console.log(wantedIndustryGroup);
 					if (!wantedIndustryGroup){//if undefined, check out for similar groups
 						var similarResults = covectric.searchIndustry(industry);
 						if (similarResults.length>0){
@@ -246,13 +247,9 @@ main_router.route('/api/recommendation')
 						}else{
 							//no similar results have to address that you're unable to find a prof
 						}
-					}
-					console.log(wantedIndustryGroup);
-					if (wantedIndustryGroup){
+					}else{
 						var rankResults = _organizeAndRankByProfessors(wantedIndustryGroup);
 						res.json(rankResults);
-					}else{
-						//work on capturing by other groups
 					}
 				});
 			});
@@ -481,7 +478,6 @@ function _matchAndSearchCompanySingapore(companyName,callback,companyID){
 				//initiate search
 				linkedIn.companySingaporeSearch(companyName,function(e,results1){
 					if(e){
-						console.log(e);
 						console.log('error occured');
 					}else{
 						var searchResults = results1;
@@ -510,7 +506,6 @@ function _matchAndSearchCompany(companyName,callback){
 				//initiate search
 				linkedIn.companySearch(companyName,function(e,results1){
 					if(e){
-						console.log(e);
 						console.log('error occured');
 					}else{
 						var searchResults = results1;

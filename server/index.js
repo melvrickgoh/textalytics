@@ -218,7 +218,7 @@ main_router.route('/api/recommendation')
 		industryCode = req.query.industryCode;
 
 		if (industry.indexOf('XandX')>-1){
-			industry.replace('XandX','&');
+			industry = industry.replace('XandX','&');
 		}
 			
 		tDAO.getAllTeams(function(isSuccess,tResults){
@@ -231,7 +231,7 @@ main_router.route('/api/recommendation')
 					var wantedIndustryGroup;
 					if (industry.indexOf('/')>-1){
 						var modIndustryName = industry;
-						modIndustryName.replace('/',' or ');
+						modIndustryName = modIndustryName.replace('/',' or ');
 						wantedIndustryGroup = industryDictionary[modIndustryName];
 					}else{
 						wantedIndustryGroup = industryDictionary[industry];
@@ -407,7 +407,7 @@ function _aggregateSimilarProjects(similarResults,industryDictionary,industry){
 	var industryModMap = covectric.getIndustryModMap();
 	var resIndustry = industry;
 	if(industry.indexOf('/')>-1){
-		resIndustry.replace('/',' or ');
+		resIndustry = resIndustry.replace('/',' or ');
 	}
 	for (var i in similarResults){
 		var resultCode = similarResults[i].id,

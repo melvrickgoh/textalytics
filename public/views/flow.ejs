@@ -277,7 +277,7 @@
           console.log(industry);
           console.log(industry.indexOf('&'));
           if (industry.indexOf('&')>-1){
-            industry.replace('&','XandX');
+            industry = industry.replace('&','XandX');
           }
           console.log(industry);
           var phase4URL = '/api/recommendation?company=' + lir.name + '&industry=' + industry + '&industryCode=' + industryCode;

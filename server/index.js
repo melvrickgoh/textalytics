@@ -438,7 +438,7 @@ function _organizeAndRankByProfessors(industryArray){
 		professorLog[supervisor].array.push(industryProject);
 
 		if (professorLog[supervisor].array.length>highestCounter){
-			highestCounter = professorLog[supervisor].length;
+			highestCounter = professorLog[supervisor].array.length;
 			highestProfessor = supervisor;
 		}
 	}

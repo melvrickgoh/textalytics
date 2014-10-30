@@ -450,6 +450,7 @@ function _organizeAndRankByProfessors(industryArray){
 		var professorGroup = professorLog[professorLogKeys[k]];
 		console.log('score: '+professorGroup.array.length/highestCounter);
 		professorGroup.tf = professorGroup.array.length/highestCounter;
+		professorGroup.supervisor = professorLogKeys[k];
 	}
 
 	var sortedProfessorLog = _sortProfessorLog(professorLog);

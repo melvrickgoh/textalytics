@@ -224,7 +224,25 @@ main_router.route('/api/recommendation')
 					var industryDictionary = sortTeamsByIndustries(tResults,sResults,iResults);
 					console.log(Object.keys(industryDictionary));
 					console.log(industry);
-					var wantedIndustryGroup = industryDictionary[industry];
+					var wantedIndustryGroup;
+					if (industry.indexOf('/')>-1){
+						var modIndustryName = industry;
+						modIndustryName.replace('/',' or ');
+						wantedIndustryGroup = industryDictionary[modIndustryName];
+					}else{
+						wantedIndustryGroup = industryDictionary[industry];
+					}
+					if (!wantedIndustryGroup){//if undefined, check out for similar groups
+						var similarResults = covectric.searchIndustry(industry);
+						if (similarResults.length>0){
+							var aggregateSimilarProjects = _aggregateSimilarProjects(similarResults,industryDictionary,industry);
+							console.log(aggregateSimilarProjects);
+							var rankResults = _organizeAndRankByProfessors(wantedIndustryGroup);
+							res.json(rankResults);
+						}else{
+							//no similar results have to address that you're unable to find a prof
+						}
+					}
 					console.log(wantedIndustryGroup);
 					if (wantedIndustryGroup){
 						var rankResults = _organizeAndRankByProfessors(wantedIndustryGroup);
@@ -380,6 +398,25 @@ main_router.route('/teamwit')
 			}
 		});
 	});
+
+function _aggregateSimilarProjects(similarResults,industryDictionary,industry){
+	var aggregatedProjects = [];
+	var industryModMap = covectric.getIndustryModMap();
+	var resIndustry = industry;
+	if(industry.indexOf('/')>-1){
+		resIndustry.replace('/',' or ');
+	}
+	for (var i in similarResults){
+		var resultCode = similarResults[i].id,
+		resultDes = similarResults[i].name;
+
+		var similarArray = industryDictionary[resultDes];
+		if (similarArray) {
+			aggregatedProjects = aggregatedProjects.concat(similarArray);
+		}
+	}
+	return aggregatedProjects;
+}
 
 function _organizeAndRankByProfessors(industryArray){
 	var highestCounter = 0,

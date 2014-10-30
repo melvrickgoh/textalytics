@@ -236,11 +236,13 @@ main_router.route('/api/recommendation')
 					}else{
 						wantedIndustryGroup = industryDictionary[industry];
 					}
+					console.log('------------ wanted group ----------');
 					console.log(wantedIndustryGroup);
 					if (!wantedIndustryGroup){//if undefined, check out for similar groups
 						var similarResults = covectric.searchIndustry(industry);
 						if (similarResults.length>0){
 							var aggregateSimilarProjects = _aggregateSimilarProjects(similarResults,industryDictionary,industry);
+							console.log('------------- aggregated projects --------------');
 							console.log(aggregateSimilarProjects);
 							var rankResults = _organizeAndRankByProfessors(wantedIndustryGroup);
 							res.json(rankResults);

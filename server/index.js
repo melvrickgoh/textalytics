@@ -222,6 +222,7 @@ main_router.route('/api/recommendation')
 				iDAO.getAllIndustries(function(isSuccess,iResults){
 					var industryDictionary = sortTeamsByIndustries(tResults,sResults,iResults);
 					//console.log(Object.keys(industryDictionary));
+					console.log('----------Industry-------------');
 					console.log(industry);
 					var wantedIndustryGroup;
 					if (industry.indexOf('/')>-1){

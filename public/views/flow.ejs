@@ -373,12 +373,14 @@
           var olProjects = document.createElement('ol');
           tdProjects.appendChild(olProjects);
           for (var i in profGroup.array){
-            var project = profGroup.array[i],
+            var projectLi = document.createElement('li'),
+            project = profGroup.array[i],
             projectLink = document.createElement('a');
             projectLink.href = project.teampage;
             projectLink.innerHTML = project.teamname + '- ' + project.witorganizations + ' (' + project.year + ')';
 
-            olProjects.appendChild(projectLink);
+            projectLi.appendChild(projectLink);
+            olProjects.appendChild(projectLi);
           }
           return row;
         }

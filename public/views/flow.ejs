@@ -180,7 +180,6 @@
 
         url += '?tn=' +teamName + '&pd=' + projectDescription + '&sd=' + sponsorDescription + '&tm=' + teamMembers + '&y=' + year + '&s=' + semester;
         XHR('GET',url,function(results){
-          console.log(results);
           var jsonResults = JSON.parse(results);
           var name = jsonResults.name,
           keywordsArray = jsonResults.keywords,

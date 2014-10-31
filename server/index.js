@@ -220,7 +220,7 @@ main_router.route('/api/recommendation')
 		if (industry.indexOf('XandX')>-1){
 			industry = industry.replace('XandX','&');
 		}
-			
+
 		tDAO.getAllTeams(function(isSuccess,tResults){
 			sDAO.getAllSupervisorRecords(function(isSuccess,sResults){
 				iDAO.getAllIndustries(function(isSuccess,iResults){
@@ -247,6 +247,8 @@ main_router.route('/api/recommendation')
 							var rankResults = _organizeAndRankByProfessors(wantedIndustryGroup);
 							res.json(rankResults);
 						}else{
+							console.log('no similar results as weill');
+							res.json({noresults:true});
 							//no similar results have to address that you're unable to find a prof
 						}
 					}else{

@@ -429,7 +429,7 @@ function _organizeAndRankByProfessors(industryArray){
 	for (var i in industryArray){
 		console.log('----------- ranking groups ' + i + ' ---------------' );
 		var industryProject = industryArray[i];
-		if (industryProject){
+		if (industryProject.supervisor){
 			console.log(industryProject.supervisor);
 			var supervisor = industryProject.supervisor.supervisor;
 			if (!professorLog[supervisor]) {

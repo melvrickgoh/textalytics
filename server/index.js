@@ -470,7 +470,7 @@ function _sortProfessorLog(logs){
 		sortable.sort(function(a,b){
 			var atf = a.tf,
 			btf = b.tf;
-			return atf < btf ? -1 : (atf > btf ? 1 : 0);
+			return btf < atf ? -1 : (btf > atf ? 1 : 0);
 		});
 	}
 

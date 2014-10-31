@@ -227,7 +227,6 @@ main_router.route('/api/recommendation')
 					var industryDictionary = sortTeamsByIndustries(tResults,sResults,iResults);
 					//console.log(Object.keys(industryDictionary));
 					console.log('----------   Industry   -------------');
-					console.log(industry);
 					var wantedIndustryGroup;
 					if (industry.indexOf('/')>-1){
 						var modIndustryName = industry;
@@ -430,8 +429,7 @@ function _organizeAndRankByProfessors(industryArray){
 	for (var i in industryArray){
 		console.log('----------- ranking groups ' + i + ' ---------------' );
 		var industryProject = industryArray[i];
-		console.log(industryProject.supervisor);
-		console.log(industryProject.supervisor.supervisor);
+		console.log(industryProject);
 		var supervisor = industryProject.supervisor.supervisor;
 		if (!professorLog[supervisor]) {
 			professorLog[supervisor] = {tf:0,array:[]};

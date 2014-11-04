@@ -50,6 +50,9 @@
         <div id="chart">
           <svg></svg>
         </div>
+        <div id="unclassified_chart">
+          <svg></svg>
+        </div>
       </div>
     </div>
 
@@ -104,11 +107,33 @@
         return {x: i, y: Math.max(0, d)};
       }
 
+      var initializeUnclassifiedGraph = function(dataset){
+        nv.addGraph(function() {
+          var chart = nv.models.multiBarChart()
+                        .showControls(false);
+
+          chart.xAxis
+              .axisLabel('Number of Projects');
+              //.tickFormat(d3.format(',f'));
+
+          chart.yAxis
+              .axisLabel('Year');
+              //.tickFormat(d3.format(',.1f'));
+          d3.select('#unclassified_chart svg')
+              .datum(dataset)
+              .transition().duration(500)
+              .call(chart);
+
+          nv.utils.windowResize(chart.update);
+
+          return chart;
+      });
+      }
+
       var initializeGraph = function(dataset){
         nv.addGraph(function() {
           var chart = nv.models.multiBarChart()
                         .showControls(false);
-          console.log(chart);
 
           chart.xAxis
               .axisLabel('Number of Projects');
@@ -186,6 +211,8 @@
           }
           valuesData.push(industryGroup);
         }
+        console.log('FILTER DETAILS');
+        console.log(valuesData);
         return valuesData;
       }
 

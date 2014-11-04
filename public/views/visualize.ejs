@@ -199,6 +199,7 @@
       var filterStackedBarDictionary = function(dictionary){
         var valuesData = [],
         industryKeys = Object.keys(dictionary);
+        console.log('pre process dictionary');
         for(var i = 0; i<industryKeys.length; i++){
           var industryName = industryKeys[i],
           industrySet = dictionary[industryName],

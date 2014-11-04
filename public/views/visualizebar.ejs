@@ -46,6 +46,9 @@
                           <div class='chart'>
                             <div id='chart'></div>
                           </div>
+                          <div class='chart'>
+                            <div id='unclassified_chart'></div>
+                          </div>
                         </div>
                     </div>
                 </div>
@@ -255,7 +258,8 @@
       }
       
       var stackedBarData = function(rawData){
-        var dictionary = {};
+        var dictionary = {},
+        unclassifiedDictionary = {};
         for(var i = 0; i<rawData.length; i++){
           var unit = rawData[i],
           industryResults = _extractIndustry(unit.liindustries),
@@ -282,18 +286,18 @@
 
               dictionary['Startup'][unit.year].push(unit);
             }else{
-              if(!dictionary['Unclassified']){
-                dictionary['Unclassified'] = {};
+              if(!unclassifiedDictionary['Unclassified']){
+                unclassifiedDictionary['Unclassified'] = {};
               }
 
-              if(!dictionary['Unclassified'][unit.year]){
-                dictionary['Unclassified'][unit.year] = [];
+              if(!unclassifiedDictionary['Unclassified'][unit.year]){
+                unclassifiedDictionary['Unclassified'][unit.year] = [];
               }
-              dictionary['Unclassified'][unit.year].push(unit);
+              unclassifiedDictionary['Unclassified'][unit.year].push(unit);
             }
           }
         }
-        return dictionary;
+        return {normal:dictionary, unclassified:unclassifiedDictionary};
       }
 
       var INDUSTRIES_NUMBER,
@@ -393,9 +397,9 @@
         }
       }
 
-      var c3StackedBarFilter = function(dictionary){
+      var c3StackedBarFilter = function(dictionary.chartid){
         var c3package = {
-          bindto:'#chart',
+          bindto:chartid,
           size:{
             height:550
           },
@@ -531,16 +535,19 @@
           return false;
         }
       }
-      var DICTIONARY;
+      var DICTIONARY,
+      UNCLASSIFIED_DICTIONARY;
       var getAllTeamsData = function(){
         xhr('/allteamsdata',function(results){
           var data = JSON.parse(results);
           var filteredData = stackedBarData(data);
-          DICTIONARY = filteredData;
+          DICTIONARY = filteredData.normal;
+          UNCLASSIFIED_DICTIONARY = filteredData.unclassified;
           console.log('ALL TEAMS FILTER');
           console.log(filteredData);
-          INDUSTRIES_NUMBER = Object.keys(filteredData).length;
-          c3StackedBarFilter(filteredData);
+          INDUSTRIES_NUMBER = Object.keys(DICTIONARY).length;
+          c3StackedBarFilter(DICTIONARY,'#chart');
+          c3StackedBarFilter(UNCLASSIFIED_DICTIONARY,'#unclassified_chart');
         });
       }
 

@@ -87,7 +87,7 @@ pgDAO.prototype.getConnection = function(queryObject,callback,errCallback){
   try{
 		client.query(queryObject,callback);
 	}catch(err){
-		//errCallback(err);
+		//errCallback(err); 
 		console.log(err);
 	}
   /*

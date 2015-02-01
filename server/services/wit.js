@@ -15,7 +15,7 @@ Wit.prototype.requestWit = function(team) {
     var future = Future.create();
     var options = {
         host: 'api.wit.ai',
-        path: '/message?v=20141001&q=' + encodeURIComponent(user_text),
+        path: '/message?v=20150129&q=' + encodeURIComponent(user_text),
         // the Authorization header allows you to access your Wit.AI account
         // make sure to replace it with your own
         headers: {'Authorization': AUTHORIZATION}
@@ -24,7 +24,6 @@ Wit.prototype.requestWit = function(team) {
     https.request(options, function(res) {
         var response = '',
         objectResponse;
-
         res.on('data', function (chunk) {
             response += chunk;
             objectResponse = JSON.parse(response);
@@ -34,7 +33,7 @@ Wit.prototype.requestWit = function(team) {
         });
 
         res.on('end', function () {
-            future.fulfill(undefined, objectResponse);
+          future.fulfill(undefined, objectResponse);
         });
     }).on('error', function(e) {
         future.fulfill(e, undefined);

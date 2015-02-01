@@ -298,6 +298,7 @@ main_router.route('/api/wit')
 			if (err) console.log(err); // handle error here
 			//team.intepretation = response;
 			var processedResults = wit.processWitResults(response);
+			
 			if (processedResults.outcome && processedResults.outcome.intent == 'sponsor'){
 				tDAO.updateTeamWitData(response.id,processedResults,function(isSuccess){
 					res.json(processedResults);
@@ -310,7 +311,6 @@ main_router.route('/api/wit')
 				});
 			}
 		});
-
 	});
 
 main_router.route('/teamwit')

@@ -1,4 +1,4 @@
-var pg = require('pg.js'),
+var pg = require('pg'),
 conString = "postgres://lxkdnxglxsqpfd:i652h8UFdyfV-hRnADKlJDBWit@ec2-23-21-170-57.compute-1.amazonaws.com:5432/d2t3trkm3dvedc",
 handleError;
 
@@ -74,16 +74,38 @@ pgDAO.prototype.initialize = function(){
 }
 
 pgDAO.prototype.getConnection = function(queryObject,callback,errCallback){
-	// get a pg client from the connection pool
-  pg.connect(conString, function(err, client, done) {
-	try{
+  var client = new pg.Client({
+    user: "lxkdnxglxsqpfd",
+    password: "i652h8UFdyfV-hRnADKlJDBWit",
+    database: "d2t3trkm3dvedc",
+    port: 5432,
+    host: "ec2-23-21-170-57.compute-1.amazonaws.com",
+    ssl: true
+	}); 
+	client.connect();
+
+  try{
 		client.query(queryObject,callback);
-		done();
 	}catch(err){
 		//errCallback(err);
-      	done(client);
+		console.log(err);
 	}
+  /*
+  pg.connect(conString, function(err, client, done) {
+		console.log(err);
+		console.log(client);
+		console.log(done);
+		try{
+			client.query(queryObject,callback);
+			done();
+		}catch(err){
+			//errCallback(err);
+			console.log('pg connection');
+			console.log(err);
+	    done(client);
+		}
   });
+	*/
 }
 
 pgDAO.prototype.update = function(details,callback){

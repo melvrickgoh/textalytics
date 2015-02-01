@@ -27,6 +27,7 @@
     "errorhandler": "1.1.1",
     "body-parser": "1.4.3",
     "model": "0.5.16",
+    "pg": "2.x",
     "pg.js": "3.3.0",
     "request": "2.36.0",
     "connect-flash": "0.1.1",

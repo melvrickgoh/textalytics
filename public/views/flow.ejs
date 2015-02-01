@@ -130,7 +130,7 @@
         <div id="phase4">
 
           <div class="blog-post">
-            <h2 class="blog-post-title">Phase 4: Recommended Supervisor</h2>
+            <h2 class="blog-post-title">Phase 4: Recommending a Project Manager</h2>
             <p class="blog-post-meta" id="phase4tracking"></p>
             <div id="supervisorDes">
 
@@ -178,7 +178,7 @@
       var extractKeywordsPhrases = function(teamName,projectDescription,sponsorDescription,teamMembers,year,semester){
         //PHASE 1: PRE-PROCESSING
         var startTimePhase1 = new Date().getMilliseconds();
-        var url = 'http://localhost:8080/Textalytics470/api/keyphrase';
+        var url = 'http://textalytics.herokuapp.com/api/keyphrase';
 
         url += '?tn=' +teamName + '&pd=' + projectDescription + '&sd=' + sponsorDescription + '&tm=' + teamMembers + '&y=' + year + '&s=' + semester;
         XHR('GET',url,function(results){
@@ -319,7 +319,7 @@
         descriptionPara.innerHTML = 'Process completed in ' + (endTime-startTime)/1000 + ' seconds on NodeJS';
 
         var explanation = document.createElement('p');
-        explanation.innerHTML = 'Recommending a professor as a supervisor at this stage is primarily a matching of incoming projects to those of the past. The vector space model is also applied to include projects of similar classes in the results. Term frequency is used to score the most suitable professors. Naturally, this is a naive approach of scoring that can definitely be improved in the following ways:';
+        explanation.innerHTML = 'Recommending a project manager as a supervisor at this stage is primarily a matching of incoming projects to those of the past. The vector space model is also applied to include projects of similar classes in the results. Term frequency is used to score the most suitable project manager. Naturally, this is a naive approach of scoring that can definitely be improved in the following ways:';
         descriptionDiv.appendChild(explanation);
 
         var unorderedList = document.createElement('ul');
@@ -333,7 +333,7 @@
         descriptionDiv.appendChild(document.createElement('br'));
 
         var recommendationResults = document.createElement('h3');
-        recommendationResults.innerHTML = 'Recommended Professors';
+        recommendationResults.innerHTML = 'Recommended Project Managers';
         descriptionDiv.appendChild(recommendationResults);
 
         var projectNumbers = document.createElement('p');
@@ -351,7 +351,7 @@
         headRow = document.createElement('tr');
         table.appendChild(thead);
         thead.appendChild(headRow);
-        headRow.appendChild(generateTh('Professor'));
+        headRow.appendChild(generateTh('Project Managers'));
         headRow.appendChild(generateTh('Score (out of 1)'));
         headRow.appendChild(generateTh('Projects'));
 
@@ -390,7 +390,6 @@
 
         for (var i in sortedArray) {
           var professorRow = generateProfessorRecommendationRow(sortedArray[i]);
-          console.log(professorRow);
           tbody.appendChild(professorRow);
         }
 
@@ -589,14 +588,7 @@
         return li;
       }
 
-      var textalyticsKeyphrase = function(){
-        XHR('GET','http://textalytics.herokuapp.com/api/keyphrase',function(results){
-          alert(results);
-        })
-      }
-
       $(document).ready(function() {
-        //textalyticsKeyphrase();
         $('#phase1').hide();
         $('#phase2').hide();
         $('#phase3').hide();

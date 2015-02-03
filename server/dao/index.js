@@ -64,7 +64,7 @@ function pgDAO (options){
 			returning:['attr1','attr2','attr3']
 		}
 	}
-}
+} 
 
 pgDAO.prototype.constructor = pgDAO;
 

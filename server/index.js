@@ -37,6 +37,7 @@ iDAO.getAllIndustries(function(isSuccess,results){
 
 main_router.route('/')
 	.all(function(req,res){
+		console.log('CHECK ME OUT!!!');
 		res.render('index.ejs');
 		//res.send('welcome to head');
 	});

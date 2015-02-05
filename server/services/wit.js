@@ -30,6 +30,7 @@ Wit.prototype.requestWit = function(team) {
             objectResponse.id = team.id;
             objectResponse.sponsor = team.sponsor;
             objectResponse.team = team.team;
+            console.log(objectResponse);
         });
 
         res.on('end', function () {

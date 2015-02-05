@@ -216,4 +216,4 @@ function _filterInvalidOutcomes(outcomes){
 	return outcomes;
 }
 
-module.exports = Wit; 
+module.exports = Wit;

@@ -1,5 +1,5 @@
 var pgDAO = require('./index');
-var dao = new pgDAO({pgURL:"postgresql://lxkdnxglxsqpfd:i652h8UFdyfV-hRnADKlJDBWit@ec2-23-21-170-57.compute-1.amazonaws.com:5432/d2t3trkm3dvedc"});
+var dao = new pgDAO({pgURL:"postgres://raooddscbjubfm:_hRtPSh-P_d97Za496xD75SBCp@ec2-107-20-169-200.compute-1.amazonaws.com:5432/d1v8k0l98bmvg4"});
 
 var TABLENAME = 'teams',
 	NAME = "teamname",

@@ -1,5 +1,5 @@
 var pg = require('pg'),
-conString = "postgres://lxkdnxglxsqpfd:i652h8UFdyfV-hRnADKlJDBWit@ec2-23-21-170-57.compute-1.amazonaws.com:5432/d2t3trkm3dvedc",
+conString = "postgres://raooddscbjubfm:_hRtPSh-P_d97Za496xD75SBCp@ec2-107-20-169-200.compute-1.amazonaws.com:5432/d1v8k0l98bmvg4",
 handleError;
 
 function pgDAO (options){
@@ -75,11 +75,11 @@ pgDAO.prototype.initialize = function(){
 
 pgDAO.prototype.getConnection = function(queryObject,callback,errCallback){
   var client = new pg.Client({
-    user: "lxkdnxglxsqpfd",
-    password: "i652h8UFdyfV-hRnADKlJDBWit",
-    database: "d2t3trkm3dvedc",
+    user: "raooddscbjubfm",
+    password: "_hRtPSh-P_d97Za496xD75SBCp",
+    database: "d1v8k0l98bmvg4",
     port: 5432,
-    host: "ec2-23-21-170-57.compute-1.amazonaws.com",
+    host: "ec2-107-20-169-200.compute-1.amazonaws.com",
     ssl: true
 	}); 
 	client.connect();
@@ -175,7 +175,7 @@ pgDAO.prototype.generateUpdateQuery = function(details){
 
 pgDAO.prototype.delete = function(details,callback){
 	var query = this.generateDeleteQuery(details);
-	console.log(query);
+
 	this.getConnection(query,function(err,result){
 		if (err){
 			callback(false,err);
@@ -277,7 +277,7 @@ pgDAO.prototype.generateSelectQuery = function(details){
 
 pgDAO.prototype.insert = function(details,callback){
 	var query = this.generateInsertQuery(details);
-	//query = 'INSERT INTO epictable (moobars, foobars) VALUES (\'helloworldmoo\', \'helloworldfoo\');'
+
 	this.getConnection(query,function(err,result){
 		if (err){
 			callback(false,err);

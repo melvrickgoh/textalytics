@@ -2,7 +2,8 @@
  * GET home page.
  */
 
-var express = require('express'),
+const express = require('express'),
+
 
 TeamDAO = require('./dao/TeamDAO'),
 SupervisorsDAO = require('./dao/SupervisorsDAO'),
@@ -10,6 +11,11 @@ IndustriesDAO = require('./dao/IndustriesDAO'),
 Wit = require('./services/wit'),
 LinkedIn = require('./services/linkedin'),
 Covectric = require('./services/covectric'),
+GoogleServices = require('./services/GoogleServices'),
+UserController = require('./controller/UserController'),
+User = require('./entity/user'),
+File = require('./entity/file'),
+ImageCrawler = require('./services/ImageCrawler'),
 main_router = express.Router();
 //svc acct pw: notasecret
 var readline = require('readline');
@@ -23,8 +29,11 @@ var tDAO = new TeamDAO(),
 sDAO = new SupervisorsDAO(),
 iDAO = new IndustriesDAO(),
 wit = new Wit(),
-linkedIn = new LinkedIn();
-covectric = new Covectric();
+linkedIn = new LinkedIn(),
+covectric = new Covectric(),
+gSvcs = new GoogleServices(),
+imageCrawler = new ImageCrawler(),
+uController = new UserController({pgURL:(process.env.HEROKU_POSTGRESQL_RED_URL||'postgres://raooddscbjubfm:_hRtPSh-P_d97Za496xD75SBCp@ec2-107-20-169-200.compute-1.amazonaws.com:5432/d1v8k0l98bmvg4')});
 
 //SET COVECTRIC BASELINES
 iDAO.getAllIndustries(function(isSuccess,results){
@@ -37,7 +46,6 @@ iDAO.getAllIndustries(function(isSuccess,results){
 
 main_router.route('/')
 	.all(function(req,res){
-		console.log('CHECK ME OUT!!!');
 		res.render('index.ejs');
 		//res.send('welcome to head');
 	});
@@ -52,6 +60,199 @@ main_router.route('/ebola')
 	.all(function(req,res){
 		res.render('ebola.ejs');
 		//res.send('welcome to head');
+	});
+
+main_router.route('/ocr/login')
+	.all(function(req,res){
+		gSvcs.login(res);
+	});
+
+main_router.route('/ocr/oauth2callback')
+	.all(function(req,res){
+		var code = req.query.code;
+
+		var returnCounter = 0;
+		var loggedInUser = new User({}),
+		files = [];
+
+		gSvcs.getUserAndDriveProfile(code,function(resultType,err,results,tokens,oauth2Client,client) {
+
+	      if (err) {
+	        console.log('An error occured', err);
+	        return;
+	      }else{
+	      	switch(resultType){
+	      		case 'profile':
+	      			loggedInUser.id = results.id,
+			      	loggedInUser.etag = results.etag,
+			      	loggedInUser.gender = results.gender,
+			      	loggedInUser.googleURL = results.url,
+			      	loggedInUser.displayName = results.displayName,
+			      	loggedInUser.name = results.name,
+			      	loggedInUser.image = results.image,
+			      	loggedInUser.email = results.emails[0].value? results.emails[0].value : 'no email',
+			      	loggedInUser.emailUsername = _extractEmailUsername(results.emails[0].value),
+			      	loggedInUser.lastVisit = new Date();
+
+			      	tokens.access_token? 		loggedInUser.refreshToken = tokens.access_token : '';
+	    				oauth2Client? 					loggedInUser.authClient = oauth2Client : '';
+	    				client? 								loggedInUser.client = client : '';
+
+	      			break;
+	      		case 'folder':
+	      			loggedInUser.ocrFolder = results;
+	      			break;
+	      		case 'drive':
+	      			var filesObj = results.items;
+	      			for (var i in filesObj){
+	      				var fileObj = filesObj[i];
+	      				files.push(new File({
+	      					type : fileObj.kind,
+									id : fileObj.id,
+									etag : fileObj.etag,
+									selfLink : fileObj.selfLink,
+									alternateLink : fileObj.alternateLink,
+									embedLink : fileObj.embedLink,
+									iconLink : fileObj.iconLink,
+									title : fileObj.title,
+									mimeType : fileObj.mimeType,
+									createdDate : fileObj.createdDate,
+									modifiedDate : fileObj.modifiedDate,
+									modifiedByMeDate : fileObj.modifiedByMeDate,
+									lastViewedByMeDate : fileObj.lastViewedByMeDate,
+									parents : fileObj.parents,
+									exportLinks : fileObj.exportLinks,
+									userPermission : fileObj.userPermission,
+									ownerNames : fileObj.ownerNames,
+									owners : fileObj.owners,
+									lastModifyingUserName : fileObj.lastModifyingUserName,
+									lastModifyingUser : fileObj.lastModifyingUser,
+									editable : fileObj.editable,
+									copyable : fileObj.copyable,
+									shared : fileObj.shared
+	      				}));
+	      			}
+	      			break;
+	      		default:
+	      			break;
+	      	}
+	      	returnCounter++;
+
+	      	if (returnCounter == 3){//assign to the user the files at the end of the second callback
+	      		loggedInUser.files = files;
+	      		req.session.user = loggedInUser; //set the session to that of this user
+	      		req.flash('user',loggedInUser);
+
+	      		var authorization = req.session.authorization;
+					  if (!authorization) {
+					    authorization = req.session.authorization = {}
+					  }
+					  req.session.authorization['tokens'] = tokens;
+					  req.session.authorization['authClient'] = oauth2Client;
+					  req.session.authorization['client'] = loggedInUser.client;
+
+	      		var targetRedirect = req.flash('target_locale')[0];//use only the first element as the result
+
+	      		//update user database on user details
+	      		uController.processGoogleLogin(loggedInUser,function(action,isSuccess,result){
+	      			//action performed
+	      			switch(action){
+	      				case 'Update User':
+	      					console.log(result);
+	      					break;
+	      				case 'Insert User':
+	      					console.log(result);
+	      					break;
+	      				default:
+	      			}
+	      		});
+
+	      		switch(targetRedirect){
+	      			case 'ocr/play':
+	      				req.flash('target_locale',undefined);//reset given that you've logged in already
+	      				res.redirect('/ocr/play');
+	      				break;
+	      			default:
+	      				res.redirect('/');
+	      		}
+	      	}
+	      }
+	      
+	    });
+	});
+
+main_router.route('/api/ocr/uploadImage')
+	.all(function(req,res){
+		_restrict(req,res,function(user){
+			var authorization = req.session.authorization,
+			user = req.session.user;
+
+		  if (!authorization) {
+		    res.redirect('/ocr/play');
+		  }
+
+			var imageLink = req.query.image_link,
+			imageName = req.query.image_name;
+
+			imageCrawler.downloadImage(imageLink,function(err,imageResults){
+				gSvcs.uploadClientOCRFile(authorization['client'],authorization['authClient'],authorization['tokens'],{
+					title: imageName,
+					description: imageLink,
+					mimeType: imageResults.mimeType,
+					body: imageResults.data,
+					folderId: user.ocrFolder.id
+				},function(err,response){
+					response['bodyImage'] = imageResults.mimeType + ";base64," + imageResults.data.toString('base64');
+					
+					gSvcs.getClientOCRFile(authorization['client'],authorization['authClient'],authorization['tokens'],response.id,function(getFileErr,getFileResponse){
+						console.log(getFileErr);
+						console.log(getFileResponse);
+						response['ocrFile'] = getFileResponse;
+						res.send(response);
+					});
+				});
+			});
+
+		},'api/ocr/uploadImage');
+	});
+
+main_router.route('/api/image_crawl')
+	.all(function(req,res){
+		var url = req.query.image,
+		authorization = req.session.authorization,
+		user = req.session.user;
+
+		if (!authorization) {
+	    res.redirect('/ocr/login');
+	  }
+		imageCrawler.downloadImage(url,function(err,imageResults){
+			gSvcs.uploadClientOCRFile(authorization['client'],authorization['authClient'],authorization['tokens'],{
+				title: "test_file.png",
+				description: url,
+				mimeType: imageResults.mimeType,
+				body: imageResults.data,
+				folderId: user.ocrFolder.id
+			},function(err,response){
+				response['bodyImage'] = imageResults.mimeType + ";base64," + imageResults.data.toString('base64');
+				res.send(response);
+			});
+		});
+	});
+
+main_router.route('/ocr/play')
+	.all(function(req,res){
+		_restrict(req,res,function(user){
+			res.render('ocr_flow.ejs',{
+				user : req.session.user
+			});
+		},'ocr/play');
+	});
+
+main_router.route('/ocr/files')
+	.all(function(req,res){
+		_restrict(req,res,function(user){
+			res.json(req.flash('user'));
+		},'ocr/files');
 	});
 
 main_router.route('/play')
@@ -602,6 +803,28 @@ function mapSupervisors(supervisorRecords){
 
 function intepretIndustries(dbString){
 	return dbString.trim().split('III')[1];
+}
+
+function _restrict(req, res, next, targetLocale) {                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
+  if (req.session.user) {
+    next(req.session.user);                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
+  } else {                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+    req.session.error = 'Access denied!';
+    req.flash('target_locale',targetLocale);
+    console.log(targetLocale);
+    res.redirect('/ocr/login');                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
+  }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
+}
+
+function _extractEmailUsername(str){
+	var nameMatch = str.match(/^([^@]*)@/),
+	name = nameMatch ? nameMatch[1] : null;
+	if (str.indexOf('@gtempaccount.com')!=-1){
+		var tempUsername = name.split('@gtempaccount.com')[0];
+		var subTempUsername = tempUsername.split('%')[0];
+		return subTempUsername;
+	}
+	return name;
 }
 
 exports.index = main_router;

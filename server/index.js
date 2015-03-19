@@ -41,7 +41,7 @@ fSvcs = new FileServices(),
 downloaderSvc = new DownloaderService({ GoogleServices: gSvcs}),
 ocrReaderSvc = new OCRService(),
 imageCrawler = new ImageCrawler(),
-uController = new UserController({pgURL:(process.env.HEROKU_POSTGRESQL_RED_URL||'postgres://raooddscbjubfm:_hRtPSh-P_d97Za496xD75SBCp@ec2-107-20-169-200.compute-1.amazonaws.com:5432/d1v8k0l98bmvg4')});
+uController = new UserController({pgURL:process.env.HEROKU_POSTGRESQL_RED_URL});
 
 //SET COVECTRIC BASELINES
 iDAO.getAllIndustries(function(isSuccess,results){
@@ -241,8 +241,6 @@ main_router.route('/api/ocr/serverUploadImage')
 
 				var failureOCRAction = function(response,masterCallback){
 					fSvcs.removeOCRFile(__dirname+'/../downloads/'+response.id + '.html',function(isRemovalSuccess,removalMessage){
-						console.log('failure remove ocr file > ' + isRemovalSuccess);
-						console.log(removalMessage);
 						gSvcs.setGlobalReadPermissions(response.id,function(readPermissionsErr,readPermissionResponse){
 							setTimeout(recursiveDownloadAndReadOCR(response,masterCallback),3500);
 						});
@@ -255,7 +253,6 @@ main_router.route('/api/ocr/serverUploadImage')
 							console.log(results); 
 						} else {
 							fSvcs.removeOCRFile(__dirname+'/../downloads/'+response.id + '.html',function(isRemovalSuccess,removalMessage){
-								console.log('success remove ocr file > ' + isRemovalSuccess);
 								masterCallback(true,response);
 							});
 						}
@@ -264,7 +261,6 @@ main_router.route('/api/ocr/serverUploadImage')
 
 				gSvcs.setGlobalReadPermissions(response.id,function(readPermissionsErr,readPermissionResponse){
 					setTimeout(recursiveDownloadAndReadOCR(response,function(isRecursionSuccess,recursionResponse){
-						console.log('master callback success ? ' + isRecursionSuccess);
 						res.json(response);
 					}),3500);
 				});

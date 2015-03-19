@@ -1,7 +1,7 @@
 var https = require('https');
 var Future = require('futures').future;
 
-var AUTHORIZATION = 'Bearer KA5DLWOLPPGEHURAE7PBZPSPU5MK2L2N';
+var AUTHORIZATION = process.env.WIT_AUTHORIZATION;
 
 function Wit(options){
 

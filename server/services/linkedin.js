@@ -1,31 +1,30 @@
 var OAUTH_GROUPS = {
 	t1:{
-	    consumer_key: '75otna9w35iudo'
-	    , consumer_secret: 'Zr6IYQxnELcwywLB'
-	    , token: '620859b4-d7d5-4f60-9c3c-66a06f4b686f'
-	    , token_secret: '777bbe55-39b6-4494-a9dd-eff9ab2b6ae7'
+	    consumer_key: process.env.LI_1_KEY
+	    , consumer_secret: process.env.LI_1_SECRET
+	    , token: process.env.LI_1_TOKEN
+	    , token_secret: process.env.LI_1_TOKEN_SECRET
 	},
 	t2:{
-		consumer_key: '75zk9y8biiqhwl'
-	    , consumer_secret: 'PpgGs9QQliIMkv46'
-	    , token: 'a62b1fdf-88ac-4062-a9b8-602d5f48de66'
-	    , token_secret: '31dcfab4-a3e5-42ea-903b-2b69e8c595f7'
+		consumer_key: process.env.LI_2_KEY
+	    , consumer_secret: process.env.LI_2_SECRET
+	    , token: process.env.LI_2_TOKEN
+	    , token_secret: process.env.LI_2_TOKEN_SECRET
 	},
 	t3:{
-		consumer_key: '75ykn07z5f4pp4'
-	    , consumer_secret: 'IsvID0ukMlVa0fez'
-	    , token: '7e3ef627-79fc-4b4e-9c97-ab20a5ef8928'
-	    , token_secret: '262839b5-b051-4f5a-a6e8-c231b717bd9b'
+		consumer_key: process.env.LI_3_KEY
+	    , consumer_secret: process.env.LI_3_SECRET
+	    , token: process.env.LI_3_TOKEN
+	    , token_secret: process.env.LI_3_TOKEN_SECRET
 	},
 	t4:{
-		consumer_key: '75q21r3tmzi0iv'
-	    , consumer_secret: 'KtDRXqIRQSK43hPr'
-	    , token: 'a3c3cee6-1dc3-4b33-b015-342f795c1fa4'
-	    , token_secret: 'c816aa48-f6a9-4ef0-9e71-a2012a89af13'
+		consumer_key: process.env.LI_4_KEY
+	    , consumer_secret: process.env.LI_4_SECRET
+	    , token: process.env.LI_4_TOKEN
+	    , token_secret: process.env.LI_4_TOKEN_SECRET
 	}
 },
 OAUTH_GROUP = OAUTH_GROUPS.t3,
-//OAuth_Token = '620859b4-d7d5-4f60-9c3c-66a06f4b686f',
 LOCAL_CALLBACK = 'http://localhost:5432/oauth/linkedin/callback',
 DEPLOYED_CALLBACK = 'http://textalytics-wit.herokuapp.com/oauth/linkedin/callback',
 LinkedIN = require('node-linkedin')(OAUTH_GROUP.consumer_key, OAUTH_GROUP.consumer_secret, LOCAL_CALLBACK),
@@ -47,7 +46,7 @@ LinkedIn.prototype.initializeUserAuthorization = function(access_token) {
 }
 
 LinkedIn.prototype.serviceAutorization = function(){
-	svcLinkedIn = LinkedIN.init('620859b4-d7d5-4f60-9c3c-66a06f4b686f');
+	svcLinkedIn = LinkedIN.init(process.env.LI_1_TOKEN);
 	return svcLinkedIn;
 }
 

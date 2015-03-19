@@ -1,5 +1,5 @@
 var pg = require('pg'),
-conString = "postgres://raooddscbjubfm:_hRtPSh-P_d97Za496xD75SBCp@ec2-107-20-169-200.compute-1.amazonaws.com:5432/d1v8k0l98bmvg4",
+conString = process.env.HEROKU_POSTGRESQL_RED_URL,
 handleError;
 
 function pgDAO (options){
@@ -75,12 +75,12 @@ pgDAO.prototype.initialize = function(){
 
 pgDAO.prototype.getConnection = function(queryObject,callback,errCallback){
   var client = new pg.Client({
-    user: "raooddscbjubfm",
-    password: "_hRtPSh-P_d97Za496xD75SBCp",
-    database: "d1v8k0l98bmvg4",
-    port: 5432,
-    host: "ec2-107-20-169-200.compute-1.amazonaws.com",
-    ssl: true
+    user: process.env.PG_DB_USER,
+    password: process.env.PG_DB_KEY,
+    database: process.env.PG_DB_NAME,
+    port: process.env.PG_DB_PORT,
+    host: process.env.PG_DB_HOST,
+    ssl: process.env.PG_DB_SSL
 	}); 
 	client.connect();
 

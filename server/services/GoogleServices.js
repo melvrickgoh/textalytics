@@ -3,16 +3,16 @@ GoogleServerFileDAO = require('../dao/GoogleServerFilesDAO');
 
 var googleapis = require('googleapis');
 var OAuth2Client = googleapis.OAuth2Client;
-var CLIENT_ID = '43920069348-dumn50n713ibd53u0r39co0vke0pho6u.apps.googleusercontent.com';
-var CLIENT_SECRET = 'YNhCQTVTDcTt5zwhmPNV5BAv';
+var CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
+var CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
 var REDIRECT_URL = _googleAuthCallbackURL();
 
 //For Client Side logging in
 var OAuth2 = googleapis.auth.OAuth2;
 
-var SERVICE_CLIENT_ID = '43920069348-tgnid2frja9o5otfbf5u5s6l2hkpp30r.apps.googleusercontent.com';
-var SERVICE_ACCOUNT_EMAIL = '43920069348-tgnid2frja9o5otfbf5u5s6l2hkpp30r@developer.gserviceaccount.com';
-var SERVICE_ACCOUNT_KEY_FILE = './server/key.pem';
+var SERVICE_CLIENT_ID = process.env.GOOGLE_SERVICE_ID;
+var SERVICE_ACCOUNT_EMAIL = process.env.GOOGLE_SERVICE_EMAIL;
+var SERVICE_ACCOUNT_KEY_FILE = process.env.GOOGLE_SERVICE_KEY;
 
 //Other info
 var CLIENT_DEFAULT_OCR_FOLDER_NAME = "melvrickgoh/textalytics/ocr_demo",

@@ -1,5 +1,5 @@
 var pgDAO = require('./index');
-var dao = new pgDAO({pgURL:"postgres://raooddscbjubfm:_hRtPSh-P_d97Za496xD75SBCp@ec2-107-20-169-200.compute-1.amazonaws.com:5432/d1v8k0l98bmvg4"});
+var dao = new pgDAO({pgURL:process.env.HEROKU_POSTGRESQL_RED_URL});
 
 var TABLENAME = 'supervisorteams',
 	ID = 'id',

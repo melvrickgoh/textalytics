@@ -25,9 +25,7 @@ var OAUTH_GROUPS = {
 	}
 },
 OAUTH_GROUP = OAUTH_GROUPS.t3,
-LOCAL_CALLBACK = 'http://localhost:5432/oauth/linkedin/callback',
-DEPLOYED_CALLBACK = 'http://textalytics-wit.herokuapp.com/oauth/linkedin/callback',
-LinkedIN = require('node-linkedin')(OAUTH_GROUP.consumer_key, OAUTH_GROUP.consumer_secret, LOCAL_CALLBACK),
+LinkedIN = require('node-linkedin')(OAUTH_GROUP.consumer_key, OAUTH_GROUP.consumer_secret, _determineLinkedInCallback()),
 linkedin, svcLinkedIn;
 
 function LinkedIn(options){
@@ -144,6 +142,14 @@ LinkedIn.prototype.getCompanyDetails = function(company){
 		universalName : company.universalName,
 		website : company.websiteUrl,
 		specialities: specialities
+	}
+}
+
+function _determineLinkedInCallback(){
+	if (process.env.GOOGLE_STATUS) {
+		return 'http://textalytics-wit.herokuapp.com/oauth/linkedin/callback';
+	}else{
+		return 'http://localhost:5432/oauth/linkedin/callback';
 	}
 }
 

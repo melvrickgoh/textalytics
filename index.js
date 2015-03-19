@@ -11,7 +11,11 @@ session = require('express-session'),
 pgSession = require('connect-pg-simple')(session),
 flash = require('connect-flash'),//allowing the flashing 
 errorHandler = require('errorhandler'),
-pgDAO = require('./server/dao/index');
+pgDAO = require('./server/dao/index'),
+dotenv = require('dotenv');
+
+//env vars
+dotenv.load();
 
 var router = require('./server');
 

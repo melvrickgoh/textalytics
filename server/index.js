@@ -12,6 +12,10 @@ Wit = require('./services/wit'),
 LinkedIn = require('./services/linkedin'),
 Covectric = require('./services/covectric'),
 GoogleServices = require('./services/GoogleServices'),
+UserServices = require('./services/UserServices'),
+FileServices = require('./services/FileServices'),
+DownloaderService = require('./services/DownloaderService'),
+OCRService = require('./services/OCRService'),
 UserController = require('./controller/UserController'),
 User = require('./entity/user'),
 File = require('./entity/file'),
@@ -31,7 +35,11 @@ iDAO = new IndustriesDAO(),
 wit = new Wit(),
 linkedIn = new LinkedIn(),
 covectric = new Covectric(),
+uSvcs = new UserServices(),
 gSvcs = new GoogleServices(),
+fSvcs = new FileServices(),
+downloaderSvc = new DownloaderService({ GoogleServices: gSvcs}),
+ocrReaderSvc = new OCRService(),
 imageCrawler = new ImageCrawler(),
 uController = new UserController({pgURL:(process.env.HEROKU_POSTGRESQL_RED_URL||'postgres://raooddscbjubfm:_hRtPSh-P_d97Za496xD75SBCp@ec2-107-20-169-200.compute-1.amazonaws.com:5432/d1v8k0l98bmvg4')});
 
@@ -83,55 +91,13 @@ main_router.route('/ocr/oauth2callback')
 	      }else{
 	      	switch(resultType){
 	      		case 'profile':
-	      			loggedInUser.id = results.id,
-			      	loggedInUser.etag = results.etag,
-			      	loggedInUser.gender = results.gender,
-			      	loggedInUser.googleURL = results.url,
-			      	loggedInUser.displayName = results.displayName,
-			      	loggedInUser.name = results.name,
-			      	loggedInUser.image = results.image,
-			      	loggedInUser.email = results.emails[0].value? results.emails[0].value : 'no email',
-			      	loggedInUser.emailUsername = _extractEmailUsername(results.emails[0].value),
-			      	loggedInUser.lastVisit = new Date();
-
-			      	tokens.access_token? 		loggedInUser.refreshToken = tokens.access_token : '';
-	    				oauth2Client? 					loggedInUser.authClient = oauth2Client : '';
-	    				client? 								loggedInUser.client = client : '';
-
+	      			uSvcs.loadSessionUserInfo(loggedInUser,results,tokens,oauth2Client,client);
 	      			break;
 	      		case 'folder':
 	      			loggedInUser.ocrFolder = results;
 	      			break;
 	      		case 'drive':
-	      			var filesObj = results.items;
-	      			for (var i in filesObj){
-	      				var fileObj = filesObj[i];
-	      				files.push(new File({
-	      					type : fileObj.kind,
-									id : fileObj.id,
-									etag : fileObj.etag,
-									selfLink : fileObj.selfLink,
-									alternateLink : fileObj.alternateLink,
-									embedLink : fileObj.embedLink,
-									iconLink : fileObj.iconLink,
-									title : fileObj.title,
-									mimeType : fileObj.mimeType,
-									createdDate : fileObj.createdDate,
-									modifiedDate : fileObj.modifiedDate,
-									modifiedByMeDate : fileObj.modifiedByMeDate,
-									lastViewedByMeDate : fileObj.lastViewedByMeDate,
-									parents : fileObj.parents,
-									exportLinks : fileObj.exportLinks,
-									userPermission : fileObj.userPermission,
-									ownerNames : fileObj.ownerNames,
-									owners : fileObj.owners,
-									lastModifyingUserName : fileObj.lastModifyingUserName,
-									lastModifyingUser : fileObj.lastModifyingUser,
-									editable : fileObj.editable,
-									copyable : fileObj.copyable,
-									shared : fileObj.shared
-	      				}));
-	      			}
+	      			uSvcs.loadSessionUserFiles(results.items,files);	      			
 	      			break;
 	      		default:
 	      			break;
@@ -181,6 +147,132 @@ main_router.route('/ocr/oauth2callback')
 	    });
 	});
 
+main_router.route('/api/server/createFolder')
+	.all(function(req,res){
+		gSvcs.createServerFolder(req.query.name, req.query.purpose, function(err,response){
+			res.json(response);
+		});
+	});
+
+main_router.route('/api/server/listServiceDriveFiles')
+	.all(function(req,res){
+		errCallback = function(err,results){
+	  	res.json(results);
+	  }
+	  successCallback = function(files,tokens,authClient){
+	  	res.json(files);
+	  }
+	  gSvcs.listServiceAccountFiles(successCallback,errCallback);
+	});
+
+main_router.route('/api/server/deleteServiceFile')
+	.all(function(req,res){
+		var	errCallback = function(msg,err){
+			err['sysMessage'] = msg;
+	  	res.json(err);
+	  },
+	  successCallback = function(err,repsonse){
+	  	res.json(repsonse);
+	  };
+	  gSvcs.deleteServiceFile(req.query.id,successCallback,errCallback);
+	});
+
+main_router.route('/api/server/downloadServiceFile')
+	.all(function(req,res){
+		downloaderSvc.downloadServiceFile(req.query.id,function(err,results){
+			res.json(results);
+		});
+	});
+
+main_router.route('/api/server/readServiceFile')
+	.all(function(req,res){
+		ocrReaderSvc.readOCRFile(__dirname+'/../',req.query.id+'.txt',function(isSuccess,response){
+			res.json(response);
+		});
+	});
+
+main_router.route('/api/server/readServiceHTML')
+	.all(function(req,res){
+		ocrReaderSvc.readOCRHTML(__dirname+'/../',req.query.id+'.html',function(isSuccess,response){
+			res.json(response);
+		});
+	});
+
+main_router.route('/api/ocr/serverUploadImage')
+	.all(function(req,res){
+	  errCallback = function(err,results){
+	  	res.json(results);
+	  }
+	  successCallback = function(results){
+	  	res.json(results);
+	  }
+
+		var imageLink = req.query.image_link,
+		imageName = req.query.image_name;
+
+		imageCrawler.downloadImage(imageLink,function(err,imageResults){
+			gSvcs.uploadServerOCRFile(imageLink,{
+				title: imageLink,
+				description: imageLink,
+				mimeType: imageResults.mimeType,
+				body: imageResults.data,
+				folderId: process.env.GOOGLE_SERVICE_FOLDERS_DEMO_ID
+			},function(err,response){
+				response['bodyImage'] = imageResults.mimeType + ";base64," + imageResults.data.toString('base64');
+				response['purpose'] = 'demo';
+				response['type'] = 'demo';
+
+				gSvcs.addServicePermissionsToFile(response.id, process.env.GOOGLE_TEXTALYTICS_USER_ID, process.env.GOOGLE_TEXTALYTICS_USER_EMAIL, function(permsErr, permsResp){
+					if (permsErr) {
+						permsResp('error') = true;
+						permsResp('error_message') = 'Image not processed and recorded. Err: Failure to add sys service permission to file';
+					}
+				});
+
+				var recursiveDownloadAndReadOCR = function(response,masterCallback){
+					_downloadAndReadOCRFile(response,function(isReadOCRSuccess,readOCRResults){
+						if (!isReadOCRSuccess && readOCRResults.error_code == 1){ //failure
+							failureOCRAction(response,masterCallback);
+						}else{
+							successOCRAction(response,readOCRResults,masterCallback);
+						}
+					});
+				}
+
+				var failureOCRAction = function(response,masterCallback){
+					fSvcs.removeOCRFile(__dirname+'/../downloads/'+response.id + '.html',function(isRemovalSuccess,removalMessage){
+						console.log('failure remove ocr file > ' + isRemovalSuccess);
+						console.log(removalMessage);
+						gSvcs.setGlobalReadPermissions(response.id,function(readPermissionsErr,readPermissionResponse){
+							setTimeout(recursiveDownloadAndReadOCR(response,masterCallback),3500);
+						});
+					});
+				}
+
+				var successOCRAction = function(response,successResults,masterCallback){
+					fSvcs.saveOCRRawText(response,function(isSuccess,results){
+						if (!isSuccess) { 
+							console.log(results); 
+						} else {
+							fSvcs.removeOCRFile(__dirname+'/../downloads/'+response.id + '.html',function(isRemovalSuccess,removalMessage){
+								console.log('success remove ocr file > ' + isRemovalSuccess);
+								masterCallback(true,response);
+							});
+						}
+					});
+				}
+
+				gSvcs.setGlobalReadPermissions(response.id,function(readPermissionsErr,readPermissionResponse){
+					setTimeout(recursiveDownloadAndReadOCR(response,function(isRecursionSuccess,recursionResponse){
+						console.log('master callback success ? ' + isRecursionSuccess);
+						res.json(response);
+					}),3500);
+				});
+			});
+		});
+		
+	});
+
 main_router.route('/api/ocr/uploadImage')
 	.all(function(req,res){
 		_restrict(req,res,function(user){
@@ -205,8 +297,6 @@ main_router.route('/api/ocr/uploadImage')
 					response['bodyImage'] = imageResults.mimeType + ";base64," + imageResults.data.toString('base64');
 					
 					gSvcs.getClientOCRFile(authorization['client'],authorization['authClient'],authorization['tokens'],response.id,function(getFileErr,getFileResponse){
-						console.log(getFileErr);
-						console.log(getFileResponse);
 						response['ocrFile'] = getFileResponse;
 						res.send(response);
 					});
@@ -246,6 +336,15 @@ main_router.route('/ocr/play')
 				user : req.session.user
 			});
 		},'ocr/play');
+	});
+
+main_router.route('/ocr/server/test')
+	.all(function(req,res){
+		_restrict(req,res,function(user){
+			res.render('ocr_server_flow.ejs',{
+				user : req.session.user
+			});
+		},'ocr/server/test');
 	});
 
 main_router.route('/ocr/files')
@@ -816,15 +915,31 @@ function _restrict(req, res, next, targetLocale) {
   }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
 }
 
-function _extractEmailUsername(str){
-	var nameMatch = str.match(/^([^@]*)@/),
-	name = nameMatch ? nameMatch[1] : null;
-	if (str.indexOf('@gtempaccount.com')!=-1){
-		var tempUsername = name.split('@gtempaccount.com')[0];
-		var subTempUsername = tempUsername.split('%')[0];
-		return subTempUsername;
-	}
-	return name;
+function _downloadAndReadOCRFile(response, dlCallback){
+	console.log('Wait 3.5 seconds to launch download feature');
+	downloaderSvc.downloadServiceFile(response.id,function(downloadSuccess,downloadResults){
+		if (downloadSuccess) {
+			ocrReaderSvc.readOCRHTML(__dirname+'/../',response.id + '.html',function(ocrSuccess,ocrResults){
+				if (ocrSuccess) { 
+					response['ocrText'] = ocrResults;
+					dlCallback(true,response);
+				}else{
+					dlCallback(false,{
+						error: true,
+						error_code: ocrResults.error_code,
+						error_message: ocrResults.error_message,
+					});
+				}
+			});
+		} else {
+			dlCallback(false,{
+				error: true,
+				error_code: 0,
+				error_message: 'Image not processed and recorded. Err: Download to file system was a failure',
+				err: downloadResults 
+			});
+		}
+	});
 }
 
 exports.index = main_router;

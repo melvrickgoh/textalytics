@@ -1,10 +1,11 @@
+const GoogleServerFolderDAO = require('../dao/GoogleServerFoldersDAO'),
+GoogleServerFileDAO = require('../dao/GoogleServerFilesDAO');
+
 var googleapis = require('googleapis');
 var OAuth2Client = googleapis.OAuth2Client;
 var CLIENT_ID = '43920069348-dumn50n713ibd53u0r39co0vke0pho6u.apps.googleusercontent.com';
 var CLIENT_SECRET = 'YNhCQTVTDcTt5zwhmPNV5BAv';
-var LOCAL_URL = 'http://localhost:5432/',
-		REMOTE_URL = 'http://textalytics-wit.herokuapp.com/';
-var REDIRECT_URL = REMOTE_URL + 'ocr/oauth2callback';
+var REDIRECT_URL = _googleAuthCallbackURL();
 
 //For Client Side logging in
 var OAuth2 = googleapis.auth.OAuth2;
@@ -14,7 +15,12 @@ var SERVICE_ACCOUNT_EMAIL = '43920069348-tgnid2frja9o5otfbf5u5s6l2hkpp30r@develo
 var SERVICE_ACCOUNT_KEY_FILE = './server/key.pem';
 
 //Other info
-var CLIENT_DEFAULT_OCR_FOLDER_NAME = "melvrickgoh/textalytics/ocr_demo"
+var CLIENT_DEFAULT_OCR_FOLDER_NAME = "melvrickgoh/textalytics/ocr_demo",
+TEXTALYTICS_USER_ID = process.env.GOOGLE_TEXTALYTICS_USER_ID,
+TEXTALYTICS_USER_EMAIL = process.env.GOOGLE_TEXTALYTICS_USER_EMAIL;
+
+var ServerFoldersDAO = new GoogleServerFolderDAO(),
+ServerFilesDAO = new GoogleServerFileDAO(); 
 
 function GoogleServices(options){}
 
@@ -74,9 +80,9 @@ GoogleServices.prototype.getUserProfile = function(code,callback){
 
 GoogleServices.prototype.getDriveProfile = function(code,callback){
 	getAccessToken(code,function(oauth2Client,tokens){
-	  	_executeCommand(oauth2Client,function(client,oauth2Client){
-	  		_getDriveProfile(client,oauth2Client,'me',function(err,results){callback('drive',err,results,tokens,oauth2Client);});
-	  	});
+  	_executeCommand(oauth2Client,function(client,oauth2Client){
+  		_getDriveProfile(client,oauth2Client,'me',function(err,results){callback('drive',err,results,tokens,oauth2Client);});
+  	});
 	});
 }
 
@@ -84,7 +90,6 @@ GoogleServices.prototype.reQueryDriveProfile = function(client,authClient,callba
 
   	_executeCommand(authClient,function(reClient,oauth2Client){
 
-		console.log('Requery Drive Profile Clients info');
   	_getDriveProfile(client,authClient,'me',function(err,results){callback('drive',err,results,tokens,authClient);});
 
 	});
@@ -95,9 +100,7 @@ GoogleServices.prototype.getUserAndDriveProfile = function(code,callback){
 	getAccessToken(code,function(oauth2Client,tokens){
   	_executeCommand(oauth2Client,function(client,oauth2Client){
   		_getUserProfile(client,oauth2Client,'me',function(err,results){
-  			console.log(results);
   			callback('profile',err,results,tokens,oauth2Client,client);
-
   		});
   				
   		_getDriveProfile(client,oauth2Client,'me',function(err,results){callback('drive',err,results,tokens,oauth2Client)});
@@ -195,7 +198,7 @@ function _updateServiceFile(client,authClient,fileId,newTitle,callback){
 	}).withAuthClient(authClient).execute(callback);
 }
 function _getUserProfile(client, authClient, userId, callback){
-    client.plus.people.get({ userId: userId, auth: authClient }, callback);
+  client.plus.people.get({ userId: userId, auth: authClient }, callback);
 }
 
 function _getDriveProfile(client, authClient, userId, callback){
@@ -223,7 +226,6 @@ function _createClientOCRFolder(client, authClient, userId, callback){
 }
 
 function _getClientOCRFile(client, authClient, tokens, userId, fileId, callback){
-	console.log(client.drive.files);
 	client.drive.files.get({
 		fileId: 			fileId,
 		acknowledgeAbuse: true,
@@ -312,7 +314,6 @@ function copyFile(originFileId, copyTitle) {
 * where the authclient for svc account is returned, this is the beginning
 */
 
-
 GoogleServices.prototype.listServiceAccountFiles = function(successCallback,errorCallback){
 	var authClientCallback = function(err, tokens, client, authClient) {
 	  if (err) {
@@ -321,11 +322,13 @@ GoogleServices.prototype.listServiceAccountFiles = function(successCallback,erro
 	  }
 	  // Successfully authorize account
 	  // Make an authorized request to list Drive files.
-	  client.drive.files.list().withAuthClient(authClient).execute(function(err, files) {
+	  client.drive.files.list({
+	  	auth: authClient
+	  },function(err, files) {
 	  		if (err) {
 			    errorCallback('Error accessing files with authClient (Service Account)',err);
 			    return;
-			}
+				}
 	  		successCallback(files,tokens,authClient);
 		});
 	}
@@ -406,7 +409,6 @@ GoogleServices.prototype.deleteServiceFile = function(id,successCallback,errorCa
 	  	}else{
 	  		var serviceCredentials = serviceResults.service,
 	  		secondaryCredentials = serviceResults.secondary;
-	  		console.log('multi file permissions');
 	  		if (serviceCredentials.role == 'owner'){
 	  			//upgrade secondary n remove urself
 	  			_upgradeOtherUserToOwner(id,secondaryCredentials.id,function(err,success){
@@ -414,13 +416,11 @@ GoogleServices.prototype.deleteServiceFile = function(id,successCallback,errorCa
 			  			success.file = id;
 	  					successCallback(err,success);
 	  				}else{
-	  					console.log(err);
 	  					errorCallback('Could not handle upgrading other user error',err);
 	  				}
 	  			});
 	  		}else{
 	  			_removeServiceFilePermission(id,serviceCredentials.id,function(err,response){
-	  				console.log(err);
 		  			errorCallback('Could not remove permissions',err);
 		  		},function(err,response){
 		  			if (!response){
@@ -473,41 +473,262 @@ GoogleServices.prototype.removeServiceFilePermissions = function(fileid,successC
 }
 
 function _removeServiceFilePermission(fileid,permissionid,errorCallback,successCallback){
-	var authClientCallback = function(err, tokens, client, authClient) {
+	var authClientCallback = function(err, tokens, client, jwtClient) {
 	  if (err) {
-	    errorCallback('Error authorizing account in authClient (Service account)',err);
+	    errorCallback('Error authorizing account in jwtClient (Service account)',err);
 	    return;
 	  }
 	  // Successfully authorize account
 	  // Make an authorized request to list Drive files.
-	  client.drive.permissions.delete({fileId:fileid,permissionId:permissionid}).withAuthClient(authClient).execute(function(err,response) {
-	  		if (err){
-	  			errorCallback(err,response);
-	  		}else{
-	  			successCallback(err,response);
-	  		}
+	  client.drive.permissions.delete({
+	  	fileId:fileid,
+	  	permissionId:permissionid,
+	  	auth: jwtClient
+	  },function(err,response) {
+  		if (err){
+  			errorCallback(err,response);
+  		}else{
+  			successCallback(err,response);
+  		}
 		});
 	}
 	_serviceAccountExecution(authClientCallback);
 }
 
 function _deleteServiceFile(fileid,errorCallback,successCallback){
-	var authClientCallback = function(err, tokens, client, authClient) {
+	var authClientCallback = function(err, tokens, client, jwtClient) {
 	  if (err) {
 	    errorCallback('Error authorizing account in authClient (Service account)',err);
 	    return;
 	  }
 	  // Successfully authorize account
 	  // Make an authorized request to list Drive files.
-	  client.drive.files.delete({fileId:fileid}).withAuthClient(authClient).execute(function(err,response) {
-	  		if (err){
-	  			errorCallback(err,response);
-	  		}else{
-	  			successCallback(err,response);
-	  		}
+	  client.drive.files.delete({
+	  	fileId:fileid,
+	  	auth: jwtClient
+	  },function(err,response) {
+  		if (err){
+  			errorCallback(err,response);
+  		}else{
+  			successCallback(err,response);
+  		}
 		});
 	}
 	_serviceAccountExecution(authClientCallback);
+}
+
+function _serviceUpgradeOtherUserToOwner(fileid,permissionid,callback){
+	var authClientCallback = function(err, tokens, client, jwtClient) {
+	  if (err) {
+	    errorCallback('Error authorizing account in jwtClient (Service account)',err);
+	    return;
+	  }
+	  // Successfully authorize account
+	  // Make an authorized request to upgeade Drive files permission.
+	  client.drive.permissions.update({
+	  		fileId:fileid,
+	  		permissionId:permissionid,
+	  		transferOwnership:true,
+	  		resource: {
+	  			role:'owner'
+	  		},
+	  		auth: jwtClient
+	  	},function(err, success) {
+	  		callback(err,success);
+	  	});
+	}
+	_serviceAccountExecution(authClientCallback);
+}
+
+GoogleServices.prototype.addServiceRepresentativePermissionsToFile = function(fileID,callback){
+	this.addServicePermissionsToFile(fileID,TEXTALYTICS_USER_ID,TEXTALYTICS_USER_EMAIL,callback);
+}
+
+GoogleServices.prototype.addServicePermissionsToFile = function(fileID,userID,email,callback){
+	var authClientCallback = function(err, tokens, client, jwtClient) {
+	  if (err) {
+	    errorCallback('Error authorizing account in jwtClient (Service account)',err);
+	    return;
+	  }
+	  // Successfully authorize account
+	  // Make an authorized request to list Drive files.
+	  client.drive.permissions.insert({
+	  	fileId:fileID,
+	  	emailMessage: 'A new file has been processed and shared with you ~ Textalytics &copy (Melvrick Goh)',
+	  	resource: {
+				id:userID,
+				value: email,
+				type: 'user',
+				role: 'writer'
+		  },
+		  auth: jwtClient
+	  },function(err,response) {
+	  	callback(err,response);
+		});
+	}
+	_serviceAccountExecution(authClientCallback);
+}
+
+GoogleServices.prototype.updateServiceFileMetadata = function(fileID,title,callback){
+	var authClientCallback = function(err, tokens, client, jwtClient) {
+	  if (err) {
+	    callback(err);
+	    return;
+	  }
+	  // Make an authorized request to patch file title.
+	  client.drive.files.patch({
+	  	fileId:fileID,
+	  	auth: jwtClient,
+	  	resource: { title:title }
+	  },function(err,response) {
+	  		callback(err,response);
+		});
+	}
+	_serviceAccountExecution(authClientCallback);
+}
+
+GoogleServices.prototype.createServerFolder = function(name,purpose,callback){
+	var authClientCallback = function(err, tokens, client, jwtClient) {
+	  if (err) {
+	    callback(err);
+	    return;
+	  }
+	  // Make an authorized request to patch file title.
+	  client.drive.files.insert({
+			resource:{
+				"mimeType":"application/vnd.google-apps.folder",
+				"title":name,
+				"description":purpose
+			},
+			media:{
+				"writersCanShare":true
+			},
+			auth: jwtClient
+		}, function(err,response){
+			response['purpose'] = purpose;
+			ServerFoldersDAO.insertNewFolder(response,callback);
+		});
+	}
+	_serviceAccountExecution(authClientCallback);
+}
+
+GoogleServices.prototype.uploadServerOCRFile = function(fileURL, dataOptions, uploadCallback){
+	var authClientCallback = function(err, tokens, client, jwtClient) {
+	  if (err) {
+	    uploadCallback(err);
+	    return;
+	  }
+	  // Make an authorized request to patch file title.
+	  client.drive.files.insert({
+			"convert": 					true,
+		  "ocr": 							true,
+		  "ocrLanguage": 			"en",
+			resource:{
+				"title":  					fileURL,
+		    "uploadType": 			"multipart",
+		    "mimeType": 				dataOptions.mimeType,
+		    "writersCanShare": 	true,
+		    "description": 			dataOptions.description,
+		    "parents": 					[ { id: dataOptions.folderId } ]
+			},
+			media:{
+				"mimeType":					dataOptions.mimeType,
+				"body": 						dataOptions.body
+			},
+			auth: 								jwtClient
+		}, uploadCallback);
+	}
+	_serviceAccountExecution(authClientCallback);
+}
+
+GoogleServices.prototype.getServerOCRFileMetadata = function(fileId,callback){
+	var authClientCallback = function(err, tokens, client, jwtClient) {
+	  if (err) {
+	    callback(err);
+	    return;
+	  }
+	  // Make an authorized request to patch file title.
+	  client.drive.files.get({
+			fileId: 							fileId,
+			acknowledgeAbuse: 		true,
+			auth: 								jwtClient
+		}, callback);
+	}
+	_serviceAccountExecution(authClientCallback);
+}
+
+GoogleServices.prototype.logServiceFile = function(file){
+	ServerFilesDAO.insertNewFile({
+		purpose: file.purpose,
+		type: file.type,
+		title: file.title,
+		id: file.id,
+		downloadUrl: file['exportLinks']['text/plain'] 
+	},function(err,response){
+		if (err) {console.log(err);}
+	});
+}
+
+GoogleServices.prototype.setGlobalReadPermissions = function(fileID,callback){
+	var authClientCallback = function(err, tokens, client, jwtClient) {
+	  if (err) {
+	    callback(false,err);
+	    return;
+	  }
+	  // Successfully authorize account
+	  // Make an authorized request to list Drive files.
+	  client.drive.permissions.insert({
+		  fileId: fileID,
+		  resource: {
+		  	value: '',
+		  	id: 'anyone',
+		  	type: 'anyone',
+		  	role: 'writer'
+		  },
+		  auth: jwtClient
+		},callback);
+	}
+	_serviceAccountExecution(authClientCallback);
+}
+
+function _getServicePermissions(fileID,errorCallback,successCallback){
+	var authClientCallback = function(err, tokens, client, jwtClient) {
+	  if (err) {
+	    errorCallback('Error authorizing account in authClient (Service account)',err);
+	    return;
+	  }
+	  // Successfully authorize account
+	  // Make an authorized request to list Drive files.
+	  client.drive.permissions.list({fileId:fileID, auth: jwtClient},function(err,response) {
+  		if (err){
+  			errorCallback(err);
+  		}else{
+  			successCallback(response);
+  		}
+		});
+	}
+	_serviceAccountExecution(authClientCallback);
+}
+
+/*
+* Service discovery and request execution
+*/
+function _serviceAccountExecution(authClientCallback){
+	var jwtClient = new googleapis.auth.JWT(
+    SERVICE_ACCOUNT_EMAIL,
+    SERVICE_ACCOUNT_KEY_FILE,
+    // Contents of private_key.pem if you want to load the pem file yourself
+    // (do not use the path parameter above if using this param)
+    '',
+    ['https://www.googleapis.com/auth/drive'],
+    // User to impersonate (leave empty if no impersonation needed)
+    '');
+
+  jwtClient.authorize(function(err,tokens){
+  	authClientCallback(err,tokens,{
+  		drive: googleapis.drive('v2')
+  	},jwtClient);
+  });
 }
 
 function _upgradeOtherUserToOwner(fileid,permissionid,callback){
@@ -521,104 +742,24 @@ function _upgradeOtherUserToOwner(fileid,permissionid,callback){
 	  client.drive.permissions.update({
 	  		fileId:fileid,
 	  		permissionId:permissionid,
-	  		transferOwnership:true
-	  	},{
-	  		role:'owner'
-	  	}).withAuthClient(authClient).execute(function(err, success) {
+	  		transferOwnership:true,
+	  		resource: {
+		  		role:'owner'
+		  	},
+		  	auth: authClient
+	  	},function(err, success) {
 	  		callback(err,success);
 	  	});
 	}
 	_serviceAccountExecution(authClientCallback);
 }
 
-GoogleServices.prototype.addPermissionsToFile = function(fileID,userID,email,callback){
-	var authClientCallback = function(err, tokens, client, authClient) {
-	  if (err) {
-	    errorCallback('Error authorizing account in authClient (Service account)',err);
-	    return;
-	  }
-	  // Successfully authorize account
-	  // Make an authorized request to list Drive files.
-	  client.drive.permissions.insert({
-	  	fileId:fileID,
-	  	emailMessage: 'It does not do to dwell on dreams and forget to live, remember that. ~ Dumbledore'
-	  },{
-		id:userID,
-		value: email,
-		type: 'user',
-		role: 'writer'
-	  }
-	  ).withAuthClient(authClient).execute(function(err,response) {
-	  		callback(err,response);
-		});
+function _googleAuthCallbackURL(){
+	if (process.env.GOOGLE_STATUS) {
+		return process.env.GOOGLE_CALLBACK_URL;
 	}
-	_serviceAccountExecution(authClientCallback);
+	return 'http://localhost:5432/ocr/oauth2callback';
 }
-
-GoogleServices.prototype.updateFileMetadata = function(fileID,title,callback){
-	var authClientCallback = function(err, tokens, client, authClient) {
-	  if (err) {
-	    callback(err);
-	    return;
-	  }
-	  // Make an authorized request to patch file title.
-	  client.drive.files.patch({
-	  	fileId:fileID,
-	  },{
-		title:title
-	  }
-	  ).withAuthClient(authClient).execute(function(err,response) {
-	  		callback(err,response);
-		});
-	}
-	_serviceAccountExecution(authClientCallback);
-}
-
-function _getServicePermissions(fileID,errorCallback,successCallback){
-	var authClientCallback = function(err, tokens, client, authClient) {
-	  if (err) {
-	    errorCallback('Error authorizing account in authClient (Service account)',err);
-	    return;
-	  }
-	  // Successfully authorize account
-	  // Make an authorized request to list Drive files.
-	  client.drive.permissions.list({fileId:fileID}).withAuthClient(authClient).execute(function(err,response) {
-	  		if (err){
-	  			errorCallback(err);
-	  		}else{
-	  			successCallback(response);
-	  		}
-		});
-	}
-	_serviceAccountExecution(authClientCallback);
-}
-
-/*
-* Service discovery and request execution
-*/
-function _serviceAccountExecution(authClientCallback){
-	googleapis
-	  	.discover('drive', 'v2')
-	  	.execute(function(err, client) {
-
-		  var authClient = new googleapis.auth.JWT(
-		    SERVICE_ACCOUNT_EMAIL,
-		    SERVICE_ACCOUNT_KEY_FILE,
-		    // Contents of private_key.pem if you want to load the pem file yourself
-		    // (do not use the path parameter above if using this param)
-		    '',
-		    ['https://www.googleapis.com/auth/drive'],
-		    // User to impersonate (leave empty if no impersonation needed)
-		    '');
-
-		  authClient.authorize(function(err,tokens){
-		  	authClientCallback(err,tokens,client,authClient);
-		  });
-
-		});
-}
-
-
 
 
 module.exports = GoogleServices;

@@ -90,22 +90,6 @@ pgDAO.prototype.getConnection = function(queryObject,callback,errCallback){
 		//errCallback(err); 
 		console.log(err);
 	}
-  /*
-  pg.connect(conString, function(err, client, done) {
-		console.log(err);
-		console.log(client);
-		console.log(done);
-		try{
-			client.query(queryObject,callback);
-			done();
-		}catch(err){
-			//errCallback(err);
-			console.log('pg connection');
-			console.log(err);
-	    done(client);
-		}
-  });
-	*/
 }
 
 pgDAO.prototype.update = function(details,callback){

@@ -125,7 +125,6 @@ TeamDAO.prototype.updateInvalidIntent = function(teamID,witData,callback){
 }
 
 TeamDAO.prototype.updateTeamWitData = function(teamID,witData,callback){
-	console.log('team dao update wit called');
 	var updateWitDetails = {
 		name:TABLENAME,
 		values:[{
@@ -168,9 +167,6 @@ TeamDAO.prototype.updateTeamWitData = function(teamID,witData,callback){
 		conditions:['id = ' + teamID ]
 	}
 	dao.update(updateWitDetails,function(isSuccess,result){
-		console.log('update processed details');
-		console.log(isSuccess);
-		console.log(result);
 		if (result.rowCount >= 1){
 			callback(true);//selected length >= 1
 		}else{
